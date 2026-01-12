@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Share2, Star } from 'lucide-react';
+import { ChevronLeft, Share2 } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import { Shop, Category } from '@/types';
 import { isCurrentlyOpen } from '@/lib/utils';
@@ -98,20 +98,10 @@ export default function ShopHero({ shop, category, primaryImage }: ShopHeroProps
 
       {/* Shop info */}
       <div className="px-4 py-4 border-b border-grey-light">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-ink">{shop.name}</h1>
-            {shop.tagline && (
-              <p className="text-grey mt-1">{shop.tagline}</p>
-            )}
-          </div>
-
-          {/* Rating if exists */}
-          {shop.rating && shop.rating > 0 && (
-            <div className="flex items-center gap-1 bg-yellow-light px-2 py-1 rounded-lg">
-              <Star className="w-4 h-4 text-yellow fill-yellow" />
-              <span className="font-bold text-sm text-yellow">{shop.rating.toFixed(1)}</span>
-            </div>
+        <div>
+          <h1 className="text-2xl font-bold text-ink">{shop.name}</h1>
+          {shop.tagline && (
+            <p className="text-grey mt-1">{shop.tagline}</p>
           )}
         </div>
 
