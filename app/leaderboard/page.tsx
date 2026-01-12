@@ -1,67 +1,60 @@
-import { Trophy, Info, TrendingUp, Star, Calendar } from "lucide-react";
-import { Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui";
-import { LeaderboardTable } from "@/components/leaderboard";
+'use client';
 
-// Mock leaderboard data
-const mockLeaderboardEntries = [
-  {
-    shop: { id: "1", name: "Whitstable Oyster Company", slug: "whitstable-oyster-company", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 2450, rank: 1, rank_change: 2 },
-    badges: [{ badge_type: "trending_weekly" }, { badge_type: "review_star" }],
-  },
-  {
-    shop: { id: "2", name: "The Cheese Box", slug: "the-cheese-box", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 2180, rank: 2, rank_change: -1 },
-    badges: [{ badge_type: "most_saved" }],
-  },
-  {
-    shop: { id: "3", name: "Frank", slug: "frank", category: "Retail", image_url: null },
-    stats: { engagement_score: 1920, rank: 3, rank_change: 3 },
-    badges: [{ badge_type: "new_favourite" }],
-  },
-  {
-    shop: { id: "4", name: "Wheeler's Oyster Bar", slug: "wheelers-oyster-bar", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 1750, rank: 4, rank_change: 0 },
-    badges: [{ badge_type: "local_legend" }],
-  },
-  {
-    shop: { id: "5", name: "JoJo's", slug: "jojos", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 1680, rank: 5, rank_change: -2 },
-    badges: [],
-  },
-  {
-    shop: { id: "6", name: "Samphire", slug: "samphire", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 1520, rank: 6, rank_change: 1 },
-    badges: [],
-  },
-  {
-    shop: { id: "7", name: "Windy Corner Stores", slug: "windy-corner-stores", category: "Retail", image_url: null },
-    stats: { engagement_score: 1380, rank: 7, rank_change: 4 },
-    badges: [{ badge_type: "community_choice" }],
-  },
-  {
-    shop: { id: "8", name: "The Sportsman", slug: "the-sportsman", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 1290, rank: 8, rank_change: -1 },
-    badges: [{ badge_type: "review_star" }],
-  },
-  {
-    shop: { id: "9", name: "Harbour Street Books", slug: "harbour-street-books", category: "Retail", image_url: null },
-    stats: { engagement_score: 1150, rank: 9, rank_change: 0 },
-    badges: [],
-  },
-  {
-    shop: { id: "10", name: "The Old Neptune", slug: "the-old-neptune", category: "Food & Drink", image_url: null },
-    stats: { engagement_score: 1080, rank: 10, rank_change: 2 },
-    badges: [{ badge_type: "photo_favourite" }],
-  },
-];
+import { useState, useEffect } from 'react';
+import { Trophy, Info, Star, Calendar } from 'lucide-react';
+import { Card, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
+import { LeaderboardTable } from '@/components/leaderboard';
 
-export const metadata = {
-  title: "Shop Leaderboard",
-  description: "See the most popular shops in Whitstable this week",
-};
+interface LeaderboardEntry {
+  shop: {
+    id: string;
+    name: string;
+    slug: string;
+    category: string;
+    image_url: string | null;
+  };
+  stats: {
+    engagement_score: number;
+    rank: number;
+    rank_change: number;
+  };
+  badges: { badge_type: string }[];
+}
 
 export default function LeaderboardPage() {
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [period, setPeriod] = useState<'week' | 'month' | 'allTime'>('week');
+
+  useEffect(() => {
+    async function fetchLeaderboard() {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`/api/leaderboard?period=${period}`);
+        if (res.ok) {
+          const data = await res.json();
+          setEntries(data);
+        }
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchLeaderboard();
+  }, [period]);
+
+  // Get the current week's date range
+  const now = new Date();
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - now.getDay());
+  const weekLabel = weekStart.toLocaleDateString('en-GB', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
@@ -71,9 +64,7 @@ export default function LeaderboardPage() {
         </div>
         <div>
           <h1 className="text-3xl font-bold text-oyster-900">Shop Leaderboard</h1>
-          <p className="text-oyster-600">
-            Top shops by community engagement
-          </p>
+          <p className="text-oyster-600">Top shops by community engagement</p>
         </div>
       </div>
 
@@ -84,48 +75,63 @@ export default function LeaderboardPage() {
           <div>
             <p className="font-medium text-ocean-900 mb-1">How rankings work</p>
             <p className="text-sm text-ocean-700">
-              Shops earn points from saves, reviews, photo tags, and clicks.
-              Rankings update weekly. Support your favourite shops by saving them,
-              leaving reviews, and tagging them in photos!
+              Shops earn points from saves, reviews, photo tags, and clicks. Rankings update weekly.
+              Support your favourite shops by saving them, leaving reviews, and tagging them in photos!
             </p>
           </div>
         </div>
       </Card>
 
       {/* Tabs */}
-      <Tabs defaultValue="thisWeek">
+      <Tabs defaultValue="thisWeek" onValueChange={(v) => setPeriod(v as typeof period)}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <TabsList>
-            <TabsTrigger value="thisWeek">This Week</TabsTrigger>
-            <TabsTrigger value="thisMonth">This Month</TabsTrigger>
+            <TabsTrigger value="week">This Week</TabsTrigger>
+            <TabsTrigger value="month">This Month</TabsTrigger>
             <TabsTrigger value="allTime">All Time</TabsTrigger>
           </TabsList>
 
           <div className="flex items-center gap-2 text-sm text-oyster-500">
             <Calendar className="h-4 w-4" />
-            Week of Jan 6, 2025
+            Week of {weekLabel}
           </div>
         </div>
 
-        <TabsContent value="thisWeek">
-          <LeaderboardTable entries={mockLeaderboardEntries} period="week" />
-        </TabsContent>
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <Card className="flex items-center gap-4">
+                  <div className="w-8 h-8 bg-oyster-200 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-oyster-200 rounded w-1/3" />
+                    <div className="h-3 bg-oyster-200 rounded w-1/4" />
+                  </div>
+                  <div className="h-6 w-16 bg-oyster-200 rounded" />
+                </Card>
+              </div>
+            ))}
+          </div>
+        ) : entries.length === 0 ? (
+          <Card className="text-center py-12">
+            <Trophy className="h-12 w-12 text-oyster-300 mx-auto mb-4" />
+            <p className="text-oyster-600">No rankings available yet</p>
+          </Card>
+        ) : (
+          <>
+            <TabsContent value="week">
+              <LeaderboardTable entries={entries} period="week" />
+            </TabsContent>
 
-        <TabsContent value="thisMonth">
-          <LeaderboardTable
-            entries={mockLeaderboardEntries}
-            period="month"
-            showRankChange={false}
-          />
-        </TabsContent>
+            <TabsContent value="month">
+              <LeaderboardTable entries={entries} period="month" showRankChange={false} />
+            </TabsContent>
 
-        <TabsContent value="allTime">
-          <LeaderboardTable
-            entries={mockLeaderboardEntries}
-            period="allTime"
-            showRankChange={false}
-          />
-        </TabsContent>
+            <TabsContent value="allTime">
+              <LeaderboardTable entries={entries} period="allTime" showRankChange={false} />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
 
       {/* Scoring Breakdown */}

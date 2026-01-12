@@ -1,108 +1,43 @@
-import { Tag, Filter, Calendar } from "lucide-react";
-import { Button, Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui";
-import { OfferCard } from "@/components/offers";
-import type { Offer, Shop } from "@/types/database";
+'use client';
 
-// Mock offers data
-const mockOffers: (Offer & { shop: Pick<Shop, 'name' | 'slug'> })[] = [
-  {
-    id: "1",
-    shop_id: "1",
-    shop: { name: "Wheeler's Oyster Bar", slug: "wheelers-oyster-bar" },
-    title: "10% off Tuesday lunches",
-    description: "Enjoy 10% off your bill when you visit us for lunch on Tuesdays. Perfect for a mid-week treat!",
-    valid_from: "2025-01-01",
-    valid_until: "2025-03-31",
-    is_ongoing: false,
-    terms: "Not valid with other offers. Lunch service only.",
-    offer_type: "discount",
-    is_active: true,
-    view_count: 156,
-    created_at: "2025-01-01T00:00:00Z",
-  },
-  {
-    id: "2",
-    shop_id: "2",
-    shop: { name: "The Cheese Box", slug: "the-cheese-box" },
-    title: "Free cheese tasting with any purchase over £20",
-    description: "Sample our artisan cheese selection when you spend £20 or more in store.",
-    valid_from: "2025-01-01",
-    valid_until: null,
-    is_ongoing: true,
-    terms: "Subject to availability.",
-    offer_type: "freebie",
-    is_active: true,
-    view_count: 89,
-    created_at: "2025-01-01T00:00:00Z",
-  },
-  {
-    id: "3",
-    shop_id: "3",
-    shop: { name: "JoJo's", slug: "jojos" },
-    title: "Kids eat free on Sundays",
-    description: "One free kids meal with every adult main course ordered. Perfect for family Sunday lunch!",
-    valid_from: "2025-01-01",
-    valid_until: null,
-    is_ongoing: true,
-    terms: "One child per paying adult. Under 12s only.",
-    offer_type: "freebie",
-    is_active: true,
-    view_count: 234,
-    created_at: "2025-01-01T00:00:00Z",
-  },
-  {
-    id: "4",
-    shop_id: "4",
-    shop: { name: "Harbour Street Books", slug: "harbour-street-books" },
-    title: "Buy 2, get 3rd book half price",
-    description: "Build your reading list and save! Buy any two books and get your third at 50% off.",
-    valid_from: "2025-01-01",
-    valid_until: "2025-01-31",
-    is_ongoing: false,
-    terms: "Cheapest book discounted. Excludes special editions.",
-    offer_type: "bundle",
-    is_active: true,
-    view_count: 67,
-    created_at: "2025-01-01T00:00:00Z",
-  },
-  {
-    id: "5",
-    shop_id: "5",
-    shop: { name: "Frank", slug: "frank" },
-    title: "Loyalty card - 9th drink free",
-    description: "Pick up a loyalty card and get your 9th hot drink absolutely free!",
-    valid_from: "2024-01-01",
-    valid_until: null,
-    is_ongoing: true,
-    terms: "One stamp per visit. Card must be presented.",
-    offer_type: "loyalty",
-    is_active: true,
-    view_count: 445,
-    created_at: "2024-01-01T00:00:00Z",
-  },
-  {
-    id: "6",
-    shop_id: "6",
-    shop: { name: "Windy Corner Stores", slug: "windy-corner-stores" },
-    title: "15% off local produce Thursdays",
-    description: "Support local producers and save! All local Kent produce 15% off every Thursday.",
-    valid_from: "2025-01-01",
-    valid_until: null,
-    is_ongoing: true,
-    terms: "Local produce section only.",
-    offer_type: "discount",
-    is_active: true,
-    view_count: 123,
-    created_at: "2025-01-01T00:00:00Z",
-  },
-];
+import { useState, useEffect } from 'react';
+import { Tag } from 'lucide-react';
+import { Button, Card, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
+import { OfferCard } from '@/components/offers';
+import type { Offer, Shop } from '@/types/database';
 
-export const metadata = {
-  title: "Deals & Offers",
-  description: "Special offers and deals from local Whitstable shops",
-};
+type OfferWithShop = Offer & { shop: Pick<Shop, 'name' | 'slug'> };
 
 export default function OffersPage() {
+  const [offers, setOffers] = useState<OfferWithShop[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'discount' | 'freebie' | 'loyalty'>('all');
+
+  useEffect(() => {
+    async function fetchOffers() {
+      setIsLoading(true);
+      try {
+        const res = await fetch('/api/offers?active=true');
+        if (res.ok) {
+          const data = await res.json();
+          setOffers(data);
+        }
+      } catch (error) {
+        console.error('Error fetching offers:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchOffers();
+  }, []);
+
+  const filteredOffers =
+    filter === 'all' ? offers : offers.filter((o) => o.offer_type === filter);
+
+  const ongoingCount = offers.filter((o) => o.is_ongoing).length;
+  const shopCount = new Set(offers.map((o) => o.shop_id)).size;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
@@ -112,34 +47,28 @@ export default function OffersPage() {
         </div>
         <div>
           <h1 className="text-3xl font-bold text-oyster-900">Deals & Offers</h1>
-          <p className="text-oyster-600">
-            Special offers from local shops
-          </p>
+          <p className="text-oyster-600">Special offers from local shops</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <Card className="text-center !p-4">
-          <p className="text-2xl font-bold text-oyster-900">{mockOffers.length}</p>
+          <p className="text-2xl font-bold text-oyster-900">{offers.length}</p>
           <p className="text-sm text-oyster-500">Active Offers</p>
         </Card>
         <Card className="text-center !p-4">
-          <p className="text-2xl font-bold text-oyster-900">
-            {mockOffers.filter(o => o.is_ongoing).length}
-          </p>
+          <p className="text-2xl font-bold text-oyster-900">{ongoingCount}</p>
           <p className="text-sm text-oyster-500">Ongoing Deals</p>
         </Card>
         <Card className="text-center !p-4">
-          <p className="text-2xl font-bold text-oyster-900">
-            {new Set(mockOffers.map(o => o.shop_id)).size}
-          </p>
+          <p className="text-2xl font-bold text-oyster-900">{shopCount}</p>
           <p className="text-sm text-oyster-500">Participating Shops</p>
         </Card>
       </div>
 
       {/* Filters & Tabs */}
-      <Tabs defaultValue="all">
+      <Tabs defaultValue="all" onValueChange={(v) => setFilter(v as typeof filter)}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <TabsList>
             <TabsTrigger value="all">All Offers</TabsTrigger>
@@ -149,54 +78,66 @@ export default function OffersPage() {
           </TabsList>
         </div>
 
-        <TabsContent value="all">
+        {isLoading ? (
           <div className="grid sm:grid-cols-2 gap-4">
-            {mockOffers.map((offer) => (
-              <OfferCard key={offer.id} offer={offer} />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <div className="h-5 bg-oyster-200 rounded w-3/4 mb-3" />
+                <div className="h-4 bg-oyster-200 rounded w-full mb-2" />
+                <div className="h-4 bg-oyster-200 rounded w-2/3 mb-4" />
+                <div className="h-8 bg-oyster-200 rounded w-1/3" />
+              </Card>
             ))}
           </div>
-        </TabsContent>
+        ) : offers.length === 0 ? (
+          <Card className="text-center py-12">
+            <Tag className="h-12 w-12 text-oyster-300 mx-auto mb-4" />
+            <p className="text-oyster-600">No offers available right now</p>
+            <p className="text-sm text-oyster-500 mt-1">Check back soon!</p>
+          </Card>
+        ) : (
+          <>
+            <TabsContent value="all">
+              <div className="grid sm:grid-cols-2 gap-4">
+                {offers.map((offer) => (
+                  <OfferCard key={offer.id} offer={offer} />
+                ))}
+              </div>
+            </TabsContent>
 
-        <TabsContent value="discount">
-          <div className="grid sm:grid-cols-2 gap-4">
-            {mockOffers
-              .filter((o) => o.offer_type === "discount")
-              .map((offer) => (
-                <OfferCard key={offer.id} offer={offer} />
-              ))}
-          </div>
-        </TabsContent>
+            <TabsContent value="discount">
+              <div className="grid sm:grid-cols-2 gap-4">
+                {filteredOffers.map((offer) => (
+                  <OfferCard key={offer.id} offer={offer} />
+                ))}
+              </div>
+            </TabsContent>
 
-        <TabsContent value="freebie">
-          <div className="grid sm:grid-cols-2 gap-4">
-            {mockOffers
-              .filter((o) => o.offer_type === "freebie")
-              .map((offer) => (
-                <OfferCard key={offer.id} offer={offer} />
-              ))}
-          </div>
-        </TabsContent>
+            <TabsContent value="freebie">
+              <div className="grid sm:grid-cols-2 gap-4">
+                {filteredOffers.map((offer) => (
+                  <OfferCard key={offer.id} offer={offer} />
+                ))}
+              </div>
+            </TabsContent>
 
-        <TabsContent value="loyalty">
-          <div className="grid sm:grid-cols-2 gap-4">
-            {mockOffers
-              .filter((o) => o.offer_type === "loyalty")
-              .map((offer) => (
-                <OfferCard key={offer.id} offer={offer} />
-              ))}
-          </div>
-        </TabsContent>
+            <TabsContent value="loyalty">
+              <div className="grid sm:grid-cols-2 gap-4">
+                {filteredOffers.map((offer) => (
+                  <OfferCard key={offer.id} offer={offer} />
+                ))}
+              </div>
+            </TabsContent>
+          </>
+        )}
       </Tabs>
 
       {/* CTA for shops */}
       <Card className="mt-8 bg-ocean-50 border-ocean-200 text-center">
         <Tag className="h-10 w-10 text-ocean-500 mx-auto mb-3" />
-        <h2 className="text-lg font-bold text-oyster-900 mb-2">
-          Are you a local shop owner?
-        </h2>
+        <h2 className="text-lg font-bold text-oyster-900 mb-2">Are you a local shop owner?</h2>
         <p className="text-oyster-600 mb-4 max-w-md mx-auto">
-          Add your offers to reach thousands of locals and visitors looking for
-          great deals in Whitstable.
+          Add your offers to reach thousands of locals and visitors looking for great deals in Whitstable.
         </p>
         <Button>Add Your Offer</Button>
       </Card>

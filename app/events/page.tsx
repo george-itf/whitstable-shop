@@ -1,100 +1,37 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import { Event } from '@/types';
 
-// Mock events data
-const mockEvents: Event[] = [
-  {
-    id: '1',
-    shop_id: null,
-    title: 'Oyster Festival Opening',
-    description: 'The annual celebration of Whitstable oysters returns! Join us for live music, oyster shucking competitions, and the freshest seafood from local suppliers.',
-    date: '2025-07-26',
-    time_start: '10:00',
-    time_end: '18:00',
-    location: 'Whitstable Harbour',
-    is_recurring: false,
-    recurrence_rule: null,
-    status: 'approved',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    shop_id: null,
-    title: 'Oyster Festival Day 2',
-    description: 'The festivities continue with more music, food, and fun for the whole family.',
-    date: '2025-07-27',
-    time_start: '10:00',
-    time_end: '20:00',
-    location: 'Whitstable Harbour',
-    is_recurring: false,
-    recurrence_rule: null,
-    status: 'approved',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    shop_id: null,
-    title: 'Live Music at The Old Neptune',
-    description: 'Weekly live music night featuring local bands and artists. Free entry, great atmosphere.',
-    date: '2025-07-28',
-    time_start: '19:00',
-    time_end: '22:00',
-    location: 'The Old Neptune',
-    is_recurring: true,
-    recurrence_rule: 'weekly',
-    status: 'approved',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    shop_id: null,
-    title: 'Art Walk',
-    description: 'Monthly gallery trail through Whitstable. Visit local galleries and meet the artists.',
-    date: '2025-08-02',
-    time_start: '14:00',
-    time_end: '17:00',
-    location: 'Town Centre',
-    is_recurring: true,
-    recurrence_rule: 'monthly',
-    status: 'approved',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    shop_id: null,
-    title: 'Beach Clean',
-    description: 'Join the community beach clean. Equipment provided. Refreshments afterwards.',
-    date: '2025-08-09',
-    time_start: '09:00',
-    time_end: '11:00',
-    location: 'West Beach',
-    is_recurring: true,
-    recurrence_rule: 'monthly',
-    status: 'approved',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    shop_id: null,
-    title: 'Farmers Market',
-    description: 'Weekly farmers market with local produce, artisan foods, and handmade crafts.',
-    date: '2025-08-10',
-    time_start: '09:00',
-    time_end: '14:00',
-    location: 'Oxford Street',
-    is_recurring: true,
-    recurrence_rule: 'weekly',
-    status: 'approved',
-    created_at: new Date().toISOString(),
-  },
-];
-
 export default function EventsPage() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      setIsLoading(true);
+      try {
+        const res = await fetch('/api/events?upcoming=true');
+        if (res.ok) {
+          const data = await res.json();
+          setEvents(data);
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchEvents();
+  }, []);
+
   // Group events by month
   const eventsByMonth: Record<string, Event[]> = {};
-  mockEvents.forEach((event) => {
+  events.forEach((event) => {
     const date = new Date(event.date);
     const monthKey = date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
     if (!eventsByMonth[monthKey]) {
@@ -129,18 +66,41 @@ export default function EventsPage() {
 
       {/* Events list */}
       <div className="px-4 py-6 space-y-6">
-        {Object.entries(eventsByMonth).map(([month, events]) => (
-          <div key={month}>
-            <h2 className="text-sm font-semibold text-grey uppercase tracking-wide mb-3">
-              {month}
-            </h2>
-            <div className="space-y-3">
-              {events.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
+        {isLoading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-4 bg-grey-light rounded w-32 mb-3" />
+                <div className="card p-4 flex gap-4">
+                  <div className="w-14 h-16 bg-grey-light rounded" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-5 bg-grey-light rounded w-3/4" />
+                    <div className="h-3 bg-grey-light rounded w-1/2" />
+                    <div className="h-3 bg-grey-light rounded w-1/3" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : events.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-grey">No upcoming events</p>
+            <p className="text-sm text-grey-dark mt-1">Check back soon!</p>
+          </div>
+        ) : (
+          Object.entries(eventsByMonth).map(([month, monthEvents]) => (
+            <div key={month}>
+              <h2 className="text-sm font-semibold text-grey uppercase tracking-wide mb-3">
+                {month}
+              </h2>
+              <div className="space-y-3">
+                {monthEvents.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       <BottomNav />
