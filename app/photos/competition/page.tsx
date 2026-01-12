@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Camera, Trophy, Clock, Users, Heart, Calendar } from 'lucide-react';
-import { Button, Card, Badge, Countdown } from '@/components/ui';
+import Image from 'next/image';
+import { ChevronLeft, Camera, Trophy, Users, Heart } from 'lucide-react';
+import { Button, Card } from '@/components/ui';
 import { PhotoGrid, CompetitionBanner } from '@/components/photos';
 import { createClient } from '@/lib/supabase/client';
 import type { PhotoEntryWithUser, PhotoCompetition } from '@/types/database';
@@ -254,11 +255,12 @@ export default function PhotoCompetitionPage() {
                     {index + 1}
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-oyster-100">
-                      <img
+                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-oyster-100 relative">
+                      <Image
                         src={photo.image_url}
                         alt={photo.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                     <div className="flex-1 min-w-0">

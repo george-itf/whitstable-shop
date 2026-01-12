@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 export async function GET() {
   try {
@@ -40,6 +41,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 50 save operations per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`saved:post:${ip}`, { limit: 50, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const supabase = await createClient();
 
     // Check authentication
@@ -105,6 +113,13 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    // Rate limit: 50 unsave operations per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`saved:delete:${ip}`, { limit: 50, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const supabase = await createClient();
 
     // Check authentication

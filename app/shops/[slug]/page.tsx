@@ -8,7 +8,6 @@ import ShopContact from '@/components/shops/ShopContact';
 import ShopReviews from '@/components/shops/ShopReviews';
 import ShopMap from '@/components/shops/ShopMap';
 import { createClient } from '@/lib/supabase/server';
-import type { Shop, Category, Review } from '@/types';
 
 interface ShopPageProps {
   params: { slug: string };

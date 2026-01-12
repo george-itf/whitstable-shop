@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft, Heart, Search } from "lucide-react";
-import { Button, Card, Input } from "@/components/ui";
+import { Button, Card } from "@/components/ui";
 import { CharityCard } from "@/components/charity";
 import type { Charity } from "@/types/database";
 

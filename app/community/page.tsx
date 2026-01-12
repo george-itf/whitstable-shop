@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Calendar, Users, Store, HandHeart } from 'lucide-react';
+import { Heart, Calendar, Store, HandHeart } from 'lucide-react';
 import { Button, Card, Badge } from '@/components/ui';
 import { CharityCard, CharityEventCard } from '@/components/charity';
 import type { Charity, CharityEvent } from '@/types/database';

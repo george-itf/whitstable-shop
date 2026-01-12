@@ -5,9 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, Trophy, Calendar, Heart, Camera } from 'lucide-react';
 import { Button, Card, Badge, Avatar } from '@/components/ui';
-import { WinnerCard } from '@/components/photos';
 import { createClient } from '@/lib/supabase/client';
-import { formatDate } from '@/lib/utils';
 import type { PhotoEntryWithUser, PhotoCompetition } from '@/types/database';
 
 interface WinnerMonth {

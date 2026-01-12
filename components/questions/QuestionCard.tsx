@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MessageCircle, CheckCircle, Clock, ThumbsUp } from 'lucide-react';
+import { MessageCircle, CheckCircle, Clock } from 'lucide-react';
 import { Card, Badge, Avatar } from '@/components/ui';
 import { formatRelativeTime } from '@/lib/utils';
 import type { Question, Profile } from '@/types/database';

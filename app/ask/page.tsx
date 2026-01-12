@@ -1,11 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { HelpCircle, Filter, MessageCircle, Users, Clock, Sparkles } from 'lucide-react';
+import { HelpCircle, Filter, MessageCircle, Clock, Sparkles } from 'lucide-react';
 import { Button, Select, Card, Badge, EmptyState } from '@/components/ui';
 import { QuestionCard, AskQuestionForm } from '@/components/questions';
-import { createClient } from '@/lib/supabase/client';
 import type { Question, Profile } from '@/types/database';
 
 type QuestionWithProfile = Question & {

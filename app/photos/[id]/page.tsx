@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { ChevronLeft, Heart, MapPin, Store, Calendar, Camera, Share2, Flag } from 'lucide-react';
 import { Button, Card, Badge, Avatar } from '@/components/ui';
 import { VoteButton } from '@/components/photos';

@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { Calendar, Clock, MapPin, Users, ExternalLink } from 'lucide-react';
+import { Clock, MapPin, Users, ExternalLink } from 'lucide-react';
 import { Card, Badge, Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
 import type { CharityEvent } from '@/types/database';

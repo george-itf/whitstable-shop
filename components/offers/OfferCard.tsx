@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Tag, Calendar, Clock, Store, ExternalLink } from 'lucide-react';
+import { Tag, Calendar, Clock, Store } from 'lucide-react';
 import { Card, Badge, Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
 import type { Offer, Shop } from '@/types/database';

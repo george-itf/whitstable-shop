@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trophy, Heart, Calendar } from 'lucide-react';
+import { Trophy, Heart } from 'lucide-react';
 import { Card, Avatar, Badge } from '@/components/ui';
-import { formatDate } from '@/lib/utils';
 import type { PhotoEntryWithUser, PhotoCompetition } from '@/types/database';
 
 interface WinnerCardProps {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Flag, Store, Clock, Info, MapPin, Calendar, Lightbulb, AlertCircle, Upload, X } from 'lucide-react';
+import { Flag, Store, Clock, Info, MapPin, Calendar, Lightbulb, AlertCircle } from 'lucide-react';
 import { Button, Input, Textarea, Select, Card } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';

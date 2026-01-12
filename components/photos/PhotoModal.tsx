@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Heart, MapPin, Store, Calendar, Camera, X } from 'lucide-react';
+import { Heart, MapPin, Store, Calendar, Camera } from 'lucide-react';
 import { Modal, Avatar, Badge, Button } from '@/components/ui';
 import { formatDate, formatRelativeTime, cn } from '@/lib/utils';
 import type { PhotoEntryWithUser } from '@/types/database';

@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Upload, X, Camera, MapPin, Store, Info } from 'lucide-react';
+import { Upload, X, Camera, Info } from 'lucide-react';
 import { Button, Input, Textarea, Select, Card } from '@/components/ui';
 import { cn, compressImage } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
@@ -127,7 +127,7 @@ export function PhotoSubmitForm({
 
       // Upload to Supabase Storage
       const fileName = `${user.id}/${Date.now()}-${selectedFile.name}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('photos')
         .upload(fileName, compressedFile);
 

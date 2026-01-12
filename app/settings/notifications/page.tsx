@@ -85,10 +85,10 @@ export default function NotificationSettingsPage() {
           .single();
 
         if (profile?.notification_preferences) {
-          setPreferences({
-            ...preferences,
+          setPreferences((prev) => ({
+            ...prev,
             ...profile.notification_preferences,
-          });
+          }));
         }
       } catch (error) {
         console.error('Error fetching preferences:', error);
