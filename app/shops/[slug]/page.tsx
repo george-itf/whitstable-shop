@@ -259,11 +259,11 @@ const mockShops: Record<string, Shop & { category: Category; reviews: Review[] }
 };
 
 interface ShopPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default async function ShopPage({ params }: ShopPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   const shop = mockShops[slug];
 
   if (!shop) {
