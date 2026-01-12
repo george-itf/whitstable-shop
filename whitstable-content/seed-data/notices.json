@@ -1,0 +1,52 @@
+[
+  {
+    "message": "High tide warning: The Street underwater from 2pm today",
+    "is_active": true,
+    "expires_at": "2026-01-12T18:00:00Z"
+  },
+  {
+    "message": "Gorrell Tank car park closed Monday for resurfacing",
+    "is_active": false,
+    "expires_at": "2026-01-20T00:00:00Z"
+  },
+  {
+    "message": "Harbour Market this Saturday 9am–4pm — extra stalls!",
+    "is_active": false,
+    "expires_at": "2026-01-18T00:00:00Z"
+  },
+  {
+    "message": "Road closure: High Street between Oxford St and Harbour St, Sunday 8am-2pm for filming",
+    "is_active": false,
+    "expires_at": "2026-02-01T00:00:00Z"
+  },
+  {
+    "message": "Oyster Festival 2026 dates announced — July 25th to August 1st",
+    "is_active": false,
+    "expires_at": "2026-03-01T00:00:00Z"
+  },
+  {
+    "message": "Beach clean this Sunday 10am — meet at Tankerton Slopes",
+    "is_active": false,
+    "expires_at": "2026-01-26T00:00:00Z"
+  },
+  {
+    "message": "Storm warning: Please secure garden furniture and beach equipment",
+    "is_active": false,
+    "expires_at": "2026-02-10T00:00:00Z"
+  },
+  {
+    "message": "New parking charges in effect from 1st February — see parking page for details",
+    "is_active": false,
+    "expires_at": "2026-02-15T00:00:00Z"
+  },
+  {
+    "message": "Half term activities at Whitstable Castle — see events page",
+    "is_active": false,
+    "expires_at": "2026-02-22T00:00:00Z"
+  },
+  {
+    "message": "The Old Neptune closed for essential maintenance 3-5 March",
+    "is_active": false,
+    "expires_at": "2026-03-06T00:00:00Z"
+  }
+]

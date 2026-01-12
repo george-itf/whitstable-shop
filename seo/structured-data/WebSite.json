@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "whitstable.shop",
+  "alternateName": "Whitstable Shop Directory",
+  "url": "https://whitstable.shop",
+  "description": "Discover independent shops, restaurants, and local events in Whitstable, Kent. Your complete guide to the high street.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "whitstable.shop",
+    "url": "https://whitstable.shop",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://whitstable.shop/logo.png",
+      "width": "512",
+      "height": "512"
+    }
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://whitstable.shop/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "inLanguage": "en-GB",
+  "copyrightYear": "2024",
+  "keywords": [
+    "Whitstable",
+    "Whitstable shops",
+    "Whitstable restaurants",
+    "Kent shopping",
+    "independent shops",
+    "local businesses",
+    "Whitstable events",
+    "Whitstable tide times"
+  ]
+}

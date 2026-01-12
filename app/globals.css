@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-nunito), 'Nunito', sans-serif;
+  }
+}
+
+@layer components {
+  .mobile-wrapper {
+    @apply max-w-[430px] mx-auto bg-white min-h-screen relative;
+  }
+
+  .card {
+    @apply bg-white rounded-card border border-grey-light shadow-card;
+  }
+
+  .card-hover {
+    @apply transition-shadow duration-200 hover:shadow-card-hover;
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded-button font-semibold transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-sky text-white hover:bg-sky/90;
+  }
+
+  .btn-secondary {
+    @apply bg-grey-light text-ink hover:bg-grey-light/80;
+  }
+
+  .btn-coral {
+    @apply bg-coral text-white hover:bg-coral/90;
+  }
+
+  .pill {
+    @apply px-3 py-1 rounded-pill text-sm font-medium;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 border border-grey-light rounded-button focus:outline-none focus:ring-2 focus:ring-sky focus:border-transparent;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-ink lowercase;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Mapbox overrides */
+.mapboxgl-map {
+  font-family: var(--font-nunito), 'Nunito', sans-serif !important;
+}
+
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mapboxgl-popup-close-button {
+  font-size: 18px !important;
+  padding: 4px 8px !important;
+}
+
+/* Animation for pulsing dot */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
