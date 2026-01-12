@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const hubs = [
+  // Row 1: Core discovery
   {
     href: '/map',
     label: 'map',
@@ -68,6 +69,7 @@ const hubs = [
     ),
     color: 'bg-green-light text-green',
   },
+  // Row 2: Engagement
   {
     href: '/info',
     label: 'local info',
@@ -90,12 +92,53 @@ const hubs = [
     ),
     color: 'bg-yellow/10 text-yellow',
   },
+  {
+    href: '/offers',
+    label: 'deals',
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        <line x1="7" y1="7" x2="7.01" y2="7" />
+      </svg>
+    ),
+    color: 'bg-coral-light text-coral',
+  },
+  {
+    href: '/ask',
+    label: 'ask',
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+    color: 'bg-sky-light text-sky',
+  },
 ];
 
 export default function HubButtons() {
   return (
     <div className="px-4 py-6">
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-4">
         {hubs.map((hub) => (
           <Link
             key={hub.href}

@@ -85,36 +85,83 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
               </button>
             </div>
 
-            <nav className="p-4">
-              <ul className="space-y-1">
-                <MenuItem href="/" onClick={() => setIsMenuOpen(false)}>
-                  Home
-                </MenuItem>
+            <nav className="p-4 overflow-y-auto max-h-[calc(100vh-60px)]">
+              {/* DISCOVER */}
+              <MenuSection title="Discover">
                 <MenuItem href="/shops" onClick={() => setIsMenuOpen(false)}>
                   All Shops
-                </MenuItem>
-                <MenuItem href="/map" onClick={() => setIsMenuOpen(false)}>
-                  Map
                 </MenuItem>
                 <MenuItem href="/events" onClick={() => setIsMenuOpen(false)}>
                   What&apos;s On
                 </MenuItem>
+                <MenuItem href="/map" onClick={() => setIsMenuOpen(false)}>
+                  Map
+                </MenuItem>
                 <MenuItem href="/info" onClick={() => setIsMenuOpen(false)}>
                   Local Info
                 </MenuItem>
-                <div className="border-t border-grey-light my-3" />
+                <MenuItem href="/offers" onClick={() => setIsMenuOpen(false)}>
+                  Deals &amp; Offers
+                </MenuItem>
+              </MenuSection>
+
+              {/* COMMUNITY */}
+              <MenuSection title="Community">
+                <MenuItem href="/community" onClick={() => setIsMenuOpen(false)}>
+                  Community Hub
+                </MenuItem>
+                <MenuItem href="/awards" onClick={() => setIsMenuOpen(false)}>
+                  Awards
+                </MenuItem>
+                <MenuItem href="/ask" onClick={() => setIsMenuOpen(false)}>
+                  Ask a Local
+                </MenuItem>
+                <MenuItem href="/photos" onClick={() => setIsMenuOpen(false)}>
+                  Photos
+                </MenuItem>
+                <MenuItem href="/leaderboard" onClick={() => setIsMenuOpen(false)}>
+                  Leaderboard
+                </MenuItem>
+              </MenuSection>
+
+              {/* ACCOUNT */}
+              <MenuSection title="Account">
+                <MenuItem href="/settings/profile" onClick={() => setIsMenuOpen(false)}>
+                  Profile
+                </MenuItem>
+                <MenuItem href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                  Dashboard
+                </MenuItem>
+                <div className="border-t border-grey-light my-2" />
                 <MenuItem href="/auth/login" onClick={() => setIsMenuOpen(false)}>
                   Log In
                 </MenuItem>
                 <MenuItem href="/auth/signup" onClick={() => setIsMenuOpen(false)}>
                   Sign Up
                 </MenuItem>
-              </ul>
+              </MenuSection>
             </nav>
           </div>
         </div>
       )}
     </>
+  );
+}
+
+function MenuSection({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mb-4">
+      <h3 className="text-xs font-semibold uppercase text-grey px-3 mb-1">
+        {title}
+      </h3>
+      <ul className="space-y-1">{children}</ul>
+    </div>
   );
 }
 

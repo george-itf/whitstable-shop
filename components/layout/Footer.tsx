@@ -12,8 +12,9 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Links */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Links - 2x2 Grid */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+          {/* Explore */}
           <div>
             <h4 className="font-semibold mb-2 text-sm uppercase text-grey">
               Explore
@@ -23,8 +24,25 @@ export default function Footer() {
               <FooterLink href="/map">Map</FooterLink>
               <FooterLink href="/events">What&apos;s On</FooterLink>
               <FooterLink href="/info">Local Info</FooterLink>
+              <FooterLink href="/offers">Deals</FooterLink>
             </ul>
           </div>
+
+          {/* Community */}
+          <div>
+            <h4 className="font-semibold mb-2 text-sm uppercase text-grey">
+              Community
+            </h4>
+            <ul className="space-y-1">
+              <FooterLink href="/community">Community Hub</FooterLink>
+              <FooterLink href="/awards">Awards</FooterLink>
+              <FooterLink href="/ask">Ask a Local</FooterLink>
+              <FooterLink href="/photos">Photos</FooterLink>
+              <FooterLink href="/report">Report Issue</FooterLink>
+            </ul>
+          </div>
+
+          {/* Account */}
           <div>
             <h4 className="font-semibold mb-2 text-sm uppercase text-grey">
               Account
@@ -34,6 +52,18 @@ export default function Footer() {
               <FooterLink href="/auth/signup">Sign Up</FooterLink>
               <FooterLink href="/saved">Saved</FooterLink>
               <FooterLink href="/dashboard">Dashboard</FooterLink>
+              <FooterLink href="/settings/profile">Settings</FooterLink>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="font-semibold mb-2 text-sm uppercase text-grey">
+              Legal
+            </h4>
+            <ul className="space-y-1">
+              <FooterLink href="/privacy">Privacy Policy</FooterLink>
+              <FooterLink href="/terms">Terms of Service</FooterLink>
             </ul>
           </div>
         </div>
