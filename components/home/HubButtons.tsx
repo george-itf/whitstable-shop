@@ -24,6 +24,7 @@ const hubs = [
       </svg>
     ),
     color: 'bg-sky-light text-sky',
+    hoverColor: 'group-hover:bg-sky group-hover:text-white',
   },
   {
     href: '/events',
@@ -47,6 +48,7 @@ const hubs = [
       </svg>
     ),
     color: 'bg-coral-light text-coral',
+    hoverColor: 'group-hover:bg-coral group-hover:text-white',
   },
   {
     href: '/shops',
@@ -68,6 +70,7 @@ const hubs = [
       </svg>
     ),
     color: 'bg-green-light text-green',
+    hoverColor: 'group-hover:bg-green group-hover:text-white',
   },
   // Row 2: Engagement
   {
@@ -90,7 +93,8 @@ const hubs = [
         <line x1="12" y1="8" x2="12.01" y2="8" />
       </svg>
     ),
-    color: 'bg-yellow/10 text-yellow',
+    color: 'bg-yellow-light text-yellow',
+    hoverColor: 'group-hover:bg-yellow group-hover:text-white',
   },
   {
     href: '/offers',
@@ -112,10 +116,11 @@ const hubs = [
       </svg>
     ),
     color: 'bg-coral-light text-coral',
+    hoverColor: 'group-hover:bg-coral group-hover:text-white',
   },
   {
     href: '/ask',
-    label: 'ask',
+    label: 'ask locals',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -132,28 +137,32 @@ const hubs = [
       </svg>
     ),
     color: 'bg-sky-light text-sky',
+    hoverColor: 'group-hover:bg-sky group-hover:text-white',
   },
 ];
 
 export default function HubButtons() {
   return (
     <div className="px-4 py-6">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-3">
         {hubs.map((hub) => (
           <Link
             key={hub.href}
             href={hub.href}
-            className="flex flex-col items-center gap-2"
+            className="group flex flex-col items-center gap-2 tap-effect"
           >
             <div
               className={cn(
-                'w-14 h-14 rounded-card flex items-center justify-center',
-                hub.color
+                'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200',
+                hub.color,
+                hub.hoverColor
               )}
             >
               {hub.icon}
             </div>
-            <span className="text-xs font-medium text-ink">{hub.label}</span>
+            <span className="text-xs font-semibold text-ink group-hover:text-grey-dark transition-colors">
+              {hub.label}
+            </span>
           </Link>
         ))}
       </div>

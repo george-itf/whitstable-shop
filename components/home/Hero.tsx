@@ -5,10 +5,20 @@ import { useState, useEffect } from 'react';
 
 export default function Hero() {
   const [tideInfo, setTideInfo] = useState({ status: 'rising', time: '2:34pm' });
+  const [greeting, setGreeting] = useState('hey there');
 
   useEffect(() => {
-    // Mock tide data - in production this would come from an API
+    // Dynamic greeting based on time of day
     const hour = new Date().getHours();
+    if (hour < 12) {
+      setGreeting('good morning');
+    } else if (hour < 17) {
+      setGreeting('good afternoon');
+    } else {
+      setGreeting('good evening');
+    }
+
+    // Mock tide data - in production this would come from an API
     setTideInfo({
       status: hour % 12 < 6 ? 'rising' : 'falling',
       time: hour % 12 < 6 ? 'high at 3:45pm' : 'low at 9:20pm',
@@ -16,13 +26,13 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="bg-sky relative overflow-hidden">
+    <div className="bg-gradient-to-br from-sky to-sky-dark relative overflow-hidden">
       <div className="px-4 pt-4 pb-8">
         {/* Header with logo and menu */}
         <div className="flex items-center justify-between mb-6">
-          <span className="text-white font-bold text-xl">whitstable.shop</span>
+          <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
           <button
-            className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors active:scale-95"
             aria-label="Open menu"
           >
             <svg
@@ -47,28 +57,31 @@ export default function Hero() {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <h1 className="text-white text-2xl font-bold mb-2">
-              hey there, local
+              {greeting}, local
             </h1>
             <p className="text-white/80 text-sm mb-4">
               discover what&apos;s happening in whitstable
             </p>
 
-            {/* Tide widget */}
-            <div className="inline-flex items-center gap-2 bg-white/20 rounded-pill px-3 py-1.5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-white"
-              >
-                <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-5a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2z" />
-              </svg>
+            {/* Tide widget - enhanced with live indicator */}
+            <div className="inline-flex items-center gap-2 bg-white/20 rounded-pill px-3 py-1.5 backdrop-blur-sm">
+              <div className="relative">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-white"
+                >
+                  <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-5a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2z" />
+                </svg>
+                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green rounded-full" />
+              </div>
               <span className="text-white text-sm font-medium">
                 tide {tideInfo.status} · {tideInfo.time}
               </span>
@@ -82,6 +95,7 @@ export default function Hero() {
               alt="Whitstable seagull mascot"
               fill
               className="object-contain"
+              priority
             />
           </div>
         </div>
