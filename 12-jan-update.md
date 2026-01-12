@@ -9,8 +9,8 @@
 ## Current Status
 
 **Phase:** 6 - Replace Mock Data with Supabase Queries
-**Status:** In Progress (3/19 pages done)
-**Next Action:** Continue updating remaining pages with real API data
+**Status:** In Progress (8/19 pages done - 42%)
+**Next Action:** Update home page, search, awards, admin, and settings pages
 
 **Completed Phases:**
 - [x] Phase 0: Database seed script
@@ -19,7 +19,7 @@
 - [x] Phase 3: Create missing API routes (15 new endpoints)
 - [x] Phase 4: Implement Photos feature (5 pages)
 - [x] Phase 5: Implement Ask a Local feature (2 pages)
-- [ ] Phase 6: Replace mock data (3/19 pages done)
+- [ ] Phase 6: Replace mock data (8/19 pages done)
 - [ ] Phase 7: Production hardening
 
 ---
@@ -322,20 +322,46 @@
    - Charity events
    - Dynamic stats
 
+4. `/app/shops/[slug]/page.tsx` - Server-side fetch from Supabase
+   - Shop with category and reviews
+   - View count increment
+   - Dynamic SEO metadata
+
+5. `/app/map/page.tsx` - Now fetches from `/api/shops` and `/api/categories`
+   - Real shop markers
+   - Category filtering
+   - Loading states
+
+6. `/app/leaderboard/page.tsx` - Now fetches from `/api/leaderboard`
+   - Period selection (week/month/all-time)
+   - Loading skeleton
+
+7. `/app/saved/page.tsx` - Now fetches from `/api/saved`
+   - Authentication check
+   - Toggle save functionality
+   - Sign-in prompt for guests
+
+8. `/app/offers/page.tsx` - Now fetches from `/api/offers`
+   - Offer type filtering
+   - Dynamic stats
+
 **Pages remaining for Phase 6:**
-- `/app/shops/[slug]/page.tsx`
-- `/app/map/page.tsx`
 - `/app/search/page.tsx`
-- `/app/offers/page.tsx`
-- `/app/saved/page.tsx`
 - `/app/awards/page.tsx`
-- `/app/leaderboard/page.tsx`
 - `/app/page.tsx` (home)
 - `/components/home/DealsPreview.tsx`
 - `/app/dashboard/page.tsx`
 - `/app/admin/*` pages
 - `/app/settings/*` pages
 
-**Note:** Core user-facing pages (shops, events, community) updated first. Admin and settings pages can be done in next session.
+**Phase 6 Progress:** 8/19 pages done (42%)
+
+---
+
+### Entry 15 - 12 Jan 2026 - Committing Phase 6 Progress
+
+**Committing partial Phase 6:**
+- 8 pages updated with real API data
+- All core user-facing pages now use Supabase
 
 ---
