@@ -183,7 +183,7 @@ export default function PhotoSubmitPage() {
       {/* Submit Form */}
       <PhotoSubmitForm
         shops={shops}
-        competitionMonth={competition?.competition_month || currentMonth}
+        competitionMonth={competition?.month || currentMonth}
       />
     </div>
   );

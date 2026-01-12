@@ -38,12 +38,12 @@ export async function GET(request: Request, { params }: RouteParams) {
       console.error('Answers GET error:', answersError);
     }
 
-    // Increment view count
-    await supabase
+    // Increment view count (fire-and-forget)
+    supabase
       .from('questions')
       .update({ view_count: (question.view_count || 0) + 1 })
       .eq('id', id)
-      .catch(() => {});
+      .then(() => {});
 
     return NextResponse.json({
       ...question,

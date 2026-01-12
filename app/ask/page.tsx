@@ -155,11 +155,10 @@ export default function AskPage() {
           icon={MessageCircle}
           title="No questions yet"
           description="Be the first to ask a question about Whitstable!"
-          action={
-            <Button onClick={() => setShowAskForm(true)} leftIcon={<HelpCircle className="h-4 w-4" />}>
-              Ask a Question
-            </Button>
-          }
+          action={{
+            label: 'Ask a Question',
+            onClick: () => setShowAskForm(true),
+          }}
         />
       ) : (
         <div className="space-y-4">

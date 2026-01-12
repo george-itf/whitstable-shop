@@ -63,7 +63,13 @@ export default function AdminReviewsPage() {
           .eq('status', 'pending')
           .order('created_at', { ascending: false });
 
-        setReviews(pendingReviews || []);
+        // Transform data to handle Supabase's join return type
+        const transformedReviews = (pendingReviews || []).map((review) => ({
+          ...review,
+          shop: Array.isArray(review.shop) ? review.shop[0] : review.shop,
+        }));
+
+        setReviews(transformedReviews);
       } catch (error) {
         console.error('Error fetching pending reviews:', error);
       } finally {

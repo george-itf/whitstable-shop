@@ -83,7 +83,7 @@ export default function LeaderboardPage() {
       </Card>
 
       {/* Tabs */}
-      <Tabs defaultValue="thisWeek" onValueChange={(v) => setPeriod(v as typeof period)}>
+      <Tabs defaultValue="thisWeek" onChange={(v) => setPeriod(v as typeof period)}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <TabsList>
             <TabsTrigger value="week">This Week</TabsTrigger>

@@ -141,8 +141,8 @@ export default function ProfileSettingsPage() {
     );
   }
 
-  const badgeInfo = contributions
-    ? USER_BADGES[contributions.badge]
+  const badgeInfo = contributions?.badge && contributions.badge in USER_BADGES
+    ? USER_BADGES[contributions.badge as keyof typeof USER_BADGES]
     : USER_BADGES['newcomer'];
 
   const memberSince = new Date(user.created_at).toLocaleDateString('en-GB', {

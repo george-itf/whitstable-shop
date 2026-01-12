@@ -35,8 +35,8 @@ export default function DealsPreview() {
 
   const formatValidity = (offer: OfferWithShop) => {
     if (offer.is_ongoing) return 'Ongoing';
-    if (offer.ends_at) {
-      const endDate = new Date(offer.ends_at);
+    if (offer.valid_until) {
+      const endDate = new Date(offer.valid_until);
       const now = new Date();
       const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
       if (daysLeft <= 0) return 'Ending today';

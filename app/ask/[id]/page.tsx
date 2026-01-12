@@ -67,10 +67,8 @@ export default function QuestionDetailPage() {
           }
         }
 
-        // Increment view count
-        await supabase.rpc('increment_view_count', { question_id: questionId }).catch(() => {
-          // Ignore if RPC doesn't exist
-        });
+        // Increment view count (fire-and-forget)
+        supabase.rpc('increment_view_count', { question_id: questionId }).then(() => {});
       } catch (error) {
         console.error('Error fetching question:', error);
       } finally {

@@ -93,10 +93,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save shop' }, { status: 500 });
     }
 
-    // Increment save count
-    await supabase.rpc('increment_save_count', { p_shop_id: shop_id }).catch(() => {
-      // Ignore if RPC doesn't exist
-    });
+    // Increment save count (fire-and-forget)
+    supabase.rpc('increment_save_count', { p_shop_id: shop_id }).then(() => {});
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
@@ -136,10 +134,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Failed to unsave shop' }, { status: 500 });
     }
 
-    // Decrement save count
-    await supabase.rpc('decrement_save_count', { p_shop_id: shopId }).catch(() => {
-      // Ignore if RPC doesn't exist
-    });
+    // Decrement save count (fire-and-forget)
+    supabase.rpc('decrement_save_count', { p_shop_id: shopId }).then(() => {});
 
     return NextResponse.json({ success: true });
   } catch (error) {

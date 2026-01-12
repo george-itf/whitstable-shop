@@ -74,15 +74,23 @@ export async function POST(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Failed to submit answer' }, { status: 500 });
     }
 
-    // Update answer count and status
-    await supabase
-      .from('questions')
-      .update({
-        answer_count: (await supabase.from('answers').select('id', { count: 'exact' }).eq('question_id', questionId)).count || 1,
-        status: 'answered',
-      })
-      .eq('id', questionId)
-      .catch(() => {});
+    // Update answer count and status (fire-and-forget, ignore errors)
+    try {
+      const { count } = await supabase
+        .from('answers')
+        .select('id', { count: 'exact', head: true })
+        .eq('question_id', questionId);
+
+      await supabase
+        .from('questions')
+        .update({
+          answer_count: count || 1,
+          status: 'answered',
+        })
+        .eq('id', questionId);
+    } catch {
+      // Ignore errors updating count
+    }
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
