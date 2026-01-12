@@ -8,9 +8,19 @@
 
 ## Current Status
 
-**Phase:** 0 - Database Seed Script
-**Status:** Starting
-**Next Action:** Create `/database/seed.ts` with all mock data
+**Phase:** 6 - Replace Mock Data with Supabase Queries
+**Status:** In Progress (3/19 pages done)
+**Next Action:** Continue updating remaining pages with real API data
+
+**Completed Phases:**
+- [x] Phase 0: Database seed script
+- [x] Phase 1: Security fixes (middleware, validation, auth)
+- [x] Phase 2: Error handling & loading states
+- [x] Phase 3: Create missing API routes (15 new endpoints)
+- [x] Phase 4: Implement Photos feature (5 pages)
+- [x] Phase 5: Implement Ask a Local feature (2 pages)
+- [ ] Phase 6: Replace mock data (3/19 pages done)
+- [ ] Phase 7: Production hardening
 
 ---
 
@@ -287,5 +297,45 @@
 **Committing:**
 - Photos feature (5 pages)
 - Ask a Local feature (2 pages)
+
+---
+
+### Entry 14 - 12 Jan 2026 - Phase 6 Progress
+
+**What:** Replace mock data with Supabase queries
+**Status:** In progress
+
+**Pages updated so far:**
+
+1. `/app/shops/page.tsx` - Now fetches from `/api/shops` and `/api/categories`
+   - Category filtering
+   - Loading skeleton
+   - Real data from Supabase
+
+2. `/app/events/page.tsx` - Now fetches from `/api/events`
+   - Upcoming events only
+   - Loading skeleton
+   - Empty state
+
+3. `/app/community/page.tsx` - Now fetches from `/api/charities`
+   - Featured charity
+   - Charity events
+   - Dynamic stats
+
+**Pages remaining for Phase 6:**
+- `/app/shops/[slug]/page.tsx`
+- `/app/map/page.tsx`
+- `/app/search/page.tsx`
+- `/app/offers/page.tsx`
+- `/app/saved/page.tsx`
+- `/app/awards/page.tsx`
+- `/app/leaderboard/page.tsx`
+- `/app/page.tsx` (home)
+- `/components/home/DealsPreview.tsx`
+- `/app/dashboard/page.tsx`
+- `/app/admin/*` pages
+- `/app/settings/*` pages
+
+**Note:** Core user-facing pages (shops, events, community) updated first. Admin and settings pages can be done in next session.
 
 ---
