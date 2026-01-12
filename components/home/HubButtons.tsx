@@ -69,6 +69,7 @@ const hubs = [
     ),
     color: 'bg-green-light text-green',
   },
+  // Row 2: Engagement
   {
     href: '/info',
     label: 'local info',
@@ -91,7 +92,6 @@ const hubs = [
     ),
     color: 'bg-yellow/10 text-yellow',
   },
-  // Row 2: Community & engagement
   {
     href: '/offers',
     label: 'deals',
@@ -114,51 +114,6 @@ const hubs = [
     color: 'bg-coral-light text-coral',
   },
   {
-    href: '/community',
-    label: 'community',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-    color: 'bg-sky-light text-sky',
-  },
-  {
-    href: '/photos',
-    label: 'photos',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <polyline points="21 15 16 10 5 21" />
-      </svg>
-    ),
-    color: 'bg-green-light text-green',
-  },
-  {
     href: '/ask',
     label: 'ask',
     icon: (
@@ -176,14 +131,14 @@ const hubs = [
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
     ),
-    color: 'bg-yellow/10 text-yellow',
+    color: 'bg-sky-light text-sky',
   },
 ];
 
 export default function HubButtons() {
   return (
     <div className="px-4 py-6">
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-4">
         {hubs.map((hub) => (
           <Link
             key={hub.href}
