@@ -5,8 +5,10 @@ import Hero from '@/components/home/Hero';
 import Notice from '@/components/home/Notice';
 import HubButtons from '@/components/home/HubButtons';
 import TrendingList from '@/components/home/TrendingList';
+import DealsPreview from '@/components/home/DealsPreview';
 import MapPreview from '@/components/home/MapPreview';
 import EventsScroll from '@/components/home/EventsScroll';
+import CommunitySection from '@/components/home/CommunitySection';
 import FeedList from '@/components/home/FeedList';
 import FeaturedShop from '@/components/home/FeaturedShop';
 import LocalInfoGrid from '@/components/home/LocalInfoGrid';
@@ -141,11 +143,17 @@ export default function HomePage() {
       {/* Trending section */}
       <TrendingList shops={mockTrendingShops} />
 
+      {/* Deals preview */}
+      <DealsPreview />
+
       {/* Map preview */}
       <MapPreview shopCount={47} />
 
       {/* Events scroll */}
       <EventsScroll events={mockEvents} />
+
+      {/* Community section */}
+      <CommunitySection />
 
       {/* Feed list */}
       <FeedList items={mockFeedItems} />
