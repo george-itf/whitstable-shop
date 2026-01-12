@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import Footer from '@/components/layout/Footer';
@@ -7,59 +10,10 @@ import HubButtons from '@/components/home/HubButtons';
 import EventsScroll from '@/components/home/EventsScroll';
 import LocalInfoGrid from '@/components/home/LocalInfoGrid';
 import CTABanner from '@/components/home/CTABanner';
+import type { Event } from '@/types';
 
-// Mock data - will be replaced with Supabase data
-const mockNotice = {
-  message: 'Oyster Festival this weekend! Road closures in effect.',
-  link: '/info/oyster-festival',
-};
-
-const mockEvents = [
-  {
-    id: '1',
-    shop_id: null,
-    title: 'Oyster Festival Opening',
-    description: 'Annual celebration of Whitstable oysters',
-    date: '2025-07-26',
-    time_start: '10:00',
-    time_end: '18:00',
-    location: 'Harbour',
-    is_recurring: false,
-    recurrence_rule: null,
-    status: 'approved' as const,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    shop_id: null,
-    title: 'Live Music at The Old Neptune',
-    description: 'Weekly live music night',
-    date: '2025-07-28',
-    time_start: '19:00',
-    time_end: '22:00',
-    location: 'The Old Neptune',
-    is_recurring: true,
-    recurrence_rule: 'weekly',
-    status: 'approved' as const,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    shop_id: null,
-    title: 'Art Walk',
-    description: 'Monthly gallery trail',
-    date: '2025-08-02',
-    time_start: '14:00',
-    time_end: '17:00',
-    location: 'Town Centre',
-    is_recurring: true,
-    recurrence_rule: 'monthly',
-    status: 'approved' as const,
-    created_at: new Date().toISOString(),
-  },
-];
-
-const mockLocalInfo = [
+// Static local info - these don't change often
+const localInfoItems = [
   { id: '1', title: 'Bin Days', slug: 'bin-collection', content: null, icon: null, display_order: 1, updated_at: new Date().toISOString() },
   { id: '2', title: 'Tide Times', slug: 'tide-times', content: null, icon: null, display_order: 2, updated_at: new Date().toISOString() },
   { id: '3', title: 'Oyster Festival', slug: 'oyster-festival', content: null, icon: null, display_order: 3, updated_at: new Date().toISOString() },
@@ -69,22 +23,75 @@ const mockLocalInfo = [
 ];
 
 export default function HomePage() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [notice, setNotice] = useState<{ message: string; link: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchHomeData() {
+      setIsLoading(true);
+      try {
+        // Fetch upcoming events
+        const eventsRes = await fetch('/api/events?upcoming=true&limit=5');
+        if (eventsRes.ok) {
+          const eventsData = await eventsRes.json();
+          setEvents(eventsData);
+        }
+
+        // Check for active notice (could be from API in future)
+        // For now, check if there's an upcoming big event
+        const now = new Date();
+        const oysterFestival = new Date('2025-07-26');
+        const daysUntilFestival = Math.ceil((oysterFestival.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilFestival > 0 && daysUntilFestival <= 14) {
+          setNotice({
+            message: `Oyster Festival in ${daysUntilFestival} days! Check road closures.`,
+            link: '/info/oyster-festival',
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching home data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchHomeData();
+  }, []);
+
   return (
     <MobileWrapper>
       {/* Hero section */}
       <Hero />
 
       {/* Notice bar */}
-      <Notice message={mockNotice.message} link={mockNotice.link} />
+      {notice && <Notice message={notice.message} link={notice.link} />}
 
       {/* Hub buttons - primary navigation */}
       <HubButtons />
 
       {/* Events - what's happening now */}
-      <EventsScroll events={mockEvents} />
+      {isLoading ? (
+        <div className="px-4 py-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-6 bg-grey-light rounded w-24 animate-pulse" />
+            <div className="h-4 bg-grey-light rounded w-16 animate-pulse" />
+          </div>
+          <div className="flex gap-4 overflow-hidden">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-64">
+                <div className="h-32 bg-grey-light rounded-lg animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : events.length > 0 ? (
+        <EventsScroll events={events} />
+      ) : null}
 
       {/* Local info grid - practical information */}
-      <LocalInfoGrid items={mockLocalInfo} />
+      <LocalInfoGrid items={localInfoItems} />
 
       {/* CTA banner - business signup */}
       <CTABanner />

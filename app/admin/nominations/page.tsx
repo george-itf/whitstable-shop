@@ -1,51 +1,76 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
-// Mock nominations - will be replaced with Supabase data
-const mockNominations = [
-  {
-    id: '1',
-    category: 'hospitality_star',
-    nominee_name: 'Sarah',
-    nominee_business: 'The Forge',
-    reason: 'Always goes above and beyond. Remembered my coffee order after just one visit!',
-    nominator_name: 'John D.',
-    award_month: '2026-01',
-    status: 'pending',
-    created_at: '2026-01-10T10:30:00Z',
-  },
-  {
-    id: '2',
-    category: 'community_hero',
-    nominee_name: 'Mike Thompson',
-    nominee_business: null,
-    reason: 'Organised the beach clean-up last weekend. Over 50 people showed up!',
-    nominator_name: 'Lisa M.',
-    award_month: '2026-01',
-    status: 'pending',
-    created_at: '2026-01-09T14:20:00Z',
-  },
-  {
-    id: '3',
-    category: 'hospitality_star',
-    nominee_name: 'Tom at Wheelers',
-    nominee_business: 'Wheelers Oyster Bar',
-    reason: 'Made our anniversary dinner so special. Truly exceptional service.',
-    nominator_name: 'Emma R.',
-    award_month: '2026-01',
-    status: 'pending',
-    created_at: '2026-01-08T09:15:00Z',
-  },
-];
-
-type Nomination = typeof mockNominations[0];
+interface Nomination {
+  id: string;
+  category: 'hospitality_star' | 'community_hero';
+  nominee_name: string;
+  nominee_business: string | null;
+  reason: string;
+  nominator_name: string;
+  award_month: string;
+  status: string;
+  rank: number | null;
+  created_at: string;
+}
 
 export default function AdminNominationsPage() {
-  const [nominations] = useState<Nomination[]>(mockNominations);
+  const router = useRouter();
+  const [nominations, setNominations] = useState<Nomination[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [filter, setFilter] = useState<'all' | 'hospitality_star' | 'community_hero'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'winner'>('pending');
+
+  useEffect(() => {
+    async function fetchNominations() {
+      try {
+        const supabase = createClient();
+
+        // Check authentication and admin role
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          router.push('/login?redirect=/admin/nominations');
+          return;
+        }
+
+        // Check if admin
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile?.role !== 'admin') {
+          setIsAdmin(false);
+          setIsLoading(false);
+          return;
+        }
+
+        setIsAdmin(true);
+
+        // Fetch nominations
+        const res = await fetch('/api/nominations');
+        if (res.ok) {
+          const data = await res.json();
+          setNominations(data);
+        }
+      } catch (error) {
+        console.error('Error fetching nominations:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchNominations();
+  }, [router]);
 
   const filteredNominations = nominations.filter((nom) => {
     if (filter !== 'all' && nom.category !== filter) return false;
@@ -53,17 +78,87 @@ export default function AdminNominationsPage() {
     return true;
   });
 
-  const handleMakeWinner = (id: string, rank: number) => {
-    // TODO: Implement with Supabase
-    console.log('Make winner:', id, 'rank:', rank);
-    alert(`Made nomination ${id} a winner with rank ${rank}. (Demo mode)`);
+  const handleMakeWinner = async (id: string, rank: number) => {
+    try {
+      const res = await fetch('/api/nominations', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action: 'make_winner', rank }),
+      });
+
+      if (res.ok) {
+        setNominations(
+          nominations.map((nom) =>
+            nom.id === id ? { ...nom, status: 'winner', rank } : nom
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error making winner:', error);
+    }
   };
 
-  const handleReject = (id: string) => {
-    // TODO: Implement with Supabase
-    console.log('Reject:', id);
-    alert(`Rejected nomination ${id}. (Demo mode)`);
+  const handleReject = async (id: string) => {
+    try {
+      const res = await fetch('/api/nominations', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+
+      if (res.ok) {
+        setNominations(nominations.filter((nom) => nom.id !== id));
+      }
+    } catch (error) {
+      console.error('Error rejecting nomination:', error);
+    }
   };
+
+  const currentMonthLabel = new Date().toLocaleDateString('en-GB', {
+    month: 'long',
+    year: 'numeric',
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="bg-white border-b px-4 py-4">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div>
+              <Link href="/admin" className="text-sky text-sm">
+                ← Back to Admin
+              </Link>
+              <h1 className="text-xl font-bold text-ink">Nominations</h1>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-xl p-5 shadow-sm animate-pulse">
+                <div className="h-5 bg-gray-200 rounded w-1/4 mb-3" />
+                <div className="h-6 bg-gray-200 rounded w-1/3 mb-2" />
+                <div className="h-16 bg-gray-200 rounded w-full mb-4" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isAdmin === false) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-grey mb-4">You don&apos;t have permission to view this page.</p>
+          <Link href="/" className="text-sky">
+            Go home
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -71,11 +166,13 @@ export default function AdminNominationsPage() {
       <div className="bg-white border-b px-4 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
-            <Link href="/admin" className="text-sky text-sm">← Back to Admin</Link>
+            <Link href="/admin" className="text-sky text-sm">
+              ← Back to Admin
+            </Link>
             <h1 className="text-xl font-bold text-ink">Nominations</h1>
           </div>
           <div className="text-right">
-            <div className="text-sm text-ink/60">January 2026</div>
+            <div className="text-sm text-ink/60">{currentMonthLabel}</div>
             <div className="text-sm font-medium">{nominations.length} nominations</div>
           </div>
         </div>
@@ -115,25 +212,35 @@ export default function AdminNominationsPage() {
               <div key={nom.id} className="bg-white rounded-xl p-5 shadow-sm">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                      nom.category === 'hospitality_star'
-                        ? 'bg-coral/10 text-coral'
-                        : 'bg-sky/10 text-sky'
-                    }`}>
-                      {nom.category === 'hospitality_star' ? '⭐ Hospitality Star' : '🦸 Community Hero'}
+                    <span
+                      className={`inline-block px-2 py-1 text-xs rounded-full ${
+                        nom.category === 'hospitality_star'
+                          ? 'bg-coral/10 text-coral'
+                          : 'bg-sky/10 text-sky'
+                      }`}
+                    >
+                      {nom.category === 'hospitality_star'
+                        ? '⭐ Hospitality Star'
+                        : '🦸 Community Hero'}
                     </span>
-                    <span className={`ml-2 inline-block px-2 py-1 text-xs rounded-full ${
-                      nom.status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : nom.status === 'winner'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
+                    <span
+                      className={`ml-2 inline-block px-2 py-1 text-xs rounded-full ${
+                        nom.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : nom.status === 'winner'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-gray-100 text-gray-700'
+                      }`}
+                    >
                       {nom.status}
+                      {nom.rank && ` #${nom.rank}`}
                     </span>
                   </div>
                   <div className="text-xs text-ink/50">
-                    {new Date(nom.created_at).toLocaleDateString()}
+                    {new Date(nom.created_at).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                    })}
                   </div>
                 </div>
 
@@ -147,9 +254,7 @@ export default function AdminNominationsPage() {
                 <p className="text-ink/70 mt-2 mb-4">&ldquo;{nom.reason}&rdquo;</p>
 
                 <div className="flex items-center justify-between pt-3 border-t border-ink/10">
-                  <div className="text-sm text-ink/50">
-                    Nominated by {nom.nominator_name}
-                  </div>
+                  <div className="text-sm text-ink/50">Nominated by {nom.nominator_name}</div>
 
                   {nom.status === 'pending' && (
                     <div className="flex gap-2">

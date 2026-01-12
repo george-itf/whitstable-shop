@@ -1,53 +1,180 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import { createClient } from '@/lib/supabase/client';
 
-// Mock pending shops
-const mockPendingShops = [
-  {
-    id: '10',
-    name: 'The Cheese Box',
-    tagline: 'Artisan cheese shop',
-    category: 'Deli & Food',
-    submittedAt: '2025-01-10',
-    status: 'pending',
-  },
-  {
-    id: '11',
-    name: 'Seaside Pottery',
-    tagline: 'Handmade ceramics',
-    category: 'Gallery & Art',
-    submittedAt: '2025-01-09',
-    status: 'pending',
-  },
-  {
-    id: '12',
-    name: 'Neptune Coffee',
-    tagline: 'Specialty coffee roasters',
-    category: 'Café & Coffee',
-    submittedAt: '2025-01-08',
-    status: 'pending',
-  },
-];
+interface PendingShop {
+  id: string;
+  name: string;
+  tagline: string | null;
+  category: { name: string } | null;
+  created_at: string;
+  status: string;
+}
 
 export default function AdminShopsPage() {
-  const [shops, setShops] = useState(mockPendingShops);
+  const router = useRouter();
+  const [shops, setShops] = useState<PendingShop[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
-  const handleApprove = (id: string) => {
-    setShops(shops.filter((s) => s.id !== id));
-    // Would make API call to approve shop
+  useEffect(() => {
+    async function fetchPendingShops() {
+      try {
+        const supabase = createClient();
+
+        // Check authentication and admin role
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          router.push('/login?redirect=/admin/shops');
+          return;
+        }
+
+        // Check if admin
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile?.role !== 'admin') {
+          setIsAdmin(false);
+          setIsLoading(false);
+          return;
+        }
+
+        setIsAdmin(true);
+
+        // Fetch pending shops
+        const { data: pendingShops } = await supabase
+          .from('shops')
+          .select('id, name, tagline, created_at, status, category:categories(name)')
+          .eq('status', 'pending')
+          .order('created_at', { ascending: false });
+
+        setShops(pendingShops || []);
+      } catch (error) {
+        console.error('Error fetching pending shops:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchPendingShops();
+  }, [router]);
+
+  const handleApprove = async (id: string) => {
+    try {
+      const res = await fetch(`/api/shops/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'approved' }),
+      });
+
+      if (res.ok) {
+        setShops(shops.filter((s) => s.id !== id));
+      }
+    } catch (error) {
+      console.error('Error approving shop:', error);
+    }
   };
 
-  const handleReject = (id: string) => {
-    setShops(shops.filter((s) => s.id !== id));
-    // Would make API call to reject shop
+  const handleReject = async (id: string) => {
+    try {
+      const res = await fetch(`/api/shops/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'rejected' }),
+      });
+
+      if (res.ok) {
+        setShops(shops.filter((s) => s.id !== id));
+      }
+    } catch (error) {
+      console.error('Error rejecting shop:', error);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <MobileWrapper>
+        <div className="bg-coral px-4 py-4">
+          <div className="flex items-center gap-3">
+            <Link href="/admin" className="text-white">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <h1 className="text-white font-bold text-xl">approve shops</h1>
+          </div>
+        </div>
+        <div className="px-4 py-6 space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <div className="h-5 bg-grey-light rounded w-1/2 mb-2" />
+              <div className="h-4 bg-grey-light rounded w-3/4 mb-4" />
+              <div className="flex gap-3">
+                <div className="h-8 bg-grey-light rounded flex-1" />
+                <div className="h-8 bg-grey-light rounded flex-1" />
+              </div>
+            </Card>
+          ))}
+        </div>
+        <BottomNav />
+      </MobileWrapper>
+    );
+  }
+
+  if (isAdmin === false) {
+    return (
+      <MobileWrapper>
+        <div className="bg-coral px-4 py-4">
+          <div className="flex items-center gap-3">
+            <Link href="/admin" className="text-white">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <h1 className="text-white font-bold text-xl">approve shops</h1>
+          </div>
+        </div>
+        <div className="px-4 py-6 text-center py-12">
+          <p className="text-grey">You don&apos;t have permission to view this page.</p>
+        </div>
+        <BottomNav />
+      </MobileWrapper>
+    );
+  }
 
   return (
     <MobileWrapper>
@@ -103,12 +230,21 @@ export default function AdminShopsPage() {
                   <h3 className="font-bold text-ink">{shop.name}</h3>
                   <p className="text-sm text-grey">{shop.tagline}</p>
                 </div>
-                <Badge variant="yellow" size="sm">pending</Badge>
+                <Badge variant="yellow" size="sm">
+                  pending
+                </Badge>
               </div>
 
               <div className="text-sm text-grey mb-4">
-                <p>Category: {shop.category}</p>
-                <p>Submitted: {shop.submittedAt}</p>
+                <p>Category: {shop.category?.name || 'Uncategorized'}</p>
+                <p>
+                  Submitted:{' '}
+                  {new Date(shop.created_at).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </p>
               </div>
 
               <div className="flex gap-3">

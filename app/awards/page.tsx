@@ -1,36 +1,103 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import Header from '@/components/layout/Header';
 import Link from 'next/link';
 
-// Mock data - will be replaced with Supabase data
-const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
-
-const mockHospitalityStars = [
-  {
-    id: '1',
-    winner_name: 'Sarah at The Forge',
-    winner_business: 'The Forge',
-    reason: 'Always remembers regular customers and goes above and beyond to make everyone feel welcome.',
-    rank: 1,
-  },
-];
-
-const mockCommunityHeroes = [
-  {
-    id: '1',
-    winner_name: 'Mike Thompson',
-    reason: 'Organised the beach clean-up that brought together over 50 volunteers.',
-    rank: 1,
-  },
-];
-
-const pastMonths = [
-  { month: 'December 2025', hospitalityStars: 2, communityHeroes: 1 },
-  { month: 'November 2025', hospitalityStars: 3, communityHeroes: 2 },
-];
+interface Winner {
+  id: string;
+  nominee_name: string;
+  nominee_business: string | null;
+  reason: string;
+  rank: number;
+  category: 'hospitality_star' | 'community_hero';
+  award_month: string;
+}
 
 export default function AwardsPage() {
+  const [winners, setWinners] = useState<Winner[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+  const currentMonthKey = new Date().toISOString().slice(0, 7); // YYYY-MM format
+
+  useEffect(() => {
+    async function fetchWinners() {
+      try {
+        const res = await fetch('/api/nominations?status=winner');
+        if (res.ok) {
+          const data = await res.json();
+          setWinners(data);
+        }
+      } catch (error) {
+        console.error('Error fetching winners:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchWinners();
+  }, []);
+
+  // Separate current month winners from past
+  const currentMonthWinners = winners.filter((w) => w.award_month === currentMonthKey);
+  const pastWinners = winners.filter((w) => w.award_month !== currentMonthKey);
+
+  // Group past winners by month
+  const pastMonths = pastWinners.reduce((acc, winner) => {
+    const month = winner.award_month;
+    if (!acc[month]) {
+      acc[month] = { hospitality_stars: 0, community_heroes: 0 };
+    }
+    if (winner.category === 'hospitality_star') {
+      acc[month].hospitality_stars++;
+    } else {
+      acc[month].community_heroes++;
+    }
+    return acc;
+  }, {} as Record<string, { hospitality_stars: number; community_heroes: number }>);
+
+  const sortedPastMonths = Object.entries(pastMonths)
+    .sort(([a], [b]) => b.localeCompare(a))
+    .map(([month, counts]) => ({
+      month: new Date(month + '-01').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+      ...counts,
+    }));
+
+  const hospitalityStars = currentMonthWinners
+    .filter((w) => w.category === 'hospitality_star')
+    .sort((a, b) => a.rank - b.rank);
+
+  const communityHeroes = currentMonthWinners
+    .filter((w) => w.category === 'community_hero')
+    .sort((a, b) => a.rank - b.rank);
+
+  if (isLoading) {
+    return (
+      <MobileWrapper>
+        <Header />
+        <main className="px-4 py-6 pb-24">
+          <div className="max-w-lg mx-auto animate-pulse">
+            <div className="text-center mb-8">
+              <div className="h-8 bg-ink/10 rounded w-48 mx-auto mb-2" />
+              <div className="h-4 bg-ink/10 rounded w-64 mx-auto" />
+            </div>
+            <div className="h-24 bg-coral/20 rounded-2xl mb-8" />
+            <div className="h-6 bg-ink/10 rounded w-32 mb-4" />
+            <div className="space-y-3">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="h-28 bg-ink/5 rounded-xl" />
+              ))}
+            </div>
+          </div>
+        </main>
+        <BottomNav />
+      </MobileWrapper>
+    );
+  }
+
   return (
     <MobileWrapper>
       <Header />
@@ -63,9 +130,9 @@ export default function AwardsPage() {
                 <span className="text-xl">⭐</span>
                 <h3 className="font-semibold text-ink">Hospitality Stars</h3>
               </div>
-              {mockHospitalityStars.length > 0 ? (
+              {hospitalityStars.length > 0 ? (
                 <div className="space-y-3">
-                  {mockHospitalityStars.map((winner) => (
+                  {hospitalityStars.map((winner) => (
                     <div
                       key={winner.id}
                       className="bg-coral/5 border border-coral/20 rounded-xl p-4"
@@ -75,9 +142,9 @@ export default function AwardsPage() {
                           {winner.rank === 1 ? '🥇' : winner.rank === 2 ? '🥈' : '🥉'}
                         </div>
                         <div className="flex-1">
-                          <div className="font-semibold text-ink">{winner.winner_name}</div>
-                          {winner.winner_business && (
-                            <div className="text-sm text-ink/60">{winner.winner_business}</div>
+                          <div className="font-semibold text-ink">{winner.nominee_name}</div>
+                          {winner.nominee_business && (
+                            <div className="text-sm text-ink/60">{winner.nominee_business}</div>
                           )}
                           <p className="text-sm text-ink/70 mt-2">&ldquo;{winner.reason}&rdquo;</p>
                         </div>
@@ -98,9 +165,9 @@ export default function AwardsPage() {
                 <span className="text-xl">🦸</span>
                 <h3 className="font-semibold text-ink">Community Heroes</h3>
               </div>
-              {mockCommunityHeroes.length > 0 ? (
+              {communityHeroes.length > 0 ? (
                 <div className="space-y-3">
-                  {mockCommunityHeroes.map((winner) => (
+                  {communityHeroes.map((winner) => (
                     <div
                       key={winner.id}
                       className="bg-sky/5 border border-sky/20 rounded-xl p-4"
@@ -110,7 +177,7 @@ export default function AwardsPage() {
                           {winner.rank === 1 ? '🥇' : winner.rank === 2 ? '🥈' : '🥉'}
                         </div>
                         <div className="flex-1">
-                          <div className="font-semibold text-ink">{winner.winner_name}</div>
+                          <div className="font-semibold text-ink">{winner.nominee_name}</div>
                           <p className="text-sm text-ink/70 mt-2">&ldquo;{winner.reason}&rdquo;</p>
                         </div>
                       </div>
@@ -126,11 +193,11 @@ export default function AwardsPage() {
           </div>
 
           {/* Past Winners */}
-          {pastMonths.length > 0 && (
+          {sortedPastMonths.length > 0 && (
             <div>
               <h2 className="text-lg font-bold text-ink mb-4">Past Winners</h2>
               <div className="space-y-3">
-                {pastMonths.map((month) => (
+                {sortedPastMonths.map((month) => (
                   <div
                     key={month.month}
                     className="bg-paper border border-ink/10 rounded-xl p-4 flex items-center justify-between"
@@ -138,7 +205,7 @@ export default function AwardsPage() {
                     <div>
                       <div className="font-semibold text-ink">{month.month}</div>
                       <div className="text-sm text-ink/60">
-                        {month.hospitalityStars} star{month.hospitalityStars !== 1 && 's'} · {month.communityHeroes} hero{month.communityHeroes !== 1 && 'es'}
+                        {month.hospitality_stars} star{month.hospitality_stars !== 1 && 's'} · {month.community_heroes} hero{month.community_heroes !== 1 && 'es'}
                       </div>
                     </div>
                     <span className="text-ink/40">→</span>

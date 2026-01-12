@@ -8,9 +8,9 @@
 
 ## Current Status
 
-**Phase:** 6 - Replace Mock Data with Supabase Queries
-**Status:** In Progress (8/19 pages done - 42%)
-**Next Action:** Update home page, search, awards, admin, and settings pages
+**Phase:** 7 - Production Hardening
+**Status:** Pending
+**Next Action:** Rate limiting, environment validation, SEO verification
 
 **Completed Phases:**
 - [x] Phase 0: Database seed script
@@ -19,7 +19,7 @@
 - [x] Phase 3: Create missing API routes (15 new endpoints)
 - [x] Phase 4: Implement Photos feature (5 pages)
 - [x] Phase 5: Implement Ask a Local feature (2 pages)
-- [ ] Phase 6: Replace mock data (8/19 pages done)
+- [x] Phase 6: Replace mock data (19/19 pages done)
 - [ ] Phase 7: Production hardening
 
 ---
@@ -363,5 +363,78 @@
 **Committing partial Phase 6:**
 - 8 pages updated with real API data
 - All core user-facing pages now use Supabase
+
+---
+
+### Entry 16 - 12 Jan 2026 - Phase 6 Continued
+
+**Pages updated:**
+
+9. `/app/page.tsx` (Home page) - Now fetches from `/api/events`
+   - Events section with upcoming events
+   - Dynamic notice based on event data
+   - Loading skeleton
+
+10. `/app/search/page.tsx` - Now fetches from `/api/shops` and `/api/categories`
+    - Client-side filtering with useMemo
+    - Category and text search
+    - Loading skeleton
+
+**Phase 6 Progress:** 10/19 pages done (53%)
+
+---
+
+### Entry 17 - 12 Jan 2026 - Phase 6 Complete
+
+**Pages updated (11-19):**
+
+11. `/components/home/DealsPreview.tsx` - Now fetches from `/api/offers?active=true&limit=3`
+    - Hides section if no deals
+    - Dynamic validity formatting
+    - Loading skeleton
+
+12. `/app/awards/page.tsx` - Now fetches from `/api/nominations?status=winner`
+    - Current month winners by category
+    - Past winners grouped by month
+    - Loading skeleton
+
+13. `/app/dashboard/page.tsx` - Now fetches from `/api/dashboard/stats`
+    - Auth check with sign-in prompt
+    - No-shop state handling
+    - Recent reviews activity feed
+
+14. `/app/admin/page.tsx` - Now fetches admin stats from Supabase
+    - Admin role verification
+    - Real counts for pending items
+    - Access denied state
+
+15. `/app/admin/shops/page.tsx` - Fetches pending shops from Supabase
+    - Approve/reject with API calls
+    - Admin role check
+
+16. `/app/admin/reviews/page.tsx` - Fetches pending reviews from Supabase
+    - Approve/reject functionality
+    - Flag reason display
+
+17. `/app/admin/notices/page.tsx` - Fetches from `/api/notices`
+    - Create/toggle/delete notices
+    - Preview display
+
+18. `/app/admin/nominations/page.tsx` - Fetches from `/api/nominations`
+    - Category and status filtering
+    - Make winner with rank selection
+
+19. `/app/settings/profile/page.tsx` - Fetches from `/api/profile`
+    - Editable form with save
+    - Contribution stats display
+
+20. `/app/settings/notifications/page.tsx` - Fetches preferences from Supabase
+    - Toggle switches for each setting
+    - Save to profile
+
+**Also created:**
+- `/app/api/dashboard/stats/route.ts` - Dashboard stats API endpoint
+
+**Phase 6 Status:** COMPLETE (19/19 pages)
 
 ---

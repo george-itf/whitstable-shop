@@ -1,144 +1,64 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import ShopList from '@/components/shops/ShopList';
-import { Category } from '@/types';
-
-// Mock data
-const mockCategories: Category[] = [
-  { id: '1', name: 'Oysters & Seafood', slug: 'oysters-seafood', icon: null, display_order: 1 },
-  { id: '2', name: 'Café & Coffee', slug: 'cafe-coffee', icon: null, display_order: 2 },
-  { id: '3', name: 'Restaurant & Pub', slug: 'restaurant-pub', icon: null, display_order: 3 },
-  { id: '4', name: 'Fish & Chips', slug: 'fish-chips-takeaway', icon: null, display_order: 4 },
-  { id: '8', name: 'Books & Records', slug: 'books-records', icon: null, display_order: 8 },
-];
-
-const mockShops = [
-  {
-    id: '1',
-    owner_id: null,
-    name: 'Wheelers Oyster Bar',
-    slug: 'wheelers-oyster-bar',
-    tagline: 'Whitstable\'s oldest oyster bar',
-    description: 'Family-run since 1856',
-    category_id: '1',
-    phone: '01234 567890',
-    email: null,
-    website: null,
-    instagram: '@wheelers',
-    address_line1: '8 High Street',
-    address_line2: null,
-    postcode: 'CT5 1BQ',
-    latitude: 51.3607,
-    longitude: 1.0253,
-    opening_hours: null,
-    status: 'approved' as const,
-    is_featured: true,
-    view_count: 1250,
-    save_count: 89,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[0],
-  },
-  {
-    id: '2',
-    owner_id: null,
-    name: 'The Forge',
-    slug: 'the-forge',
-    tagline: 'Modern British dining',
-    description: 'Contemporary restaurant',
-    category_id: '3',
-    phone: '01234 567891',
-    email: null,
-    website: null,
-    instagram: '@theforge',
-    address_line1: '4 Harbour Street',
-    address_line2: null,
-    postcode: 'CT5 1AQ',
-    latitude: 51.3610,
-    longitude: 1.0260,
-    opening_hours: null,
-    status: 'approved' as const,
-    is_featured: false,
-    view_count: 980,
-    save_count: 67,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[2],
-  },
-  {
-    id: '3',
-    owner_id: null,
-    name: 'Harbour Books',
-    slug: 'harbour-books',
-    tagline: 'Independent bookshop',
-    description: 'Curated selection of books',
-    category_id: '8',
-    phone: '01234 567892',
-    email: null,
-    website: null,
-    instagram: '@harbourbooks',
-    address_line1: '12 Harbour Street',
-    address_line2: null,
-    postcode: 'CT5 1AQ',
-    latitude: 51.3608,
-    longitude: 1.0255,
-    opening_hours: null,
-    status: 'approved' as const,
-    is_featured: false,
-    view_count: 450,
-    save_count: 34,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[4],
-  },
-  {
-    id: '4',
-    owner_id: null,
-    name: 'JoJo\'s',
-    slug: 'jojos',
-    tagline: 'Famous fish & chips',
-    description: 'Award-winning fish and chips',
-    category_id: '4',
-    phone: '01234 567893',
-    email: null,
-    website: null,
-    instagram: '@jojosfishandchips',
-    address_line1: '2 Tankerton Road',
-    address_line2: null,
-    postcode: 'CT5 1AB',
-    latitude: 51.3612,
-    longitude: 1.0248,
-    opening_hours: null,
-    status: 'approved' as const,
-    is_featured: false,
-    view_count: 2100,
-    save_count: 156,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[3],
-  },
-];
+import type { Category, Shop } from '@/types';
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch initial data
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      try {
+        const [shopsRes, categoriesRes] = await Promise.all([
+          fetch('/api/shops'),
+          fetch('/api/categories'),
+        ]);
+
+        if (shopsRes.ok) {
+          const shopsData = await shopsRes.json();
+          setShops(shopsData);
+        }
+
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json();
+          setCategories(categoriesData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const filteredShops = useMemo(() => {
-    return mockShops.filter((shop) => {
-      const matchesQuery = query === '' ||
+    return shops.filter((shop) => {
+      const matchesQuery =
+        query === '' ||
         shop.name.toLowerCase().includes(query.toLowerCase()) ||
         shop.tagline?.toLowerCase().includes(query.toLowerCase()) ||
         shop.description?.toLowerCase().includes(query.toLowerCase());
 
-      const matchesCategory = !selectedCategory || shop.category_id === selectedCategory;
+      const matchesCategory =
+        !selectedCategory ||
+        shop.category_id === selectedCategory ||
+        shop.category?.slug === selectedCategory;
 
       return matchesQuery && matchesCategory;
     });
-  }, [query, selectedCategory]);
+  }, [query, selectedCategory, shops]);
 
   return (
     <MobileWrapper>
@@ -217,19 +137,17 @@ export default function SearchPage() {
           <button
             onClick={() => setSelectedCategory(null)}
             className={`px-3 py-1.5 rounded-pill text-sm font-medium whitespace-nowrap transition-colors ${
-              !selectedCategory
-                ? 'bg-sky text-white'
-                : 'bg-grey-light text-grey-dark hover:bg-grey-light/80'
+              !selectedCategory ? 'bg-sky text-white' : 'bg-grey-light text-grey-dark hover:bg-grey-light/80'
             }`}
           >
             All
           </button>
-          {mockCategories.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
+              onClick={() => setSelectedCategory(cat.slug)}
               className={`px-3 py-1.5 rounded-pill text-sm font-medium whitespace-nowrap transition-colors ${
-                selectedCategory === cat.id
+                selectedCategory === cat.slug
                   ? 'bg-sky text-white'
                   : 'bg-grey-light text-grey-dark hover:bg-grey-light/80'
               }`}
@@ -242,12 +160,26 @@ export default function SearchPage() {
 
       {/* Results */}
       <div className="px-4 py-4">
-        <p className="text-sm text-grey mb-4">
-          {filteredShops.length} result{filteredShops.length !== 1 ? 's' : ''}
-          {query && ` for "${query}"`}
-        </p>
-
-        <ShopList shops={filteredShops} />
+        {isLoading ? (
+          <div className="space-y-4">
+            <div className="h-4 bg-grey-light rounded w-24 animate-pulse" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-40 bg-grey-light rounded-lg mb-2" />
+                <div className="h-4 bg-grey-light rounded w-3/4 mb-1" />
+                <div className="h-3 bg-grey-light rounded w-1/2" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-grey mb-4">
+              {filteredShops.length} result{filteredShops.length !== 1 ? 's' : ''}
+              {query && ` for "${query}"`}
+            </p>
+            <ShopList shops={filteredShops} />
+          </>
+        )}
       </div>
 
       <BottomNav />
