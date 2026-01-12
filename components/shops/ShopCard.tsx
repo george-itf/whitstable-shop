@@ -107,10 +107,10 @@ export default function ShopCard({
           )}
 
           {/* Location hint */}
-          {shop.address && (
+          {shop.address_line1 && (
             <div className="flex items-center gap-1 mt-2 text-xs text-oyster-400">
               <MapPin className="w-3 h-3" />
-              <span className="truncate">{shop.address.split(',')[0]}</span>
+              <span className="truncate">{shop.address_line1}</span>
             </div>
           )}
         </div>
