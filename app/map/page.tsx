@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import Badge from '@/components/ui/Badge';
@@ -24,13 +26,112 @@ const categories = [
   { id: 'books-records', name: 'Books' },
 ];
 
+// Whitstable center coordinates
+const WHITSTABLE_CENTER: [number, number] = [1.0256, 51.3614];
+const DEFAULT_ZOOM = 15;
+
 export default function MapPage() {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
+
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedShop, setSelectedShop] = useState<typeof mockShops[0] | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
 
   const filteredShops = selectedCategory === 'all'
     ? mockShops
     : mockShops.filter(shop => shop.category === selectedCategory);
+
+  // Initialize map
+  useEffect(() => {
+    if (map.current) return; // Already initialized
+    if (!mapContainer.current) return;
+
+    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+    if (!token) {
+      setMapError('Mapbox API key not configured');
+      return;
+    }
+
+    mapboxgl.accessToken = token;
+
+    try {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: WHITSTABLE_CENTER,
+        zoom: DEFAULT_ZOOM,
+        attributionControl: false,
+      });
+
+      map.current.addControl(
+        new mapboxgl.AttributionControl({ compact: true }),
+        'bottom-left'
+      );
+
+      map.current.on('load', () => {
+        setMapLoaded(true);
+      });
+
+      map.current.on('error', (e) => {
+        console.error('Mapbox error:', e);
+        setMapError('Failed to load map');
+      });
+    } catch (error) {
+      console.error('Map initialization error:', error);
+      setMapError('Failed to initialize map');
+    }
+
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, []);
+
+  // Update markers when filtered shops change
+  useEffect(() => {
+    if (!map.current || !mapLoaded) return;
+
+    // Remove existing markers
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+
+    // Add new markers
+    filteredShops.forEach(shop => {
+      const color = CATEGORY_COLORS[shop.category] || '#5BB5E0';
+
+      // Create custom marker element
+      const el = document.createElement('div');
+      el.className = 'shop-marker';
+      el.innerHTML = `
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="${color}" stroke="${color}">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3" fill="white"/>
+        </svg>
+      `;
+      el.style.cursor = 'pointer';
+
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([shop.lng, shop.lat])
+        .addTo(map.current!);
+
+      el.addEventListener('click', () => {
+        setSelectedShop(shop);
+        map.current?.flyTo({
+          center: [shop.lng, shop.lat],
+          zoom: 16,
+          duration: 500,
+        });
+      });
+
+      markersRef.current.push(marker);
+    });
+  }, [filteredShops, mapLoaded]);
 
   return (
     <MobileWrapper>
@@ -76,94 +177,31 @@ export default function MapPage() {
       </div>
 
       {/* Map container */}
-      <div className="h-screen bg-sky-light relative">
-        {/* Map placeholder with markers */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-full h-full">
-            {/* Grid pattern */}
-            <svg
-              viewBox="0 0 430 800"
-              preserveAspectRatio="xMidYMid slice"
-              className="absolute inset-0 w-full h-full"
-            >
-              <defs>
-                <pattern
-                  id="mapGridFull"
-                  width="40"
-                  height="40"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M 40 0 L 0 0 0 40"
-                    fill="none"
-                    stroke="#5BB5E0"
-                    strokeWidth="0.5"
-                    opacity="0.3"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#mapGridFull)" />
-              {/* Coastline */}
-              <path
-                d="M0 300 Q100 280 200 290 T400 275 L430 275 L430 0 L0 0 Z"
-                fill="#a8d5e8"
-                opacity="0.5"
-              />
-            </svg>
+      <div className="h-screen relative">
+        <div ref={mapContainer} className="absolute inset-0" />
 
-            {/* Shop markers */}
-            {filteredShops.map((shop, index) => {
-              // Convert lat/lng to approximate pixel positions
-              const x = 100 + (index * 80);
-              const y = 350 + (index % 2 === 0 ? 0 : 50);
-              const color = CATEGORY_COLORS[shop.category] || '#5BB5E0';
-
-              return (
-                <button
-                  key={shop.id}
-                  onClick={() => setSelectedShop(shop)}
-                  className="absolute transform -translate-x-1/2 -translate-y-full transition-transform hover:scale-110"
-                  style={{ left: x, top: y }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill={color}
-                    stroke={color}
-                  >
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" fill="white" />
-                  </svg>
-                </button>
-              );
-            })}
-
-            {/* Amenity markers */}
-            <div className="absolute" style={{ left: 300, top: 400 }}>
-              <div className="w-6 h-6 bg-grey-dark rounded-full flex items-center justify-center text-white text-xs font-bold">
-                P
-              </div>
-            </div>
-            <div className="absolute" style={{ left: 150, top: 320 }}>
-              <div className="w-6 h-6 bg-sky rounded-full flex items-center justify-center text-white text-xs font-bold">
-                WC
-              </div>
+        {/* Error state */}
+        {mapError && (
+          <div className="absolute inset-0 bg-sky-light flex items-center justify-center">
+            <div className="bg-white rounded-card p-4 shadow-card text-center max-w-xs">
+              <p className="text-grey">{mapError}</p>
+              <p className="text-xs text-grey mt-2">
+                Add NEXT_PUBLIC_MAPBOX_TOKEN to your environment variables
+              </p>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Map notice */}
-        <div className="absolute bottom-24 left-4 right-4 bg-white rounded-card p-3 shadow-card text-center">
-          <p className="text-sm text-grey">
-            Interactive Mapbox map will display here when configured with API key
-          </p>
-        </div>
+        {/* Loading state */}
+        {!mapLoaded && !mapError && (
+          <div className="absolute inset-0 bg-sky-light flex items-center justify-center">
+            <div className="text-grey">Loading map...</div>
+          </div>
+        )}
 
         {/* Selected shop card */}
         {selectedShop && (
-          <div className="absolute bottom-24 left-4 right-4 bg-white rounded-card shadow-card overflow-hidden">
+          <div className="absolute bottom-24 left-4 right-4 bg-white rounded-card shadow-card overflow-hidden z-20">
             <div className="p-4">
               <div className="flex items-start justify-between">
                 <div>
