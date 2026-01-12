@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 // Helper to check if user is admin
 async function isAdmin(supabase: Awaited<ReturnType<typeof createClient>>): Promise<boolean> {
@@ -16,6 +17,13 @@ async function isAdmin(supabase: Awaited<ReturnType<typeof createClient>>): Prom
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 5 nominations per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`nominations:post:${ip}`, { limit: 5, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const body = await request.json();
 
     const { category, nominee_name, nominee_business, reason, nominator_name, nominator_email, award_month } = body;

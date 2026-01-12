@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 interface RouteParams {
   params: { id: string };
@@ -7,6 +8,13 @@ interface RouteParams {
 
 export async function POST(request: Request, { params }: RouteParams) {
   try {
+    // Rate limit: 20 answers per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`answers:post:${ip}`, { limit: 20, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const { id: questionId } = params;
     const supabase = await createClient();
 

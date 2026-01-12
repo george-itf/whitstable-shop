@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 // Validation schema for shop creation
 const shopSchema = {
@@ -185,6 +186,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 5 shop submissions per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`shops:post:${ip}`, { limit: 5, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const supabase = await createClient();
 
     // Check authentication
