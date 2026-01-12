@@ -212,3 +212,80 @@
 - 15 API routes
 
 ---
+
+### Entry 11 - 12 Jan 2026 - Phase 4 Complete
+
+**What:** Full implementation of Photos feature
+**Files updated:**
+
+1. `/app/photos/page.tsx` - Main gallery page
+   - Photo grid with filtering (recent, popular, winners)
+   - Competition banner integration
+   - Stats cards (photos, winners, photographers, votes)
+   - Voting functionality with optimistic updates
+   - Loading skeletons
+
+2. `/app/photos/[id]/page.tsx` - Photo detail page
+   - Fetch photo from API
+   - Related photos from same competition month
+   - Voting with auth check
+   - Share functionality (Web Share API)
+   - Loading and not found states
+
+3. `/app/photos/submit/page.tsx` - Photo submission page
+   - Auth required (redirects to login)
+   - Competition info display
+   - PhotoSubmitForm component integration
+   - Guidelines and rules display
+   - Shop tagging support
+
+4. `/app/photos/competition/page.tsx` - Current competition page
+   - Competition banner with countdown
+   - Entry statistics
+   - Top 3 leaderboard
+   - All entries grid with voting
+   - Empty state for no competition
+
+5. `/app/photos/winners/page.tsx` - Past winners page
+   - Fetch completed competitions
+   - Display winner and runner-up per month
+   - Prize info display
+   - Empty state for no winners yet
+
+**Status:** ✅ Phase 4 Complete
+
+---
+
+### Entry 12 - 12 Jan 2026 - Phase 5 Complete
+
+**What:** Full implementation of Ask a Local feature
+**Files updated:**
+
+1. `/app/ask/page.tsx` - Main questions page
+   - Question list from API with filtering
+   - Stats cards (questions, answered, need answers)
+   - How it works explainer
+   - AskQuestionForm toggle
+   - Popular topics badges
+   - Loading skeletons
+
+2. `/app/ask/[id]/page.tsx` - Question detail page
+   - Fetch question with answers from API
+   - Answer posting form
+   - Upvote functionality with optimistic updates
+   - Accept answer (for question owner)
+   - Share functionality
+   - New question success banner
+   - Loading and not found states
+
+**Status:** ✅ Phase 5 Complete
+
+---
+
+### Entry 13 - 12 Jan 2026 - Committing Phases 4-5
+
+**Committing:**
+- Photos feature (5 pages)
+- Ask a Local feature (2 pages)
+
+---
