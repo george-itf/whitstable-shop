@@ -46,13 +46,50 @@ export interface Database {
           updated_at?: string;
         };
       };
+      categories: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          description: string | null;
+          icon: string | null;
+          color: string | null;
+          sort_order: number;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          description?: string | null;
+          icon?: string | null;
+          color?: string | null;
+          sort_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          slug?: string;
+          description?: string | null;
+          icon?: string | null;
+          color?: string | null;
+          sort_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+        };
+      };
       shops: {
         Row: {
           id: string;
           name: string;
           slug: string;
           description: string | null;
+          tagline: string | null;
           category: string;
+          category_id: string | null;
           subcategory: string | null;
           address: string | null;
           street: string | null;
@@ -67,6 +104,8 @@ export interface Database {
           image_url: string | null;
           gallery_urls: string[] | null;
           opening_hours: Json | null;
+          status: 'pending' | 'approved' | 'rejected';
+          owner_id: string | null;
           is_active: boolean;
           is_verified: boolean;
           is_featured: boolean;
@@ -82,7 +121,9 @@ export interface Database {
           name: string;
           slug: string;
           description?: string | null;
+          tagline?: string | null;
           category: string;
+          category_id?: string | null;
           subcategory?: string | null;
           address?: string | null;
           street?: string | null;
@@ -97,6 +138,8 @@ export interface Database {
           image_url?: string | null;
           gallery_urls?: string[] | null;
           opening_hours?: Json | null;
+          status?: 'pending' | 'approved' | 'rejected';
+          owner_id?: string | null;
           is_active?: boolean;
           is_verified?: boolean;
           is_featured?: boolean;
@@ -112,7 +155,9 @@ export interface Database {
           name?: string;
           slug?: string;
           description?: string | null;
+          tagline?: string | null;
           category?: string;
+          category_id?: string | null;
           subcategory?: string | null;
           address?: string | null;
           street?: string | null;
@@ -127,6 +172,8 @@ export interface Database {
           image_url?: string | null;
           gallery_urls?: string[] | null;
           opening_hours?: Json | null;
+          status?: 'pending' | 'approved' | 'rejected';
+          owner_id?: string | null;
           is_active?: boolean;
           is_verified?: boolean;
           is_featured?: boolean;
@@ -212,10 +259,16 @@ export interface Database {
       reviews: {
         Row: {
           id: string;
-          user_id: string;
+          user_id: string | null;
           shop_id: string;
           rating: number;
           content: string | null;
+          comment: string | null;
+          author_name: string | null;
+          author_postcode: string | null;
+          status: 'pending' | 'approved' | 'rejected';
+          flagged_reason: string | null;
+          ip_hash: string | null;
           is_verified_purchase: boolean;
           is_featured: boolean;
           created_at: string;
@@ -223,10 +276,16 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          user_id: string;
+          user_id?: string | null;
           shop_id: string;
           rating: number;
           content?: string | null;
+          comment?: string | null;
+          author_name?: string | null;
+          author_postcode?: string | null;
+          status?: 'pending' | 'approved' | 'rejected';
+          flagged_reason?: string | null;
+          ip_hash?: string | null;
           is_verified_purchase?: boolean;
           is_featured?: boolean;
           created_at?: string;
@@ -234,14 +293,40 @@ export interface Database {
         };
         Update: {
           id?: string;
-          user_id?: string;
+          user_id?: string | null;
           shop_id?: string;
           rating?: number;
           content?: string | null;
+          comment?: string | null;
+          author_name?: string | null;
+          author_postcode?: string | null;
+          status?: 'pending' | 'approved' | 'rejected';
+          flagged_reason?: string | null;
+          ip_hash?: string | null;
           is_verified_purchase?: boolean;
           is_featured?: boolean;
           created_at?: string;
           updated_at?: string;
+        };
+      };
+      shop_views: {
+        Row: {
+          id: string;
+          shop_id: string;
+          session_id: string;
+          viewed_at: string;
+        };
+        Insert: {
+          id?: string;
+          shop_id: string;
+          session_id: string;
+          viewed_at?: string;
+        };
+        Update: {
+          id?: string;
+          shop_id?: string;
+          session_id?: string;
+          viewed_at?: string;
         };
       };
       photo_competitions: {
@@ -918,7 +1003,9 @@ export interface Database {
 
 // Helper types for easier usage
 export type Profile = Database['public']['Tables']['profiles']['Row'];
+export type Category = Database['public']['Tables']['categories']['Row'];
 export type Shop = Database['public']['Tables']['shops']['Row'];
+export type ShopView = Database['public']['Tables']['shop_views']['Row'];
 export type Event = Database['public']['Tables']['events']['Row'];
 export type Review = Database['public']['Tables']['reviews']['Row'];
 export type PhotoCompetition = Database['public']['Tables']['photo_competitions']['Row'];
@@ -958,6 +1045,10 @@ export interface AnswerWithUser extends Answer {
 export interface QuestionWithAnswers extends Question {
   profiles: Pick<Profile, 'display_name' | 'avatar_url'> | null;
   answers: AnswerWithUser[];
+}
+
+export interface ShopWithCategory extends Omit<Shop, 'category'> {
+  category: Category | null;
 }
 
 export interface ShopWithBadges extends Shop {
