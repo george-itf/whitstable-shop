@@ -4,7 +4,7 @@ import { HTMLAttributes, forwardRef } from 'react';
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;
   padding?: 'none' | 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'info' | 'success' | 'warning' | 'error' | 'outlined';
+  variant?: 'default' | 'info' | 'success' | 'warning' | 'error' | 'outlined' | 'elevated';
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -17,21 +17,22 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     };
 
     const variants = {
-      default: 'bg-white border-grey-light',
-      info: 'bg-blue-50 border-blue-200',
-      success: 'bg-green-50 border-green-200',
-      warning: 'bg-amber-50 border-amber-200',
-      error: 'bg-red-50 border-red-200',
-      outlined: 'bg-transparent border-grey-light border-dashed',
+      default: 'bg-white border-oyster-100',
+      info: 'bg-sky-light/50 border-sky/20',
+      success: 'bg-green-light border-green/20',
+      warning: 'bg-yellow-light border-yellow/20',
+      error: 'bg-coral-light border-coral/20',
+      outlined: 'bg-transparent border-oyster-200 border-dashed',
+      elevated: 'bg-white border-transparent shadow-float',
     };
 
     return (
       <div
         ref={ref}
         className={cn(
-          'rounded-card border shadow-card',
+          'rounded-2xl border shadow-card',
           variants[variant],
-          hoverable && 'transition-shadow duration-200 hover:shadow-card-hover cursor-pointer',
+          hoverable && 'transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer',
           paddingSizes[padding],
           className
         )}
