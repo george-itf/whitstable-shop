@@ -390,40 +390,65 @@ The Whitstable Carnival has been running since the 1930s, celebrating community 
 };
 
 interface InfoPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default async function InfoDetailPage({ params }: InfoPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   const info = infoContent[slug];
 
   if (!info) {
     notFound();
   }
 
-  // Simple markdown-like rendering
+  // Simple markdown-like rendering with proper list grouping
   const renderContent = (content: string) => {
-    return content.split('\n').map((line, i) => {
-      if (line.startsWith('## ')) {
-        return <h2 key={i} className="text-xl font-bold text-ink mt-6 mb-3">{line.slice(3)}</h2>;
+    const lines = content.split('\n');
+    const elements: React.ReactNode[] = [];
+    let listItems: React.ReactNode[] = [];
+    let listKey = 0;
+
+    const flushList = () => {
+      if (listItems.length > 0) {
+        elements.push(
+          <ul key={`list-${listKey++}`} className="ml-4 my-2 list-disc list-inside space-y-1">
+            {listItems}
+          </ul>
+        );
+        listItems = [];
       }
-      if (line.startsWith('### ')) {
-        return <h3 key={i} className="text-lg font-semibold text-ink mt-4 mb-2">{line.slice(4)}</h3>;
-      }
-      if (line.startsWith('**') && line.endsWith('**')) {
-        return <p key={i} className="font-semibold text-ink">{line.slice(2, -2)}</p>;
-      }
+    };
+
+    lines.forEach((line, i) => {
       if (line.startsWith('- ')) {
-        return <li key={i} className="ml-4 text-grey-dark">{line.slice(2)}</li>;
+        listItems.push(
+          <li key={i} className="text-grey-dark">{line.slice(2)}</li>
+        );
+        return;
       }
-      if (line.startsWith('*') && line.endsWith('*')) {
-        return <p key={i} className="italic text-grey text-sm mt-4">{line.slice(1, -1)}</p>;
+
+      // Flush any pending list items before other content
+      flushList();
+
+      if (line.startsWith('## ')) {
+        elements.push(<h2 key={i} className="text-xl font-bold text-ink mt-6 mb-3">{line.slice(3)}</h2>);
+      } else if (line.startsWith('### ')) {
+        elements.push(<h3 key={i} className="text-lg font-semibold text-ink mt-4 mb-2">{line.slice(4)}</h3>);
+      } else if (line.startsWith('**') && line.endsWith('**')) {
+        elements.push(<p key={i} className="font-semibold text-ink">{line.slice(2, -2)}</p>);
+      } else if (line.startsWith('*') && line.endsWith('*')) {
+        elements.push(<p key={i} className="italic text-grey text-sm mt-4">{line.slice(1, -1)}</p>);
+      } else if (line.trim() === '') {
+        elements.push(<br key={i} />);
+      } else {
+        elements.push(<p key={i} className="text-grey-dark">{line}</p>);
       }
-      if (line.trim() === '') {
-        return <br key={i} />;
-      }
-      return <p key={i} className="text-grey-dark">{line}</p>;
     });
+
+    // Flush any remaining list items
+    flushList();
+
+    return elements;
   };
 
   return (
