@@ -1,0 +1,212 @@
+[
+  {
+    "type": "parking",
+    "name": "Gorrell Tank Car Park",
+    "latitude": 51.35982,
+    "longitude": 1.02889,
+    "notes": "Main car park, approx 200 spaces, £1.50/hr, max 8 hours. Fills early on sunny weekends."
+  },
+  {
+    "type": "parking",
+    "name": "Cromwell Road Car Park",
+    "latitude": 51.35912,
+    "longitude": 1.02956,
+    "notes": "Approx 80 spaces, £1.50/hr, max 8 hours. Good alternative when Gorrell is full."
+  },
+  {
+    "type": "parking",
+    "name": "Middle Wall Car Park",
+    "latitude": 51.36134,
+    "longitude": 1.02389,
+    "notes": "Near harbour, approx 60 spaces, £1.50/hr, max 4 hours only."
+  },
+  {
+    "type": "parking",
+    "name": "Tower Parade Car Park",
+    "latitude": 51.35612,
+    "longitude": 1.04098,
+    "notes": "Tankerton end, approx 50 spaces, £1.50/hr. Good for slopes and castle."
+  },
+  {
+    "type": "parking",
+    "name": "Borstal Hill Car Park",
+    "latitude": 51.35678,
+    "longitude": 1.03456,
+    "notes": "Free parking, 2 hour maximum. 10 min walk to centre."
+  },
+  {
+    "type": "toilets",
+    "name": "Harbour Public Toilets",
+    "latitude": 51.36156,
+    "longitude": 1.02412,
+    "notes": "Free, open 8am-6pm (later in summer). Accessible facilities available."
+  },
+  {
+    "type": "toilets",
+    "name": "Tankerton Slopes Toilets",
+    "latitude": 51.35598,
+    "longitude": 1.04067,
+    "notes": "Free, open 8am-6pm. Near Beach Walk Cafe."
+  },
+  {
+    "type": "toilets",
+    "name": "High Street Public Toilets",
+    "latitude": 51.35978,
+    "longitude": 1.02812,
+    "notes": "Near Gorrell Tank car park. Free, open 8am-5pm."
+  },
+  {
+    "type": "beach_access",
+    "name": "West Beach Steps",
+    "latitude": 51.36312,
+    "longitude": 1.01876,
+    "notes": "Steps down to West Beach. Can be slippery when wet."
+  },
+  {
+    "type": "beach_access",
+    "name": "Harbour Beach Access",
+    "latitude": 51.36189,
+    "longitude": 1.02289,
+    "notes": "Sloped access near Old Neptune. Wheelchair accessible to promenade."
+  },
+  {
+    "type": "beach_access",
+    "name": "Tankerton Slopes Access",
+    "latitude": 51.35623,
+    "longitude": 1.04012,
+    "notes": "Gentle slope down from the slopes to beach. Best for pushchairs."
+  },
+  {
+    "type": "beach_access",
+    "name": "The Street Access",
+    "latitude": 51.35678,
+    "longitude": 1.03934,
+    "notes": "Access point for The Street shingle spit. Check tide times before walking out!"
+  },
+  {
+    "type": "atm",
+    "name": "NatWest ATM (Co-op)",
+    "latitude": 51.36012,
+    "longitude": 1.02678,
+    "notes": "Inside Co-op, free withdrawals. Available during store hours."
+  },
+  {
+    "type": "atm",
+    "name": "Lloyds Bank ATM",
+    "latitude": 51.35989,
+    "longitude": 1.02756,
+    "notes": "External ATM, free withdrawals, 24 hours."
+  },
+  {
+    "type": "atm",
+    "name": "Post Office ATM",
+    "latitude": 51.35934,
+    "longitude": 1.02823,
+    "notes": "Inside Post Office, free withdrawals. Limited hours."
+  },
+  {
+    "type": "train_station",
+    "name": "Whitstable Railway Station",
+    "latitude": 51.35756,
+    "longitude": 1.02545,
+    "notes": "Southeastern trains to London Victoria (90 mins), Canterbury, and coast. Step-free access."
+  },
+  {
+    "type": "bus_stop",
+    "name": "High Street Bus Stop (towards Canterbury)",
+    "latitude": 51.35978,
+    "longitude": 1.02789,
+    "notes": "Stagecoach services to Canterbury, Herne Bay. Regular service."
+  },
+  {
+    "type": "bus_stop",
+    "name": "High Street Bus Stop (towards Herne Bay)",
+    "latitude": 51.35998,
+    "longitude": 1.02712,
+    "notes": "Stagecoach services along coast to Herne Bay."
+  },
+  {
+    "type": "bus_stop",
+    "name": "Tankerton Bus Stop",
+    "latitude": 51.35534,
+    "longitude": 1.04234,
+    "notes": "Tower Parade, for Tankerton area services."
+  },
+  {
+    "type": "lifeboat_station",
+    "name": "Whitstable Lifeboat Station",
+    "latitude": 51.35623,
+    "longitude": 1.04123,
+    "notes": "RNLI volunteer station. Inshore lifeboat. In emergency call 999 Coastguard."
+  },
+  {
+    "type": "landmark",
+    "name": "Whitstable Harbour",
+    "latitude": 51.36167,
+    "longitude": 1.02423,
+    "notes": "Historic working harbour. Fish market, restaurants, boat trips."
+  },
+  {
+    "type": "landmark",
+    "name": "The Old Neptune Pub",
+    "latitude": 51.36312,
+    "longitude": 1.02156,
+    "notes": "The famous pub on the beach. Great for sunset drinks."
+  },
+  {
+    "type": "landmark",
+    "name": "The Street",
+    "latitude": 51.35712,
+    "longitude": 1.03867,
+    "notes": "Natural shingle spit visible at low tide. Check tide times before walking out!"
+  },
+  {
+    "type": "landmark",
+    "name": "Tankerton Slopes",
+    "latitude": 51.35589,
+    "longitude": 1.04056,
+    "notes": "Grassy slopes above beach. Great for picnics and sunsets."
+  },
+  {
+    "type": "landmark",
+    "name": "Whitstable Castle",
+    "latitude": 51.35678,
+    "longitude": 1.03856,
+    "notes": "Victorian Gothic house with gardens. Free to visit grounds."
+  },
+  {
+    "type": "bike_parking",
+    "name": "Harbour Bike Racks",
+    "latitude": 51.36145,
+    "longitude": 1.02456,
+    "notes": "Covered bike racks near the harbour. Free."
+  },
+  {
+    "type": "bike_parking",
+    "name": "High Street Bike Racks",
+    "latitude": 51.36034,
+    "longitude": 1.02634,
+    "notes": "Near Oxford Street junction. Free, uncovered."
+  },
+  {
+    "type": "cycle_path",
+    "name": "Crab & Winkle Way (Start)",
+    "latitude": 51.35678,
+    "longitude": 1.02512,
+    "notes": "Cycle/walking path to Canterbury (7 miles). Follows old railway line."
+  },
+  {
+    "type": "drinking_water",
+    "name": "Harbour Water Fountain",
+    "latitude": 51.36134,
+    "longitude": 1.02445,
+    "notes": "Refill your water bottle here. Free."
+  },
+  {
+    "type": "drinking_water",
+    "name": "Tankerton Slopes Water Fountain",
+    "latitude": 51.35601,
+    "longitude": 1.04078,
+    "notes": "Near the toilets. Free refills."
+  }
+]

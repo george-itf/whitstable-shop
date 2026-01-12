@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "{{event_name}}",
+  "description": "{{event_description}}",
+  "image": "{{event_image_url}}",
+  "startDate": "{{start_date_iso}}",
+  "endDate": "{{end_date_iso}}",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "{{venue_name}}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{venue_address}}",
+      "addressLocality": "Whitstable",
+      "addressRegion": "Kent",
+      "postalCode": "{{venue_postcode}}",
+      "addressCountry": "GB"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "{{venue_latitude}}",
+      "longitude": "{{venue_longitude}}"
+    }
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "{{organizer_name}}",
+    "url": "{{organizer_url}}"
+  },
+  "performer": {
+    "@type": "PerformingGroup",
+    "name": "{{performer_name}}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ticket_url}}",
+    "price": "{{price}}",
+    "priceCurrency": "GBP",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "{{sale_start_date}}"
+  },
+  "isAccessibleForFree": "{{is_free}}"
+}

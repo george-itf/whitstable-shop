@@ -1,0 +1,362 @@
+[
+  {
+    "title": "Winter Market at the Harbour",
+    "description": "Local makers and producers gather at the harbour for our weekly winter market. Fresh produce, handmade crafts, vintage finds, and hot food stalls. Wrap up warm and support local!",
+    "date": "2026-01-17",
+    "time_start": "09:00",
+    "time_end": "15:00",
+    "location": "Whitstable Harbour",
+    "shop_slug": "harbour-market"
+  },
+  {
+    "title": "Quiz Night",
+    "description": "Weekly quiz with a mix of general knowledge, music rounds, and picture rounds. Teams of up to 6, £2 per person entry. Winner takes the pot!",
+    "date": "2026-01-14",
+    "time_start": "20:00",
+    "time_end": "22:30",
+    "location": "The Ship Centurion",
+    "shop_slug": "the-ship-centurion"
+  },
+  {
+    "title": "Live Jazz Night",
+    "description": "The Resident Trio play every Thursday evening. No cover charge, just grab a pint and enjoy. A Whitstable tradition.",
+    "date": "2026-01-15",
+    "time_start": "20:00",
+    "time_end": "23:00",
+    "location": "The Old Neptune",
+    "shop_slug": "the-old-neptune"
+  },
+  {
+    "title": "Watercolour Painting Workshop",
+    "description": "Learn coastal watercolour techniques with local artist Jenny Mitchell. All materials provided. Beginners welcome. Book in advance — limited to 8 participants.",
+    "date": "2026-01-18",
+    "time_start": "10:00",
+    "time_end": "13:00",
+    "location": "Fishslab Gallery",
+    "shop_slug": "fishslab-gallery"
+  },
+  {
+    "title": "Sunday Market",
+    "description": "Our regular Sunday market at the harbour. Fresh veg, baked goods, artisan cheese, crafts, and vintage bits. Perfect for a weekend browse.",
+    "date": "2026-01-18",
+    "time_start": "10:00",
+    "time_end": "16:00",
+    "location": "Whitstable Harbour",
+    "shop_slug": "harbour-market"
+  },
+  {
+    "title": "Cheese Tasting Evening",
+    "description": "Join us for a guided tasting of six British artisan cheeses paired with wines. Learn about cheesemaking and discover new favourites. Booking essential.",
+    "date": "2026-01-22",
+    "time_start": "19:00",
+    "time_end": "21:00",
+    "location": "The Cheese Box",
+    "shop_slug": "the-cheese-box"
+  },
+  {
+    "title": "Book Club: January Pick",
+    "description": "Monthly book club meeting. This month we're discussing 'The Essex Serpent' by Sarah Perry. New members welcome — just pick up a copy and join us!",
+    "date": "2026-01-23",
+    "time_start": "19:30",
+    "time_end": "21:00",
+    "location": "Oxford Street Books",
+    "shop_slug": "oxford-street-books"
+  },
+  {
+    "title": "Live Jazz Night",
+    "description": "The Resident Trio play every Thursday evening. No cover charge, just grab a pint and enjoy.",
+    "date": "2026-01-22",
+    "time_start": "20:00",
+    "time_end": "23:00",
+    "location": "The Old Neptune",
+    "shop_slug": "the-old-neptune"
+  },
+  {
+    "title": "Saturday Harbour Market",
+    "description": "Our biggest market day. Over 40 stalls selling local produce, street food, crafts, vintage clothing, and more. Arrive early for parking!",
+    "date": "2026-01-24",
+    "time_start": "09:00",
+    "time_end": "16:00",
+    "location": "Whitstable Harbour",
+    "shop_slug": "harbour-market"
+  },
+  {
+    "title": "Brewery Tour & Tasting",
+    "description": "Go behind the scenes at Whitstable Brewery. See how our beers are made and sample the full range. Tours last approximately 90 minutes. Booking required.",
+    "date": "2026-01-24",
+    "time_start": "14:00",
+    "time_end": "15:30",
+    "location": "Whitstable Brewery Bar",
+    "shop_slug": "whitstable-brewery-bar"
+  },
+  {
+    "title": "Coastal Photography Walk",
+    "description": "Join photographer Chris Adams for a guided walk along the coast, learning techniques for capturing seascapes and beach scenes. Bring your own camera.",
+    "date": "2026-01-25",
+    "time_start": "08:00",
+    "time_end": "10:30",
+    "location": "Meeting at Whitstable Harbour",
+    "shop_slug": null
+  },
+  {
+    "title": "Sunday Roast Special",
+    "description": "Our legendary Sunday roast with all the trimmings. Booking recommended but walk-ins welcome if we have space. Kids eat half price.",
+    "date": "2026-01-25",
+    "time_start": "12:00",
+    "time_end": "16:00",
+    "location": "Pearson's Arms",
+    "shop_slug": "pearsons-arms"
+  },
+  {
+    "title": "Wine Tasting: Natural Wines",
+    "description": "Explore the world of natural wines with our sommelier. Six wines, paired with small plates from our kitchen. Booking essential.",
+    "date": "2026-01-28",
+    "time_start": "19:00",
+    "time_end": "21:30",
+    "location": "Samphire",
+    "shop_slug": "samphire"
+  },
+  {
+    "title": "Quiz Night",
+    "description": "Weekly quiz with general knowledge, music, and picture rounds. Teams of up to 6, £2 per person entry.",
+    "date": "2026-01-28",
+    "time_start": "20:00",
+    "time_end": "22:30",
+    "location": "The Ship Centurion",
+    "shop_slug": "the-ship-centurion"
+  },
+  {
+    "title": "Live Jazz Night",
+    "description": "The Resident Trio play every Thursday evening. No cover charge.",
+    "date": "2026-01-29",
+    "time_start": "20:00",
+    "time_end": "23:00",
+    "location": "The Old Neptune",
+    "shop_slug": "the-old-neptune"
+  },
+  {
+    "title": "Ceramics Workshop: Pinch Pots",
+    "description": "Beginner-friendly ceramics workshop. Learn to make pinch pots and simple vessels. All materials included. Take your finished piece home after firing.",
+    "date": "2026-01-31",
+    "time_start": "10:00",
+    "time_end": "13:00",
+    "location": "The Hardware Store Gallery",
+    "shop_slug": "the-hardware-store-gallery"
+  },
+  {
+    "title": "Saturday Harbour Market",
+    "description": "Weekly harbour market with local produce, crafts, and street food.",
+    "date": "2026-01-31",
+    "time_start": "09:00",
+    "time_end": "16:00",
+    "location": "Whitstable Harbour",
+    "shop_slug": "harbour-market"
+  },
+  {
+    "title": "Burns Night Supper",
+    "description": "Celebrate Burns Night with haggis, neeps, tatties, and a wee dram. Live poetry readings and Scottish folk music. Booking essential.",
+    "date": "2026-01-25",
+    "time_start": "19:00",
+    "time_end": "23:00",
+    "location": "The Wall Tavern",
+    "shop_slug": "the-wall-tavern"
+  },
+  {
+    "title": "Children's Storytime",
+    "description": "Free storytime session for children aged 3-7. This week: seaside adventure stories! Parents welcome to stay.",
+    "date": "2026-02-01",
+    "time_start": "10:30",
+    "time_end": "11:15",
+    "location": "Oxford Street Books",
+    "shop_slug": "oxford-street-books"
+  },
+  {
+    "title": "Sunday Harbour Market",
+    "description": "Sunday market at the harbour. Slightly smaller than Saturday but still plenty to see.",
+    "date": "2026-02-01",
+    "time_start": "10:00",
+    "time_end": "16:00",
+    "location": "Whitstable Harbour",
+    "shop_slug": "harbour-market"
+  },
+  {
+    "title": "Tap Takeover: Burning Sky",
+    "description": "East Sussex's Burning Sky Brewery takes over our taps for the night. Eight exclusive beers. Meet the brewer from 6pm.",
+    "date": "2026-02-06",
+    "time_start": "17:00",
+    "time_end": "23:00",
+    "location": "Harbour Street Taproom",
+    "shop_slug": "harbour-street-taproom"
+  },
+  {
+    "title": "Valentine's Tasting Menu",
+    "description": "Special five-course tasting menu for Valentine's weekend. Champagne reception, wine pairings available. Book now — limited tables.",
+    "date": "2026-02-14",
+    "time_start": "19:00",
+    "time_end": "22:30",
+    "location": "Crab & Winkle Restaurant",
+    "shop_slug": "crab-and-winkle"
+  },
+  {
+    "title": "Oyster Shucking Masterclass",
+    "description": "Learn to shuck oysters like a pro with our head chef. Includes a dozen oysters to take home and a glass of champagne.",
+    "date": "2026-02-07",
+    "time_start": "11:00",
+    "time_end": "12:30",
+    "location": "Whitstable Oyster Company",
+    "shop_slug": "whitstable-oyster-company"
+  },
+  {
+    "title": "Acoustic Night",
+    "description": "Local singer-songwriters showcase. Three acts, intimate setting, great atmosphere. Free entry.",
+    "date": "2026-02-07",
+    "time_start": "20:00",
+    "time_end": "23:00",
+    "location": "The Old Neptune",
+    "shop_slug": "the-old-neptune"
+  },
+  {
+    "title": "Art Exhibition Opening: Coastal Light",
+    "description": "Private view for new exhibition featuring five local artists exploring light on the Kent coast. Wine and nibbles. All welcome.",
+    "date": "2026-02-13",
+    "time_start": "18:00",
+    "time_end": "20:30",
+    "location": "Windy Corner Gallery",
+    "shop_slug": "windy-corner-gallery"
+  },
+  {
+    "title": "Pancake Day Special",
+    "description": "It's Shrove Tuesday! Pop in for our special pancake menu — sweet and savoury options. No booking needed.",
+    "date": "2026-02-17",
+    "time_start": "09:00",
+    "time_end": "16:00",
+    "location": "Frank's",
+    "shop_slug": "franks"
+  },
+  {
+    "title": "Half Term Craft Workshop",
+    "description": "Keep the kids busy during half term! Drop-in craft sessions making seaside-themed creations. All ages welcome, £5 per child.",
+    "date": "2026-02-18",
+    "time_start": "10:00",
+    "time_end": "15:00",
+    "location": "Whitstable Castle",
+    "shop_slug": "whitstable-castle"
+  },
+  {
+    "title": "Half Term Beach Clean",
+    "description": "Family-friendly beach clean organised by Whitstable Environment Group. All equipment provided. Hot chocolate afterwards!",
+    "date": "2026-02-19",
+    "time_start": "10:00",
+    "time_end": "12:00",
+    "location": "Meeting at Tankerton Slopes",
+    "shop_slug": null
+  },
+  {
+    "title": "Cupcake Decorating Class",
+    "description": "Learn professional cupcake decorating techniques. All materials included, take home your creations! Suitable for ages 8+. Booking essential.",
+    "date": "2026-02-20",
+    "time_start": "14:00",
+    "time_end": "16:00",
+    "location": "Cupcake",
+    "shop_slug": "cupcake"
+  },
+  {
+    "title": "Monthly Farmers Market",
+    "description": "Extended farmers market featuring producers from across Kent and beyond. Seasonal vegetables, meats, cheeses, preserves, and more.",
+    "date": "2026-02-21",
+    "time_start": "09:00",
+    "time_end": "14:00",
+    "location": "Whitstable Harbour",
+    "shop_slug": "harbour-market"
+  },
+  {
+    "title": "Sourdough Bread Workshop",
+    "description": "Full-day sourdough workshop. Learn to make your own starter, shape loaves, and understand fermentation. Take home your own sourdough and starter.",
+    "date": "2026-02-22",
+    "time_start": "10:00",
+    "time_end": "16:00",
+    "location": "The Handmade Bakery",
+    "shop_slug": "the-handmade-bakery"
+  },
+  {
+    "title": "Book Club: February Pick",
+    "description": "Monthly book club meeting. This month: 'Piranesi' by Susanna Clarke. New members always welcome!",
+    "date": "2026-02-26",
+    "time_start": "19:30",
+    "time_end": "21:00",
+    "location": "Oxford Street Books",
+    "shop_slug": "oxford-street-books"
+  },
+  {
+    "title": "Spring Wine Tasting",
+    "description": "Welcome spring with a selection of lighter wines perfect for the season. Six wines, cheese accompaniments. Booking essential.",
+    "date": "2026-03-04",
+    "time_start": "19:00",
+    "time_end": "21:00",
+    "location": "Elliott's of Whitstable",
+    "shop_slug": "elliotts-of-whitstable"
+  },
+  {
+    "title": "Mother's Day Afternoon Tea",
+    "description": "Treat mum to a special afternoon tea. Full traditional service with sandwiches, scones, and cakes. Booking essential.",
+    "date": "2026-03-22",
+    "time_start": "14:00",
+    "time_end": "17:00",
+    "location": "The Tea Room",
+    "shop_slug": "the-tea-room"
+  },
+  {
+    "title": "Spring Equinox Sunrise Walk",
+    "description": "Greet the spring equinox with a guided sunrise walk along the coast. Meet at the harbour, finish with coffee at The Forge.",
+    "date": "2026-03-20",
+    "time_start": "05:45",
+    "time_end": "08:00",
+    "location": "Meeting at Whitstable Harbour",
+    "shop_slug": null
+  },
+  {
+    "title": "Pottery Exhibition: Local Makers",
+    "description": "New exhibition showcasing contemporary ceramics by Kent-based potters. Running until April 15th. Free entry.",
+    "date": "2026-03-07",
+    "time_start": "10:30",
+    "time_end": "17:00",
+    "location": "The Hardware Store Gallery",
+    "shop_slug": "the-hardware-store-gallery"
+  },
+  {
+    "title": "St Patrick's Day Session",
+    "description": "Live Irish folk music, Guinness, and craic. No booking needed, just turn up and enjoy!",
+    "date": "2026-03-17",
+    "time_start": "19:00",
+    "time_end": "23:30",
+    "location": "The Old Neptune",
+    "shop_slug": "the-old-neptune"
+  },
+  {
+    "title": "Spring Plant Sale",
+    "description": "Local gardeners selling seedlings, plants, and garden accessories. All proceeds to Whitstable in Bloom.",
+    "date": "2026-03-28",
+    "time_start": "10:00",
+    "time_end": "14:00",
+    "location": "Whitstable Castle Gardens",
+    "shop_slug": "whitstable-castle"
+  },
+  {
+    "title": "Easter Egg Hunt",
+    "description": "Family fun at the castle! Hunt for eggs in the gardens, with prizes for all. £3 per child, includes hot cross bun.",
+    "date": "2026-04-04",
+    "time_start": "10:00",
+    "time_end": "13:00",
+    "location": "Whitstable Castle",
+    "shop_slug": "whitstable-castle"
+  },
+  {
+    "title": "Sea Shanty Evening",
+    "description": "Join the Whitstable Shanty Crew for a singalong evening. Song sheets provided, no experience necessary!",
+    "date": "2026-03-14",
+    "time_start": "20:00",
+    "time_end": "22:30",
+    "location": "The Wall Tavern",
+    "shop_slug": "the-wall-tavern"
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What time is high tide in Whitstable today?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{tide_answer}}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I park in Whitstable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The main car parks in Whitstable are: Gorrell Tank Car Park (CT5 1BU), Harbour Car Park (CT5 1AB), and Stream Walk Car Park (CT5 1BT). Most charge around £1-2 per hour. The harbour car park fills up quickly on sunny days, so arrive early or try Stream Walk for more availability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best independent shops in Whitstable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Whitstable's high street is home to dozens of independent shops including boutiques, art galleries, bookshops, and homeware stores. Browse our full directory at whitstable.shop to discover them all."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When is Whitstable Oyster Festival?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Whitstable Oyster Festival typically takes place in late July each year, celebrating the town's oyster heritage with parades, live music, food stalls, and of course, plenty of oysters."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get to Whitstable from London?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The fastest way is by train from London St Pancras or Victoria to Whitstable station (approximately 1 hour 15 minutes). By car, take the M2 and A299 (about 1.5 hours depending on traffic)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are dogs allowed on Whitstable beach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dogs are restricted from the main Tankerton beach (between the castle and Long Rock) from 1st May to 30th September. However, they're welcome year-round on West Beach and the areas east of Long Rock."
+      }
+    }
+  ]
+}

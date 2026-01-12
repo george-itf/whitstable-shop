@@ -1,0 +1,24 @@
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://whitstable.shop"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{category_name}}",
+      "item": "https://whitstable.shop/category/{{category_slug}}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{page_name}}",
+      "item": "https://whitstable.shop/{{page_path}}"
+    }
+  ]
+}

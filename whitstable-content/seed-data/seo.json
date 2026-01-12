@@ -1,0 +1,154 @@
+{
+  "pages": {
+    "home": {
+      "title": "whitstable.shop — Your Guide to Whitstable's High Street",
+      "description": "Discover independent shops, cafés, restaurants and events in Whitstable, Kent. Find opening hours, reviews, and what's on — all in one place.",
+      "keywords": "Whitstable, shops, restaurants, cafés, Kent, high street, local businesses, Whitstable oysters"
+    },
+    "shops": {
+      "title": "All Shops in Whitstable | whitstable.shop",
+      "description": "Browse 50+ independent shops, cafés, and restaurants in Whitstable. Filter by category, see what's open now, and find your new favourite spot.",
+      "keywords": "Whitstable shops, Whitstable restaurants, Whitstable cafés, where to eat Whitstable, shopping Whitstable"
+    },
+    "map": {
+      "title": "Whitstable Map — Find Shops, Parking & More | whitstable.shop",
+      "description": "Interactive map of Whitstable showing shops, restaurants, car parks, toilets, and beach access points. Plan your visit with ease.",
+      "keywords": "Whitstable map, Whitstable parking, Whitstable beach access, find shops Whitstable"
+    },
+    "events": {
+      "title": "What's On in Whitstable — Events & Markets | whitstable.shop",
+      "description": "Discover upcoming events in Whitstable: harbour markets, live music, gallery openings, workshops, and community gatherings.",
+      "keywords": "Whitstable events, Whitstable harbour market, what's on Whitstable, Whitstable live music, Whitstable oyster festival"
+    },
+    "saved": {
+      "title": "Your Saved Places | whitstable.shop",
+      "description": "Your collection of saved shops, cafés, and restaurants in Whitstable. Keep track of places to visit and favourites to return to.",
+      "keywords": "saved places, favourites, Whitstable wishlist"
+    },
+    "search": {
+      "title": "Search Whitstable Shops & Restaurants | whitstable.shop",
+      "description": "Search for shops, cafés, restaurants, and more in Whitstable. Find exactly what you're looking for in our local directory.",
+      "keywords": "search Whitstable, find shops Whitstable, Whitstable directory"
+    },
+    "login": {
+      "title": "Log In | whitstable.shop",
+      "description": "Log in to whitstable.shop to save your favourite places, leave reviews, and manage your shop listing.",
+      "keywords": "login, sign in, whitstable.shop account"
+    },
+    "signup": {
+      "title": "Sign Up | whitstable.shop",
+      "description": "Create a free account to save favourite shops, leave reviews, and discover the best of Whitstable.",
+      "keywords": "sign up, create account, join whitstable.shop"
+    },
+    "dashboard": {
+      "title": "Your Dashboard | whitstable.shop",
+      "description": "Manage your whitstable.shop account, saved places, and reviews.",
+      "keywords": "dashboard, account, manage listings"
+    },
+    "local-parking": {
+      "title": "Parking in Whitstable — Car Parks & Tips | whitstable.shop",
+      "description": "Complete guide to parking in Whitstable. Find car parks, prices, and tips for avoiding the crowds on busy days.",
+      "keywords": "Whitstable parking, Whitstable car parks, where to park Whitstable, Gorrell Tank car park"
+    },
+    "local-tides": {
+      "title": "Whitstable Tide Times & The Street | whitstable.shop",
+      "description": "Check tide times for Whitstable and find out when to walk The Street shingle spit. Safety tips and local knowledge included.",
+      "keywords": "Whitstable tide times, The Street Whitstable, low tide Whitstable, Whitstable beach"
+    },
+    "local-beach": {
+      "title": "Whitstable Beach Guide — Swimming, Dogs & Facilities | whitstable.shop",
+      "description": "Everything you need to know about Whitstable beach: water quality, dog rules, facilities, and the best spots for swimming and sunbathing.",
+      "keywords": "Whitstable beach, Tankerton beach, swimming Whitstable, dogs Whitstable beach, beach huts Whitstable"
+    },
+    "local-oyster-festival": {
+      "title": "Whitstable Oyster Festival Guide | whitstable.shop",
+      "description": "Complete guide to the Whitstable Oyster Festival: dates, events, tips for visitors, and the history of Whitstable's famous oyster celebration.",
+      "keywords": "Whitstable Oyster Festival, oyster festival dates, Whitstable events, Kent festivals"
+    },
+    "local-carnival": {
+      "title": "Whitstable Carnival — Parade & Events | whitstable.shop",
+      "description": "Guide to Whitstable Carnival: parade route, dates, events, and how to get involved in this traditional seaside celebration.",
+      "keywords": "Whitstable Carnival, Whitstable parade, August bank holiday Whitstable, Kent carnival"
+    },
+    "local-bins": {
+      "title": "Bin Collection in Whitstable — Days & Recycling | whitstable.shop",
+      "description": "Whitstable bin collection information: find your collection day, what goes in each bin, and recycling guidance for Canterbury district.",
+      "keywords": "Whitstable bin collection, recycling Whitstable, Canterbury City Council bins, CT5 bin day"
+    },
+    "local-healthcare": {
+      "title": "Healthcare in Whitstable — GPs, Dentists & Pharmacies | whitstable.shop",
+      "description": "Find healthcare services in Whitstable: GP surgeries, dentists, pharmacies, and the nearest hospital. Essential information for residents and visitors.",
+      "keywords": "Whitstable GP, Whitstable dentist, Whitstable pharmacy, healthcare CT5, Whitstable Medical Practice"
+    },
+    "local-emergency": {
+      "title": "Emergency Contacts for Whitstable | whitstable.shop",
+      "description": "Essential emergency contact numbers for Whitstable: police, ambulance, coastguard, council, and local services.",
+      "keywords": "emergency numbers Whitstable, Whitstable police, coastguard Kent, 999"
+    },
+    "local-schools": {
+      "title": "School Term Dates — Kent | whitstable.shop",
+      "description": "Kent school term dates for 2024-2025 and 2025-2026. Plan around school holidays for visiting Whitstable.",
+      "keywords": "Kent school term dates, school holidays 2025, Kent half term, Whitstable schools"
+    },
+    "local-council": {
+      "title": "Council Contacts for Whitstable | whitstable.shop",
+      "description": "Contact information for Canterbury City Council and Kent County Council. Report issues, find your councillor, and access local services.",
+      "keywords": "Canterbury City Council, Whitstable councillor, report problem Whitstable, Kent County Council"
+    }
+  },
+  "templates": {
+    "shop": {
+      "title": "{{shop_name}} | whitstable.shop",
+      "description": "{{shop_tagline}}. Opening hours, reviews, and contact info for {{shop_name}} in Whitstable, Kent.",
+      "keywords": "{{shop_name}}, Whitstable, {{category}}, Kent"
+    },
+    "category": {
+      "title": "{{category_name}} in Whitstable | whitstable.shop",
+      "description": "Find the best {{category_name_lower}} in Whitstable. Browse our curated list of local {{category_name_lower}} with reviews and opening hours.",
+      "keywords": "{{category_name_lower}} Whitstable, best {{category_name_lower}} Whitstable, {{category_name}} Kent"
+    }
+  },
+  "structured_data": {
+    "organization": {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "whitstable.shop",
+      "url": "https://whitstable.shop",
+      "description": "Your guide to Whitstable's independent shops, cafés, and restaurants",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://whitstable.shop/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    "local_business_template": {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "{{shop_name}}",
+      "description": "{{shop_description}}",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{address_line1}}",
+        "addressLocality": "Whitstable",
+        "addressRegion": "Kent",
+        "postalCode": "{{postcode}}",
+        "addressCountry": "GB"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "{{latitude}}",
+        "longitude": "{{longitude}}"
+      },
+      "telephone": "{{phone}}",
+      "url": "{{website}}",
+      "openingHoursSpecification": "{{opening_hours_structured}}"
+    }
+  },
+  "social": {
+    "og_image": "/images/og-default.jpg",
+    "og_image_width": 1200,
+    "og_image_height": 630,
+    "twitter_card": "summary_large_image",
+    "twitter_site": "@whitstableshop"
+  }
+}
