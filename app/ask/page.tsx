@@ -146,7 +146,7 @@ export default function AskPage() {
           </div>
         ) : questions.length === 0 ? (
           <EmptyState
-            icon={MessageCircle}
+            illustration="seagull"
             title="No questions yet"
             description="Go on, don't be shy — locals love sharing tips."
             hint="Best oysters? Quietest beach spot? We've got answers."
