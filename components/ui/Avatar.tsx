@@ -5,13 +5,14 @@ import { HTMLAttributes, forwardRef } from 'react';
 export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   src?: string | null;
   alt?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   fallback?: string;
 }
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   ({ className, src, alt = '', size = 'md', fallback, ...props }, ref) => {
     const sizes = {
+      xs: 'h-5 w-5 text-[8px]',
       sm: 'h-8 w-8 text-xs',
       md: 'h-10 w-10 text-sm',
       lg: 'h-12 w-12 text-base',
@@ -19,6 +20,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     };
 
     const imageSizes = {
+      xs: 20,
       sm: 32,
       md: 40,
       lg: 48,

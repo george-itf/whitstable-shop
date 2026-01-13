@@ -33,16 +33,21 @@ export function PhotoGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {photos.map((photo) => (
-        <PhotoCard
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+      {photos.map((photo, index) => (
+        <div
           key={photo.id}
-          photo={photo}
-          hasVoted={userVotes.has(photo.id)}
-          onVote={onVote}
-          isVoting={isVoting}
-          showVoteButton={showVoteButton}
-        />
+          className="animate-fade-in"
+          style={{ animationDelay: `${index * 50}ms` }}
+        >
+          <PhotoCard
+            photo={photo}
+            hasVoted={userVotes.has(photo.id)}
+            onVote={onVote}
+            isVoting={isVoting}
+            showVoteButton={showVoteButton}
+          />
+        </div>
       ))}
     </div>
   );

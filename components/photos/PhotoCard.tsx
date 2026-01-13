@@ -34,18 +34,18 @@ export function PhotoCard({
   };
 
   return (
-    <Link href={`/photos/${photo.id}`} className="block group">
-      <div className="relative bg-oyster-100 rounded-xl overflow-hidden">
+    <Link href={`/photos/${photo.id}`} className="block group tap-effect">
+      <div className="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         {/* Image Container */}
         <div className="aspect-[4/3] relative">
           {!imageLoaded && (
-            <div className="absolute inset-0 animate-pulse bg-oyster-200" />
+            <div className="absolute inset-0 skeleton" />
           )}
           <Image
             src={photo.image_url}
             alt={photo.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className={cn(
               'object-cover transition-all duration-300',
               imageLoaded ? 'opacity-100' : 'opacity-0',
@@ -58,7 +58,7 @@ export function PhotoCard({
           {photo.status === 'winner' && (
             <Badge
               variant="warning"
-              className="absolute top-3 left-3"
+              className="absolute top-2 left-2 text-xs"
             >
               Winner
             </Badge>
@@ -66,7 +66,7 @@ export function PhotoCard({
           {photo.status === 'runner_up' && (
             <Badge
               variant="info"
-              className="absolute top-3 left-3"
+              className="absolute top-2 left-2 text-xs"
             >
               Runner Up
             </Badge>
@@ -78,52 +78,52 @@ export function PhotoCard({
               onClick={handleVoteClick}
               disabled={isVoting}
               className={cn(
-                'absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full',
+                'absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full',
                 'transition-all duration-200',
-                'backdrop-blur-sm',
+                'backdrop-blur-sm text-xs',
                 hasVoted
-                  ? 'bg-red-500 text-white'
+                  ? 'bg-coral text-white'
                   : 'bg-white/90 text-oyster-700 hover:bg-white',
                 isVoting && 'opacity-50 cursor-not-allowed'
               )}
             >
               <Heart
-                className={cn('h-4 w-4', hasVoted && 'fill-current')}
+                className={cn('h-3.5 w-3.5', hasVoted && 'fill-current')}
               />
-              <span className="text-sm font-medium">{photo.vote_count}</span>
+              <span className="font-medium">{photo.vote_count}</span>
             </button>
           )}
         </div>
 
-        {/* Content */}
-        <div className="p-3">
-          <h3 className="font-medium text-oyster-900 truncate group-hover:text-ocean-600 transition-colors">
+        {/* Content - compact on mobile */}
+        <div className="p-2.5">
+          <h3 className="font-medium text-ink text-sm truncate group-hover:text-sky transition-colors">
             {photo.title}
           </h3>
 
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-1.5 mt-1.5">
             <Avatar
               src={photo.profiles?.avatar_url}
               fallback={photo.profiles?.display_name || 'U'}
-              size="sm"
+              size="xs"
             />
-            <span className="text-sm text-oyster-600 truncate">
+            <span className="text-xs text-oyster-500 truncate">
               {photo.profiles?.display_name || 'Anonymous'}
             </span>
           </div>
 
           {(photo.location || photo.shops) && (
-            <div className="flex items-center gap-1.5 mt-2 text-xs text-oyster-500">
+            <div className="flex items-center gap-1 mt-1.5 text-[10px] text-oyster-400">
               {photo.location && (
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-3 w-3" />
-                  {photo.location}
+                <span className="flex items-center gap-0.5 truncate">
+                  <MapPin className="h-2.5 w-2.5 flex-shrink-0" />
+                  <span className="truncate">{photo.location}</span>
                 </span>
               )}
               {photo.shops && (
-                <span className="flex items-center gap-1">
-                  <Store className="h-3 w-3" />
-                  {photo.shops.name}
+                <span className="flex items-center gap-0.5 truncate">
+                  <Store className="h-2.5 w-2.5 flex-shrink-0" />
+                  <span className="truncate">{photo.shops.name}</span>
                 </span>
               )}
             </div>

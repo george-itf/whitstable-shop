@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Calendar, Store, HandHeart } from 'lucide-react';
+import { Heart, Calendar, Store, HandHeart, Users, PoundSterling } from 'lucide-react';
 import { Button, Card, Badge } from '@/components/ui';
 import { CharityCard, CharityEventCard } from '@/components/charity';
+import MobileWrapper from '@/components/layout/MobileWrapper';
 import type { Charity, CharityEvent } from '@/types/database';
 
 type CharityWithEvents = Charity & {
@@ -49,167 +50,163 @@ export default function CommunityPage() {
   // Calculate stats
   const totalRaised = charities.reduce((sum, c) => sum + (c.raised_amount || 0), 0);
 
-  if (isLoading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="animate-pulse">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-oyster-200 rounded-xl" />
-            <div>
-              <div className="h-8 w-48 bg-oyster-200 rounded mb-2" />
-              <div className="h-4 w-64 bg-oyster-200 rounded" />
-            </div>
-          </div>
-          <div className="h-64 bg-oyster-200 rounded-xl mb-12" />
-          <div className="h-32 bg-oyster-200 rounded-xl" />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
-          <Heart className="h-6 w-6 text-rose-600" />
+    <MobileWrapper>
+      {/* Coral gradient header */}
+      <div className="bg-gradient-to-br from-coral to-coral-dark px-4 pt-6 pb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Community</h1>
+            <p className="text-white/80 text-sm mt-1">
+              Support local Whitstable causes
+            </p>
+          </div>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <Heart className="w-5 h-5 text-white" />
+          </div>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold text-oyster-900">Community Hub</h1>
-          <p className="text-oyster-600">Support local causes and make a difference</p>
+
+        {/* Stats row */}
+        <div className="grid grid-cols-4 gap-2">
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
+            <Heart className="w-4 h-4 text-white/80 mx-auto mb-1" />
+            <p className="text-base font-bold text-white">{charities.length}</p>
+            <p className="text-[10px] text-white/70">charities</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
+            <Calendar className="w-4 h-4 text-white/80 mx-auto mb-1" />
+            <p className="text-base font-bold text-white">{upcomingEvents.length}</p>
+            <p className="text-[10px] text-white/70">events</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
+            <Store className="w-4 h-4 text-white/80 mx-auto mb-1" />
+            <p className="text-base font-bold text-white">15</p>
+            <p className="text-[10px] text-white/70">give back</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
+            <PoundSterling className="w-4 h-4 text-white/80 mx-auto mb-1" />
+            <p className="text-base font-bold text-white">{(totalRaised / 1000).toFixed(0)}k</p>
+            <p className="text-[10px] text-white/70">raised</p>
+          </div>
         </div>
       </div>
 
-      {/* Featured Charity */}
-      {featuredCharity && (
-        <section className="mb-12">
-          <CharityCard charity={featuredCharity} variant="featured" />
-        </section>
-      )}
-
-      {/* Stats */}
-      <section className="mb-12">
-        <Card className="bg-gradient-to-r from-rose-500 to-pink-500 text-white border-0">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold mb-1">{charities.length}</div>
-              <div className="text-rose-100 text-sm">Local Charities</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold mb-1">{upcomingEvents.length}</div>
-              <div className="text-rose-100 text-sm">Upcoming Events</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold mb-1">15</div>
-              <div className="text-rose-100 text-sm">Shops That Give Back</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold mb-1">
-                £{(totalRaised / 1000).toFixed(1)}k
-              </div>
-              <div className="text-rose-100 text-sm">Raised This Year</div>
-            </div>
+      <div className="px-4 py-4">
+        {isLoading ? (
+          <div className="space-y-4">
+            <div className="skeleton h-40 rounded-xl" />
+            <div className="skeleton h-32 rounded-xl" />
+            <div className="skeleton h-32 rounded-xl" />
           </div>
-        </Card>
-      </section>
-
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Upcoming Events */}
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-oyster-900 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-ocean-600" />
-                Upcoming Events
-              </h2>
-              <Link
-                href="/community/events"
-                className="text-sm text-ocean-600 hover:text-ocean-700 font-medium"
-              >
-                View all →
-              </Link>
-            </div>
-            {upcomingEvents.length === 0 ? (
-              <Card className="text-center py-8">
-                <Calendar className="h-10 w-10 text-oyster-300 mx-auto mb-3" />
-                <p className="text-oyster-600">No upcoming events</p>
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                {upcomingEvents.slice(0, 3).map((event) => (
-                  <CharityEventCard key={event.id} event={event} />
-                ))}
+        ) : (
+          <>
+            {/* Featured Charity */}
+            {featuredCharity && (
+              <div className="mb-6">
+                <h2 className="font-semibold text-ink text-sm mb-3 section-title">Featured</h2>
+                <CharityCard charity={featuredCharity} variant="featured" />
               </div>
             )}
-          </section>
-        </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Local Charities */}
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-oyster-900">Local Charities</h2>
-              <Link
-                href="/community/charities"
-                className="text-sm text-ocean-600 hover:text-ocean-700 font-medium"
-              >
-                All →
-              </Link>
-            </div>
-            <div className="space-y-4">
-              {otherCharities.slice(0, 3).map((charity) => (
-                <CharityCard key={charity.id} charity={charity} />
-              ))}
-            </div>
-          </section>
-
-          {/* Shops That Give Back */}
-          <Card>
-            <div className="flex items-center gap-2 mb-4">
-              <Store className="h-5 w-5 text-ocean-600" />
-              <h3 className="font-semibold text-oyster-900">Shops That Give Back</h3>
-            </div>
-            <p className="text-sm text-oyster-600 mb-4">
-              These local businesses support community causes through donations,
-              partnerships, or volunteer work.
-            </p>
-            <div className="space-y-3">
-              {["Wheeler's Oyster Bar", 'The Cheese Box', 'Frank'].map((shop, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between py-2 border-b border-oyster-100 last:border-0"
+            {/* Upcoming Events */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-semibold text-ink text-sm section-title">Upcoming Events</h2>
+                <Link
+                  href="/community/events"
+                  className="text-xs text-sky font-medium"
                 >
-                  <span className="text-oyster-900">{shop}</span>
-                  <Badge variant="success" size="sm">
-                    <HandHeart className="h-3 w-3 mr-1" />
-                    Gives Back
-                  </Badge>
+                  View all
+                </Link>
+              </div>
+              {upcomingEvents.length === 0 ? (
+                <Card className="text-center py-6">
+                  <Calendar className="h-8 w-8 text-oyster-300 mx-auto mb-2" />
+                  <p className="text-sm text-oyster-500">No upcoming events</p>
+                </Card>
+              ) : (
+                <div className="space-y-3">
+                  {upcomingEvents.slice(0, 3).map((event, index) => (
+                    <div
+                      key={event.id}
+                      className="animate-fade-in"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      <CharityEventCard event={event} />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-            <Link href="/shops?filter=gives-back" className="block mt-4">
-              <Button variant="outline" size="sm" className="w-full">
-                View All
-              </Button>
-            </Link>
-          </Card>
 
-          {/* CTA */}
-          <Card className="bg-ocean-50 border-ocean-200">
-            <h3 className="font-semibold text-oyster-900 mb-2">Know a local charity?</h3>
-            <p className="text-sm text-oyster-600 mb-4">
-              Help us expand our community hub by suggesting local causes and organisations.
-            </p>
-            <Link href="/report">
-              <Button size="sm" className="w-full">
-                Suggest a Charity
-              </Button>
-            </Link>
-          </Card>
-        </div>
+            {/* Local Charities */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-semibold text-ink text-sm section-title">Local Charities</h2>
+                <Link
+                  href="/community/charities"
+                  className="text-xs text-sky font-medium"
+                >
+                  View all
+                </Link>
+              </div>
+              <div className="space-y-3">
+                {otherCharities.slice(0, 3).map((charity, index) => (
+                  <div
+                    key={charity.id}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <CharityCard charity={charity} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Shops That Give Back */}
+            <div className="mb-6">
+              <h2 className="font-semibold text-ink text-sm mb-3 section-title">Shops That Give Back</h2>
+              <Card className="bg-green-light/30 border-green/20">
+                <p className="text-xs text-oyster-600 mb-3">
+                  Local businesses supporting community causes
+                </p>
+                <div className="space-y-2">
+                  {["Wheeler's Oyster Bar", 'The Cheese Box', 'Frank'].map((shop, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between py-2 border-b border-oyster-100 last:border-0"
+                    >
+                      <span className="text-sm text-ink">{shop}</span>
+                      <Badge variant="success" size="sm">
+                        <HandHeart className="h-3 w-3 mr-1" />
+                        Gives Back
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/shops?filter=gives-back" className="block mt-3">
+                  <Button variant="outline" size="sm" className="w-full">
+                    View All Shops
+                  </Button>
+                </Link>
+              </Card>
+            </div>
+
+            {/* CTA */}
+            <Card className="bg-sky-light/50 border-sky/20">
+              <h3 className="font-semibold text-ink text-sm mb-1">Know a local charity?</h3>
+              <p className="text-xs text-oyster-600 mb-3">
+                Help us support more Whitstable causes
+              </p>
+              <Link href="/report">
+                <Button size="sm" className="w-full">
+                  Suggest a Charity
+                </Button>
+              </Link>
+            </Card>
+          </>
+        )}
       </div>
-    </div>
+    </MobileWrapper>
   );
 }
