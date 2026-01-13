@@ -103,7 +103,7 @@ export default function LocalInfoGrid({ items }: LocalInfoGridProps) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
         {displayItems.map((item) => {
           const config = infoConfig[item.slug] || defaultConfig;
           return (

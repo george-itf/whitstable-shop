@@ -38,7 +38,7 @@ export default function ShopList({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {shops.map((shop) => (
         <ShopCard
           key={shop.id}

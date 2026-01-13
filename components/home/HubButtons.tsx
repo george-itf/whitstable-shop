@@ -52,7 +52,7 @@ const hubs = [
 export default function HubButtons() {
   return (
     <div className="px-4 py-6">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
         {hubs.map((hub) => {
           const Icon = hub.icon;
           return (

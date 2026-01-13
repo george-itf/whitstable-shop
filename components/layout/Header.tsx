@@ -33,10 +33,32 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
             <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
           </Link>
 
+          {/* Desktop navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/shops" className="text-white/90 hover:text-white text-sm font-medium transition-colors">
+              Shops
+            </Link>
+            <Link href="/events" className="text-white/90 hover:text-white text-sm font-medium transition-colors">
+              Events
+            </Link>
+            <Link href="/map" className="text-white/90 hover:text-white text-sm font-medium transition-colors">
+              Map
+            </Link>
+            <Link href="/community" className="text-white/90 hover:text-white text-sm font-medium transition-colors">
+              Community
+            </Link>
+            <Link href="/saved" className="text-white/90 hover:text-white text-sm font-medium transition-colors">
+              Saved
+            </Link>
+            <Link href="/auth/login" className="text-white/90 hover:text-white text-sm font-medium transition-colors">
+              Log In
+            </Link>
+          </nav>
+
           {showMenu && (
             <button
               onClick={() => setIsMenuOpen(true)}
-              className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors md:hidden"
               aria-label="Open menu"
             >
               <svg
