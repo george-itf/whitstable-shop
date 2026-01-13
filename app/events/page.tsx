@@ -82,7 +82,7 @@ export default function EventsPage() {
           </div>
         ) : events.length === 0 ? (
           <EmptyState
-            icon={Calendar}
+            illustration="boat"
             title="Nothing on right now"
             description="Whitstable's taking a breather. Check back soon — something's always brewing."
             hint="The oyster festival is usually in July..."
