@@ -1,43 +1,54 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Suspense } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import SignupForm from '@/components/auth/SignupForm';
 
 export default function SignupPage() {
   return (
     <MobileWrapper withNav={false}>
-      {/* Header */}
-      <div className="bg-sky px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <h1 className="text-white font-bold text-xl">sign up</h1>
+      {/* Header with gradient */}
+      <div className="bg-gradient-to-br from-coral to-coral-dark px-4 pt-4 pb-12 relative overflow-hidden">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-6"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">back</span>
+        </Link>
+
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-1">join the locals</h1>
+            <p className="text-white/80 text-sm">
+              Become part of Whitstable
+            </p>
+          </div>
+          <div className="w-20 h-24 relative -mr-2 -mb-4">
+            <Image
+              src="/seagull.svg"
+              alt=""
+              fill
+              className="object-contain"
+            />
+          </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-ink mb-2">join whitstable.shop</h2>
-          <p className="text-grey">Create an account to save your favourite spots</p>
+      <div className="px-4 py-6 -mt-4 relative">
+        <div className="bg-white rounded-t-2xl pt-6">
+          <Suspense fallback={
+            <div className="space-y-4">
+              <div className="h-12 skeleton rounded-xl" />
+              <div className="h-12 skeleton rounded-xl" />
+              <div className="h-12 skeleton rounded-xl" />
+            </div>
+          }>
+            <SignupForm />
+          </Suspense>
         </div>
-
-        <Suspense fallback={<div>Loading...</div>}>
-          <SignupForm />
-        </Suspense>
       </div>
     </MobileWrapper>
   );

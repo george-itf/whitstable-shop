@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { ArrowLeft, LayoutDashboard, Eye, Heart, MessageSquare, Store, Calendar, ChevronRight, Star } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
-import BottomNav from '@/components/layout/BottomNav';
-import Card from '@/components/ui/Card';
+import { Card, Button, EmptyState } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 
 interface DashboardStats {
@@ -30,11 +30,7 @@ export default function DashboardPage() {
     async function fetchDashboard() {
       try {
         const supabase = createClient();
-
-        // Check authentication
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
           setIsAuthenticated(false);
@@ -44,7 +40,6 @@ export default function DashboardPage() {
 
         setIsAuthenticated(true);
 
-        // Fetch dashboard stats
         const res = await fetch('/api/dashboard/stats');
         if (res.ok) {
           const data = await res.json();
@@ -63,37 +58,21 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <MobileWrapper>
-        <div className="bg-sky px-4 py-4">
+        <div className="bg-gradient-to-br from-sky to-sky-dark px-4 pt-4 pb-6">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-white font-bold text-xl">dashboard</h1>
+            <div className="skeleton w-5 h-5 rounded" />
+            <div className="skeleton h-6 w-24 rounded" />
           </div>
         </div>
-        <div className="px-4 py-6 space-y-6">
+        <div className="px-4 py-4 space-y-4">
           <div className="grid grid-cols-3 gap-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-8 bg-grey-light rounded w-1/2 mx-auto mb-1" />
-                <div className="h-3 bg-grey-light rounded w-2/3 mx-auto" />
-              </Card>
+              <div key={i} className="skeleton h-20 rounded-xl" />
             ))}
           </div>
+          <div className="skeleton h-16 rounded-xl" />
+          <div className="skeleton h-16 rounded-xl" />
         </div>
-        <BottomNav />
       </MobileWrapper>
     );
   }
@@ -101,56 +80,27 @@ export default function DashboardPage() {
   if (isAuthenticated === false) {
     return (
       <MobileWrapper>
-        <div className="bg-sky px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-white font-bold text-xl">dashboard</h1>
-          </div>
-        </div>
-        <div className="px-4 py-6 text-center py-12">
-          <div className="w-16 h-16 bg-sky-light rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-sky"
-            >
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </div>
-          <h2 className="text-lg font-bold text-ink mb-2">Sign in to access dashboard</h2>
-          <p className="text-grey text-sm mb-4">
-            Manage your shop listings and view performance stats
-          </p>
-          <Link
-            href="/login?redirect=/dashboard"
-            className="inline-block px-6 py-2 bg-sky text-white rounded-button font-semibold"
-          >
-            sign in
+        <div className="bg-gradient-to-br from-sky to-sky-dark px-4 pt-4 pb-6">
+          <Link href="/" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4">
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">back</span>
           </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <LayoutDashboard className="w-5 h-5 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-white">Dashboard</h1>
+          </div>
         </div>
-        <BottomNav />
+        <div className="px-4 py-6">
+          <EmptyState
+            icon={LayoutDashboard}
+            title="Sign in to access dashboard"
+            description="Manage your shop listing and view stats"
+            action={{ label: 'Sign in', href: '/auth/login?redirect=/dashboard' }}
+            variant="card"
+          />
+        </div>
       </MobileWrapper>
     );
   }
@@ -158,206 +108,132 @@ export default function DashboardPage() {
   if (!stats?.has_shop) {
     return (
       <MobileWrapper>
-        <div className="bg-sky px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-white font-bold text-xl">dashboard</h1>
-          </div>
-        </div>
-        <div className="px-4 py-6 text-center py-12">
-          <div className="w-16 h-16 bg-sky-light rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-sky"
-            >
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </div>
-          <h2 className="text-lg font-bold text-ink mb-2">No shop listing yet</h2>
-          <p className="text-grey text-sm mb-4">
-            Submit your shop to whitstable.shop to access the dashboard
-          </p>
-          <Link
-            href="/submit-shop"
-            className="inline-block px-6 py-2 bg-sky text-white rounded-button font-semibold"
-          >
-            submit a shop
+        <div className="bg-gradient-to-br from-sky to-sky-dark px-4 pt-4 pb-6">
+          <Link href="/" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4">
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">back</span>
           </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <LayoutDashboard className="w-5 h-5 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-white">Dashboard</h1>
+          </div>
         </div>
-        <BottomNav />
+        <div className="px-4 py-6">
+          <EmptyState
+            icon={Store}
+            title="No shop listing yet"
+            description="Submit your shop to whitstable.shop"
+            action={{ label: 'Submit a shop', href: '/submit-shop' }}
+            variant="card"
+          />
+        </div>
       </MobileWrapper>
     );
   }
 
   return (
     <MobileWrapper>
-      {/* Header */}
-      <div className="bg-sky px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <h1 className="text-white font-bold text-xl">dashboard</h1>
+      {/* Sky gradient header */}
+      <div className="bg-gradient-to-br from-sky to-sky-dark px-4 pt-4 pb-6">
+        <Link href="/" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4">
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">back</span>
+        </Link>
+
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <LayoutDashboard className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white">Dashboard</h1>
+            <p className="text-white/80 text-sm">Your shop performance</p>
+          </div>
+        </div>
+
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+            <Eye className="w-4 h-4 text-white/80 mx-auto mb-1" />
+            <p className="text-lg font-bold text-white">{stats.views}</p>
+            <p className="text-xs text-white/70">views</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+            <Heart className="w-4 h-4 text-coral mx-auto mb-1" />
+            <p className="text-lg font-bold text-white">{stats.saves}</p>
+            <p className="text-xs text-white/70">saves</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+            <MessageSquare className="w-4 h-4 text-white/80 mx-auto mb-1" />
+            <p className="text-lg font-bold text-white">{stats.reviews}</p>
+            <p className="text-xs text-white/70">reviews</p>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-4 py-6 space-y-6">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <StatCard label="Views" value={stats.views} />
-          <StatCard label="Saves" value={stats.saves} />
-          <StatCard label="Reviews" value={stats.reviews} />
-        </div>
-
+      <div className="px-4 py-4">
         {/* Quick actions */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink">quick actions</h2>
+        <div className="mb-6">
+          <h2 className="font-semibold text-ink text-sm mb-3 section-title">Quick Actions</h2>
 
-          <Link href="/dashboard/shop">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-sky-light text-sky flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Edit Shop Details</h3>
-                <p className="text-sm text-grey">Update your listing information</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+          <div className="space-y-2">
+            <Link href="/dashboard/shop">
+              <Card className="flex items-center gap-3 hover:bg-oyster-50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-sky-light text-sky flex items-center justify-center">
+                  <Store className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-medium text-ink text-sm">Edit Shop Details</h3>
+                  <p className="text-xs text-oyster-500">Update your listing</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-oyster-400" />
+              </Card>
+            </Link>
 
-          <Link href="/dashboard/events">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-coral-light text-coral flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Manage Events</h3>
-                <p className="text-sm text-grey">Add or edit your events</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+            <Link href="/dashboard/events">
+              <Card className="flex items-center gap-3 hover:bg-oyster-50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-coral-light text-coral flex items-center justify-center">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-medium text-ink text-sm">Manage Events</h3>
+                  <p className="text-xs text-oyster-500">Add or edit events</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-oyster-400" />
+              </Card>
+            </Link>
+          </div>
         </div>
 
         {/* Recent activity */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink">recent activity</h2>
+        <div>
+          <h2 className="font-semibold text-ink text-sm mb-3 section-title">Recent Reviews</h2>
           {stats.recent_reviews && stats.recent_reviews.length > 0 ? (
-            <div className="space-y-3">
-              {stats.recent_reviews.map((review) => (
-                <Card key={review.id}>
+            <div className="space-y-2">
+              {stats.recent_reviews.map((review, index) => (
+                <Card
+                  key={review.id}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex gap-0.5 mb-1">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <svg
+                          <Star
                             key={star}
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="12"
-                            height="12"
-                            viewBox="0 0 24 24"
-                            fill={star <= review.rating ? '#f5a623' : 'none'}
-                            stroke={star <= review.rating ? '#f5a623' : '#e5e7eb'}
-                            strokeWidth="2"
-                          >
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                          </svg>
+                            className={`w-3 h-3 ${
+                              star <= review.rating
+                                ? 'text-yellow fill-yellow'
+                                : 'text-oyster-200'
+                            }`}
+                          />
                         ))}
                       </div>
-                      <p className="text-sm text-grey line-clamp-2">{review.comment}</p>
+                      <p className="text-xs text-oyster-600 line-clamp-2">{review.comment}</p>
                     </div>
-                    <span className="text-xs text-grey-light ml-2">
+                    <span className="text-[10px] text-oyster-400 ml-2">
                       {new Date(review.created_at).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',
@@ -368,25 +244,13 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <Card>
-              <div className="text-center py-6">
-                <p className="text-grey text-sm">No recent activity yet</p>
-              </div>
+            <Card className="text-center py-6 bg-oyster-50">
+              <MessageSquare className="w-8 h-8 text-oyster-300 mx-auto mb-2" />
+              <p className="text-xs text-oyster-500">No reviews yet</p>
             </Card>
           )}
         </div>
       </div>
-
-      <BottomNav />
     </MobileWrapper>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <Card className="text-center">
-      <div className="text-2xl font-bold text-ink">{value.toLocaleString()}</div>
-      <div className="text-xs text-grey">{label}</div>
-    </Card>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { ArrowLeft, Award, Star, Users, Check } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
-import BottomNav from '@/components/layout/BottomNav';
-import Header from '@/components/layout/Header';
+import { Button, Input, Card } from '@/components/ui';
 
 type Category = 'hospitality_star' | 'community_hero';
 
@@ -21,7 +22,6 @@ export default function NominatePage() {
     e.preventDefault();
     setLoading(true);
 
-    // Get current month in YYYY-MM format
     const now = new Date();
     const awardMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
@@ -53,172 +53,166 @@ export default function NominatePage() {
   if (submitted) {
     return (
       <MobileWrapper>
-        <Header />
-        <main className="px-4 py-8 pb-24">
-          <div className="max-w-lg mx-auto text-center">
-            <div className="text-6xl mb-4">🎉</div>
-            <h1 className="text-2xl font-bold text-ink mb-4">Thank You!</h1>
-            <p className="text-ink/70 mb-6">
-              Your nomination has been submitted. George will review all nominations
-              and announce the winners at the end of the month.
+        <div className="bg-gradient-to-br from-green to-green-dark px-4 pt-4 pb-12">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-6"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">back</span>
+          </Link>
+        </div>
+
+        <div className="px-4 py-6 -mt-8">
+          <Card className="text-center py-8">
+            <div className="w-16 h-16 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8 text-green" />
+            </div>
+            <h1 className="text-xl font-bold text-ink mb-2">Thank You!</h1>
+            <p className="text-sm text-oyster-600 mb-6">
+              Your nomination has been submitted. Winners will be announced at the end of the month.
             </p>
-            <a
-              href="/awards"
-              className="inline-block bg-sky text-white px-6 py-3 rounded-full font-semibold"
-            >
-              View Past Winners
-            </a>
-          </div>
-        </main>
-        <BottomNav />
+            <Link href="/awards">
+              <Button>View Past Winners</Button>
+            </Link>
+          </Card>
+        </div>
       </MobileWrapper>
     );
   }
 
   return (
     <MobileWrapper>
-      <Header />
-      <main className="px-4 py-6 pb-24">
-        <div className="max-w-lg mx-auto">
-          <h1 className="text-2xl font-bold text-ink mb-2">Nominate Someone Special</h1>
-          <p className="text-ink/70 mb-6">
-            Know someone who deserves recognition? Nominate them for our monthly awards!
-          </p>
+      {/* Coral gradient header */}
+      <div className="bg-gradient-to-br from-coral to-coral-dark px-4 pt-4 pb-6">
+        <Link
+          href="/awards"
+          className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">awards</span>
+        </Link>
 
-          {/* Category Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-ink mb-3">
-              Award Category
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <Award className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white">Nominate</h1>
+            <p className="text-white/80 text-sm">Recognise someone special</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 py-4">
+        {/* Category Selection */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold text-ink mb-3">
+            Award Category
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setCategory('hospitality_star')}
+              className={`p-3 rounded-xl border-2 text-left transition-all ${
+                category === 'hospitality_star'
+                  ? 'border-coral bg-coral-light/30'
+                  : 'border-oyster-200 hover:border-oyster-300'
+              }`}
+            >
+              <Star className={`w-5 h-5 mb-2 ${category === 'hospitality_star' ? 'text-coral' : 'text-oyster-400'}`} />
+              <div className="font-medium text-ink text-sm">Hospitality Star</div>
+              <div className="text-xs text-oyster-500 mt-0.5">Outstanding service</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setCategory('community_hero')}
+              className={`p-3 rounded-xl border-2 text-left transition-all ${
+                category === 'community_hero'
+                  ? 'border-sky bg-sky-light/30'
+                  : 'border-oyster-200 hover:border-oyster-300'
+              }`}
+            >
+              <Users className={`w-5 h-5 mb-2 ${category === 'community_hero' ? 'text-sky' : 'text-oyster-400'}`} />
+              <div className="font-medium text-ink text-sm">Community Hero</div>
+              <div className="text-xs text-oyster-500 mt-0.5">Making a difference</div>
+            </button>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Nominee Details */}
+          <Input
+            label="Who are you nominating?"
+            value={nomineeName}
+            onChange={(e) => setNomineeName(e.target.value)}
+            placeholder="Their name"
+            required
+          />
+
+          {category === 'hospitality_star' && (
+            <Input
+              label="Where do they work?"
+              value={nomineeBusiness}
+              onChange={(e) => setNomineeBusiness(e.target.value)}
+              placeholder="Business name"
+            />
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">
+              Why should they win? *
             </label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setCategory('hospitality_star')}
-                className={`p-4 rounded-xl border-2 text-left transition-all ${
-                  category === 'hospitality_star'
-                    ? 'border-coral bg-coral/10'
-                    : 'border-ink/10 hover:border-ink/30'
-                }`}
-              >
-                <div className="text-2xl mb-2">⭐</div>
-                <div className="font-semibold text-ink">Hospitality Star</div>
-                <div className="text-sm text-ink/60">
-                  Outstanding service in local businesses
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setCategory('community_hero')}
-                className={`p-4 rounded-xl border-2 text-left transition-all ${
-                  category === 'community_hero'
-                    ? 'border-sky bg-sky/10'
-                    : 'border-ink/10 hover:border-ink/30'
-                }`}
-              >
-                <div className="text-2xl mb-2">🦸</div>
-                <div className="font-semibold text-ink">Community Hero</div>
-                <div className="text-sm text-ink/60">
-                  Making Whitstable a better place
-                </div>
-              </button>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder={
+                category === 'hospitality_star'
+                  ? "Tell us about the exceptional service they provided..."
+                  : "Tell us how they've helped the Whitstable community..."
+              }
+              required
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border border-oyster-200 focus:border-sky focus:ring-1 focus:ring-sky outline-none resize-none text-sm"
+            />
+          </div>
+
+          {/* Nominator Details */}
+          <div className="pt-4 border-t border-oyster-100">
+            <h3 className="text-sm font-semibold text-ink mb-3">Your Details</h3>
+            <div className="space-y-3">
+              <Input
+                label="Your name"
+                value={nominatorName}
+                onChange={(e) => setNominatorName(e.target.value)}
+                placeholder="Your name"
+                required
+              />
+              <div>
+                <Input
+                  label="Your email (optional)"
+                  type="email"
+                  value={nominatorEmail}
+                  onChange={(e) => setNominatorEmail(e.target.value)}
+                  placeholder="your@email.com"
+                />
+                <p className="text-xs text-oyster-400 mt-1">
+                  We&apos;ll notify you if your nominee wins
+                </p>
+              </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Nominee Details */}
-            <div>
-              <label className="block text-sm font-semibold text-ink mb-2">
-                Who are you nominating? *
-              </label>
-              <input
-                type="text"
-                value={nomineeName}
-                onChange={(e) => setNomineeName(e.target.value)}
-                placeholder="Their name"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-ink/20 focus:border-sky focus:ring-1 focus:ring-sky outline-none"
-              />
-            </div>
-
-            {category === 'hospitality_star' && (
-              <div>
-                <label className="block text-sm font-semibold text-ink mb-2">
-                  Where do they work?
-                </label>
-                <input
-                  type="text"
-                  value={nomineeBusiness}
-                  onChange={(e) => setNomineeBusiness(e.target.value)}
-                  placeholder="Business name"
-                  className="w-full px-4 py-3 rounded-xl border border-ink/20 focus:border-sky focus:ring-1 focus:ring-sky outline-none"
-                />
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-semibold text-ink mb-2">
-                Why should they win? *
-              </label>
-              <textarea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder={
-                  category === 'hospitality_star'
-                    ? "Tell us about the exceptional service they provided..."
-                    : "Tell us how they've helped the Whitstable community..."
-                }
-                required
-                rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-ink/20 focus:border-sky focus:ring-1 focus:ring-sky outline-none resize-none"
-              />
-            </div>
-
-            {/* Nominator Details */}
-            <div className="pt-4 border-t border-ink/10">
-              <h3 className="text-sm font-semibold text-ink mb-3">Your Details</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-ink/70 mb-1">
-                    Your name *
-                  </label>
-                  <input
-                    type="text"
-                    value={nominatorName}
-                    onChange={(e) => setNominatorName(e.target.value)}
-                    placeholder="Your name"
-                    required
-                    className="w-full px-4 py-3 rounded-xl border border-ink/20 focus:border-sky focus:ring-1 focus:ring-sky outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-ink/70 mb-1">
-                    Your email (optional)
-                  </label>
-                  <input
-                    type="email"
-                    value={nominatorEmail}
-                    onChange={(e) => setNominatorEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 rounded-xl border border-ink/20 focus:border-sky focus:ring-1 focus:ring-sky outline-none"
-                  />
-                  <p className="text-xs text-ink/50 mt-1">
-                    We&apos;ll only use this to notify you if your nominee wins
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-coral text-white py-4 rounded-full font-semibold hover:bg-coral/90 transition-colors disabled:opacity-50"
-            >
-              {loading ? 'Submitting...' : 'Submit Nomination'}
-            </button>
-          </form>
-        </div>
-      </main>
-      <BottomNav />
+          <Button
+            type="submit"
+            fullWidth
+            isLoading={loading}
+            className="mt-6"
+          >
+            Submit Nomination
+          </Button>
+        </form>
+      </div>
     </MobileWrapper>
   );
 }
