@@ -3,6 +3,14 @@
 -- Run this AFTER engagement-schema.sql
 
 -- =====================================================
+-- 0. ADD ROLE TO PROFILES (for admin access control)
+-- =====================================================
+
+ALTER TABLE public.profiles
+ADD COLUMN IF NOT EXISTS role text DEFAULT 'user'
+CHECK (role IN ('user', 'admin', 'moderator'));
+
+-- =====================================================
 -- 1. CATEGORIES TABLE (required for shop foreign key)
 -- =====================================================
 

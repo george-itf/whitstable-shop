@@ -18,6 +18,7 @@ export interface Database {
           display_name: string | null;
           bio: string | null;
           avatar_url: string | null;
+          role: 'user' | 'admin' | 'moderator';
           is_public: boolean;
           is_local: boolean;
           joined_at: string;
@@ -29,6 +30,7 @@ export interface Database {
           display_name?: string | null;
           bio?: string | null;
           avatar_url?: string | null;
+          role?: 'user' | 'admin' | 'moderator';
           is_public?: boolean;
           is_local?: boolean;
           joined_at?: string;
@@ -40,6 +42,7 @@ export interface Database {
           display_name?: string | null;
           bio?: string | null;
           avatar_url?: string | null;
+          role?: 'user' | 'admin' | 'moderator';
           is_public?: boolean;
           is_local?: boolean;
           joined_at?: string;
