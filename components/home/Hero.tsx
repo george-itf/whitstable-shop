@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { Menu } from 'lucide-react';
 
 export default function Hero() {
   const [tideInfo, setTideInfo] = useState({ status: 'rising', time: '2:34pm' });
@@ -26,36 +28,32 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-sky to-sky-dark relative overflow-hidden">
+    <div className="bg-sky relative overflow-hidden">
       <div className="px-4 pt-4 pb-8">
         {/* Header with logo and menu */}
         <div className="flex items-center justify-between mb-6">
-          <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/seagull.svg"
+              alt=""
+              width={32}
+              height={40}
+              className="object-contain"
+              priority
+            />
+            <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
+          </Link>
           <button
             className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors active:scale-95"
             aria-label="Open menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
+            <Menu className="w-6 h-6" />
           </button>
         </div>
 
         {/* Main content */}
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
+        <div className="flex items-end justify-between">
+          <div className="flex-1 pb-2">
             <h1 className="text-white text-2xl font-bold mb-2">
               {greeting}, local
             </h1>
@@ -67,7 +65,6 @@ export default function Hero() {
             <div className="inline-flex items-center gap-2 bg-white/20 rounded-pill px-3 py-1.5 backdrop-blur-sm">
               <div className="relative">
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
@@ -80,7 +77,7 @@ export default function Hero() {
                 >
                   <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-5a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2z" />
                 </svg>
-                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green rounded-full" />
+                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green rounded-full animate-pulse" />
               </div>
               <span className="text-white text-sm font-medium">
                 tide {tideInfo.status} · {tideInfo.time}
@@ -88,13 +85,13 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Seagull mascot */}
-          <div className="w-24 h-28 relative">
+          {/* Seagull mascot - larger and peeking from edge like the logo */}
+          <div className="w-28 h-32 relative -mr-4 -mb-2">
             <Image
               src="/seagull.svg"
               alt="Whitstable seagull mascot"
               fill
-              className="object-contain"
+              className="object-contain object-bottom"
               priority
             />
           </div>
