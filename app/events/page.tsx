@@ -53,7 +53,7 @@ export default function EventsPage() {
             </Link>
             <div>
               <h1 className="text-white font-bold text-xl">what&apos;s on</h1>
-              <p className="text-white/70 text-sm">events in Whitstable</p>
+              <p className="text-white/70 text-sm">things happening around town</p>
             </div>
           </div>
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -83,8 +83,9 @@ export default function EventsPage() {
         ) : events.length === 0 ? (
           <EmptyState
             icon={Calendar}
-            title="No upcoming events"
-            description="Check back soon for what's happening in Whitstable!"
+            title="Nothing on right now"
+            description="Whitstable's taking a breather. Check back soon — something's always brewing."
+            hint="The oyster festival is usually in July..."
             variant="card"
           />
         ) : (

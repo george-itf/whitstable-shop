@@ -7,6 +7,7 @@ interface EmptyStateProps {
   icon?: LucideIcon;
   title: string;
   description?: string;
+  hint?: string;
   action?: {
     label: string;
     onClick?: () => void;
@@ -20,6 +21,7 @@ export function EmptyState({
   icon: Icon,
   title,
   description,
+  hint,
   action,
   className,
   variant = 'default',
@@ -27,7 +29,7 @@ export function EmptyState({
   const variants = {
     default: 'py-12 px-4',
     compact: 'py-8 px-4',
-    card: 'py-10 px-6 bg-oyster-50 rounded-2xl',
+    card: 'py-10 px-6 bg-oyster-50/50 rounded-2xl border border-oyster-100',
   };
 
   return (
@@ -39,13 +41,13 @@ export function EmptyState({
       )}
     >
       {Icon && (
-        <div className="w-16 h-16 rounded-2xl bg-sky-light flex items-center justify-center mb-4">
-          <Icon className="w-8 h-8 text-sky" />
+        <div className="w-14 h-14 rounded-xl bg-sky-light/70 flex items-center justify-center mb-4 border border-sky/10">
+          <Icon className="w-7 h-7 text-sky" />
         </div>
       )}
-      <h3 className="text-lg font-bold text-ink mb-1">{title}</h3>
+      <h3 className="text-base font-bold text-ink mb-1">{title}</h3>
       {description && (
-        <p className="text-sm text-grey max-w-xs mb-5 leading-relaxed">{description}</p>
+        <p className="text-sm text-oyster-500 max-w-xs mb-4 leading-relaxed">{description}</p>
       )}
       {action && (
         action.href ? (
@@ -57,6 +59,9 @@ export function EmptyState({
             {action.label}
           </Button>
         ) : null
+      )}
+      {hint && (
+        <p className="text-xs text-oyster-400 mt-4 max-w-xs italic">{hint}</p>
       )}
     </div>
   );

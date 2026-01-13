@@ -51,7 +51,7 @@ export default function AskPage() {
           <div>
             <h1 className="text-2xl font-bold text-white">Ask a Local</h1>
             <p className="text-white/80 text-sm mt-1">
-              Insider tips from Whitstable locals
+              get tips from people who actually live here
             </p>
           </div>
           <Button
@@ -94,33 +94,27 @@ export default function AskPage() {
         )}
 
         {/* How it Works */}
-        <div className="bg-sand-100 rounded-xl p-4 mb-4">
+        <div className="bg-sand-100 rounded-xl p-4 mb-4 border-l-4 border-sand-300">
           <h3 className="font-semibold text-ink text-sm mb-3">How it works</h3>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-start gap-3">
-              <div className="w-5 h-5 bg-sky rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                1
-              </div>
-              <p className="text-xs text-oyster-600">Ask about restaurants, activities, or hidden gems</p>
+              <span className="text-sm">1.</span>
+              <p className="text-xs text-oyster-600">Ask about your next meal, a day out, or the hidden spots</p>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-5 h-5 bg-sky rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                2
-              </div>
-              <p className="text-xs text-oyster-600">Locals share their knowledge and tips</p>
+              <span className="text-sm">2.</span>
+              <p className="text-xs text-oyster-600">Real locals answer — not bots, actual Whitstable people</p>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-5 h-5 bg-sky rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                3
-              </div>
-              <p className="text-xs text-oyster-600">Upvote helpful answers</p>
+              <span className="text-sm">3.</span>
+              <p className="text-xs text-oyster-600">Best answers rise to the top</p>
             </div>
           </div>
         </div>
 
         {/* Filter */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-ink section-title">Questions</h2>
+          <h2 className="font-semibold text-ink section-title">questions</h2>
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-oyster-400" />
             <Select
@@ -154,9 +148,10 @@ export default function AskPage() {
           <EmptyState
             icon={MessageCircle}
             title="No questions yet"
-            description="Be the first to ask about Whitstable!"
+            description="Go on, don't be shy — locals love sharing tips."
+            hint="Best oysters? Quietest beach spot? We've got answers."
             action={{
-              label: 'Ask a Question',
+              label: 'Ask something',
               onClick: () => setShowAskForm(true),
             }}
             variant="card"
@@ -178,17 +173,17 @@ export default function AskPage() {
         {/* Popular Topics */}
         {questions.length > 0 && (
           <div className="mt-6">
-            <h3 className="font-semibold text-ink text-sm mb-3 section-title">Popular Topics</h3>
+            <h3 className="font-semibold text-ink text-sm mb-3 section-title">people ask about</h3>
             <div className="flex flex-wrap gap-2">
               {[
-                'Oysters',
-                'Fish & Chips',
-                'Parking',
-                'Beach',
-                'Pubs',
-                'Dog-Friendly',
-                'Family',
-                'Day Trips',
+                'oysters',
+                'fish & chips',
+                'parking',
+                'the beach',
+                'good pubs',
+                'dog-friendly',
+                'family stuff',
+                'day trips',
               ].map((topic) => (
                 <Badge
                   key={topic}
