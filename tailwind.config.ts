@@ -9,21 +9,51 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        sky: '#5BB5E0',
-        'sky-light': '#e8f4fa',
-        'sky-dark': '#3a9bc9',
-        coral: '#f47b5c',
-        'coral-light': '#fef0ed',
-        'coral-dark': '#e5654a',
-        ink: '#2d2d2d',
-        paper: '#f8f8f8',
-        grey: '#6b7280',
-        'grey-light': '#e5e7eb',
-        'grey-dark': '#374151',
-        yellow: '#f5a623',
-        'yellow-light': '#fef3c7',
-        green: '#10b981',
-        'green-light': '#d1fae5',
+        // Primary - muted coastal blue (less saturated)
+        sky: '#6BA3BE',
+        'sky-light': '#EDF4F7',
+        'sky-dark': '#4A8BA8',
+        // Accent - weathered terracotta (like old beach hut paint)
+        coral: '#C9705B',
+        'coral-light': '#F7EBE8',
+        'coral-dark': '#A85A47',
+        // Text colors
+        ink: '#3D3D3D',
+        paper: '#FDFCFB',
+        grey: '#6B7280',
+        'grey-light': '#E8E6E3',
+        'grey-dark': '#4B4B4B',
+        // Accents
+        yellow: '#D4A84B',
+        'yellow-light': '#FDF6E3',
+        green: '#5B9A7D',
+        'green-light': '#E8F3ED',
+        // Driftwood - warm brown for weathered elements
+        driftwood: {
+          50: '#FAF8F6',
+          100: '#F2EDE8',
+          200: '#E5DCD2',
+          300: '#D1C4B5',
+          400: '#B5A089',
+          500: '#9A8167',
+          600: '#7D6750',
+          700: '#5F4E3D',
+          800: '#423729',
+          900: '#2A2319',
+        },
+        // Pebble - cool grey like beach stones
+        pebble: {
+          50: '#F7F7F6',
+          100: '#EEEEEC',
+          200: '#DCDCD9',
+          300: '#C4C4C0',
+          400: '#9E9E98',
+          500: '#7A7A74',
+          600: '#5E5E59',
+          700: '#474743',
+          800: '#32322F',
+          900: '#1F1F1D',
+        },
         // Oyster - neutral grayscale for text hierarchy
         oyster: {
           50: '#fafafa',
@@ -66,6 +96,8 @@ const config: Config = {
       },
       fontFamily: {
         nunito: ['Nunito', 'sans-serif'],
+        display: ['Fredoka', 'Nunito', 'sans-serif'],
+        handwritten: ['Caveat', 'cursive'],
       },
       borderRadius: {
         'card': '16px',
