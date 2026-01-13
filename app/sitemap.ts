@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { createClient } from '@/lib/supabase/server';
 
 const BASE_URL = 'https://whitstable.shop';
 
@@ -121,22 +122,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // TODO: When Supabase is connected, add dynamic shop pages:
-  // const { data: shops } = await supabase
-  //   .from('shops')
-  //   .select('slug, updated_at')
-  //   .eq('is_active', true);
-  //
-  // const shopPages = shops?.map((shop) => ({
-  //   url: `${BASE_URL}/shops/${shop.slug}`,  // Note: /shops/ not /shop/
-  //   lastModified: new Date(shop.updated_at),
-  //   changeFrequency: 'weekly' as const,
-  //   priority: 0.8,
-  // })) ?? [];
+  // Fetch dynamic shop pages from Supabase
+  let shopPages: MetadataRoute.Sitemap = [];
+  try {
+    const supabase = await createClient();
+    const { data: shops } = await supabase
+      .from('shops')
+      .select('slug, updated_at')
+      .eq('status', 'approved');
+
+    shopPages = shops?.map((shop) => ({
+      url: `${BASE_URL}/shops/${shop.slug}`,
+      lastModified: shop.updated_at ? new Date(shop.updated_at) : now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    })) ?? [];
+  } catch (error) {
+    console.error('Error fetching shops for sitemap:', error);
+  }
 
   return [
     ...staticPages,
     ...infoPages,
-    // ...shopPages,  // Uncomment when Supabase is connected
+    ...shopPages,
   ];
 }

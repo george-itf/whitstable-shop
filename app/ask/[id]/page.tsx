@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, MessageCircle, Clock, Eye, Share2, Flag, Send, CheckCircle } from 'lucide-react';
-import { Button, Card, Avatar, Badge, Textarea } from '@/components/ui';
+import { Button, Card, Avatar, Textarea } from '@/components/ui';
 import { AnswerCard } from '@/components/questions';
 import { formatRelativeTime, pluralize } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
@@ -67,10 +67,8 @@ export default function QuestionDetailPage() {
           }
         }
 
-        // Increment view count
-        await supabase.rpc('increment_view_count', { question_id: questionId }).catch(() => {
-          // Ignore if RPC doesn't exist
-        });
+        // Increment view count (fire-and-forget)
+        supabase.rpc('increment_view_count', { question_id: questionId }).then(() => {});
       } catch (error) {
         console.error('Error fetching question:', error);
       } finally {

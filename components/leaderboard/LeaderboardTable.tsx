@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { TrendingUp, TrendingDown, Minus, Trophy, Star, Heart, Camera } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Trophy, Star } from 'lucide-react';
 import { Card, Badge } from '@/components/ui';
-import { cn, getRankChangeIcon } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import type { Shop, ShopWeeklyStats, ShopBadge } from '@/types/database';
 import { SHOP_BADGES } from '@/types/database';
 
@@ -23,7 +23,6 @@ interface LeaderboardTableProps {
 export function LeaderboardTable({
   entries,
   showRankChange = true,
-  period = 'week',
 }: LeaderboardTableProps) {
   const getRankIcon = (rank: number) => {
     if (rank === 1) return <Trophy className="h-5 w-5 text-amber-500" />;

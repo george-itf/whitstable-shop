@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { HelpCircle, Info } from 'lucide-react';
-import { Button, Input, Textarea, Card } from '@/components/ui';
+import { Button, Textarea, Card } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 
 export function AskQuestionForm() {

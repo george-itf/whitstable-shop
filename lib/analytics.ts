@@ -274,7 +274,7 @@ export function trackFunnelStep(
  *    - Step 5: Claim approved
  */
 
-export default {
+const analytics = {
   trackEvent,
   trackShopView,
   trackShopSave,
@@ -295,3 +295,5 @@ export default {
   trackPWAInstall,
   trackFunnelStep,
 };
+
+export default analytics;

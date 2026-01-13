@@ -4,11 +4,12 @@ import { cn } from '@/lib/utils';
 import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'coral' | 'ghost' | 'outline';
+  variant?: 'primary' | 'secondary' | 'coral' | 'ghost' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  fullWidth?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -22,37 +23,45 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       leftIcon,
       rightIcon,
+      fullWidth,
       ...props
     },
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex items-center justify-center font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
 
     const variants = {
-      primary: 'bg-sky text-white hover:bg-sky/90',
-      secondary: 'bg-grey-light text-ink hover:bg-grey-light/80',
-      coral: 'bg-coral text-white hover:bg-coral/90',
-      ghost: 'bg-transparent text-ink hover:bg-grey-light/50',
-      outline: 'bg-transparent border border-grey-light text-ink hover:bg-grey-light/30',
+      primary: 'bg-sky text-white hover:bg-sky-dark focus-visible:ring-sky shadow-sm hover:shadow',
+      secondary: 'bg-oyster-100 text-ink hover:bg-oyster-200 focus-visible:ring-oyster-300',
+      coral: 'bg-coral text-white hover:bg-coral-dark focus-visible:ring-coral shadow-sm hover:shadow',
+      ghost: 'bg-transparent text-ink hover:bg-oyster-100 focus-visible:ring-oyster-300',
+      outline: 'bg-transparent border border-oyster-200 text-ink hover:bg-oyster-50 hover:border-oyster-300 focus-visible:ring-sky',
+      danger: 'bg-red-500 text-white hover:bg-red-600 focus-visible:ring-red-500 shadow-sm hover:shadow',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm rounded-button',
-      md: 'px-4 py-2.5 text-base rounded-button',
-      lg: 'px-6 py-3 text-lg rounded-button',
+      sm: 'px-3 py-1.5 text-sm rounded-lg gap-1.5',
+      md: 'px-4 py-2.5 text-base rounded-xl gap-2',
+      lg: 'px-6 py-3 text-lg rounded-xl gap-2',
     };
 
     return (
       <button
         ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        className={cn(
+          baseStyles,
+          variants[variant],
+          sizes[size],
+          fullWidth && 'w-full',
+          className
+        )}
         disabled={disabled || isLoading}
         {...props}
       >
         {isLoading ? (
           <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4"
+            className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -71,10 +80,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
+        ) : leftIcon ? (
+          <span className="flex-shrink-0">{leftIcon}</span>
         ) : null}
-        {leftIcon && <span className="mr-2">{leftIcon}</span>}
         {children}
-        {rightIcon && <span className="ml-2">{rightIcon}</span>}
+        {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
       </button>
     );
   }

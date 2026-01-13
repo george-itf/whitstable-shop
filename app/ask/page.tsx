@@ -1,11 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { HelpCircle, Filter, MessageCircle, Users, Clock, Sparkles } from 'lucide-react';
+import { HelpCircle, Filter, MessageCircle, Clock, Sparkles } from 'lucide-react';
 import { Button, Select, Card, Badge, EmptyState } from '@/components/ui';
 import { QuestionCard, AskQuestionForm } from '@/components/questions';
-import { createClient } from '@/lib/supabase/client';
 import type { Question, Profile } from '@/types/database';
 
 type QuestionWithProfile = Question & {
@@ -155,11 +153,10 @@ export default function AskPage() {
           icon={MessageCircle}
           title="No questions yet"
           description="Be the first to ask a question about Whitstable!"
-          action={
-            <Button onClick={() => setShowAskForm(true)} leftIcon={<HelpCircle className="h-4 w-4" />}>
-              Ask a Question
-            </Button>
-          }
+          action={{
+            label: 'Ask a Question',
+            onClick: () => setShowAskForm(true),
+          }}
         />
       ) : (
         <div className="space-y-4">

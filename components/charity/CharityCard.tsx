@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ExternalLink, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Card, Badge, Button, ProgressBar } from '@/components/ui';
 import { getPercentage, formatCurrency } from '@/lib/utils';
 import type { Charity } from '@/types/database';

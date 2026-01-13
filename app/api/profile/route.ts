@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 export async function GET() {
   try {
@@ -53,6 +54,13 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   try {
+    // Rate limit: 30 profile updates per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`profile:put:${ip}`, { limit: 30, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const supabase = await createClient();
 
     // Check authentication

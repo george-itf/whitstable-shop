@@ -28,17 +28,18 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const headersList = await headers();
-  const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown';
-  const ipHash = hashIP(ip);
+  try {
+    const body = await request.json();
+    const headersList = await headers();
+    const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown';
+    const ipHash = hashIP(ip);
 
-  const supabase = await createClient();
+    const supabase = await createClient();
 
-  // Validate required fields
-  if (!body.shop_id || !body.author_name || !body.author_postcode || !body.rating) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-  }
+    // Validate required fields
+    if (!body.shop_id || !body.author_name || !body.author_postcode || !body.rating) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
 
   // Validate postcode format
   if (!validateUKPostcode(body.author_postcode)) {
@@ -101,11 +102,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Update shop review count
-  // This would be better done with a Postgres trigger
-  if (!flaggedReason) {
-    // Could update shop's save_count here
-  }
+    // Update shop review count
+    // This would be better done with a Postgres trigger
+    if (!flaggedReason) {
+      // Could update shop's save_count here
+    }
 
-  return NextResponse.json(data);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Reviews POST error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }

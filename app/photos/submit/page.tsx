@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, AlertTriangle, Camera, Calendar, Award } from 'lucide-react';
 import { Button, Card, Badge } from '@/components/ui';
-import { PhotoSubmitForm, CompetitionBanner } from '@/components/photos';
+import { PhotoSubmitForm } from '@/components/photos';
 import { createClient } from '@/lib/supabase/client';
 import type { PhotoCompetition, Shop } from '@/types/database';
 
@@ -183,7 +183,7 @@ export default function PhotoSubmitPage() {
       {/* Submit Form */}
       <PhotoSubmitForm
         shops={shops}
-        competitionMonth={competition?.competition_month || currentMonth}
+        competitionMonth={competition?.month || currentMonth}
       />
     </div>
   );

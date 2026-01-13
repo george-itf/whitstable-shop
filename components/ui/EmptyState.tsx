@@ -11,6 +11,7 @@ interface EmptyStateProps {
     onClick: () => void;
   };
   className?: string;
+  variant?: 'default' | 'compact' | 'card';
 }
 
 export function EmptyState({
@@ -19,22 +20,30 @@ export function EmptyState({
   description,
   action,
   className,
+  variant = 'default',
 }: EmptyStateProps) {
+  const variants = {
+    default: 'py-12 px-4',
+    compact: 'py-8 px-4',
+    card: 'py-10 px-6 bg-oyster-50 rounded-2xl',
+  };
+
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center py-12 px-4 text-center',
+        'flex flex-col items-center justify-center text-center',
+        variants[variant],
         className
       )}
     >
       {Icon && (
-        <div className="w-16 h-16 rounded-full bg-oyster-100 flex items-center justify-center mb-4">
-          <Icon className="w-8 h-8 text-oyster-400" />
+        <div className="w-16 h-16 rounded-2xl bg-sky-light flex items-center justify-center mb-4">
+          <Icon className="w-8 h-8 text-sky" />
         </div>
       )}
-      <h3 className="text-lg font-semibold text-oyster-900 mb-1">{title}</h3>
+      <h3 className="text-lg font-bold text-ink mb-1">{title}</h3>
       {description && (
-        <p className="text-sm text-oyster-600 max-w-sm mb-4">{description}</p>
+        <p className="text-sm text-grey max-w-xs mb-5 leading-relaxed">{description}</p>
       )}
       {action && (
         <Button onClick={action.onClick} size="sm">

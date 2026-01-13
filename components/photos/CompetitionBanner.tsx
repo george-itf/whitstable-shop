@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Camera, Award, Clock } from 'lucide-react';
 import { Card, Button, Countdown, Badge } from '@/components/ui';
-import { formatDate } from '@/lib/utils';
 import type { PhotoCompetition } from '@/types/database';
 
 interface CompetitionBannerProps {

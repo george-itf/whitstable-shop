@@ -1,5 +1,6 @@
 'use client';
 
+import { Clock } from 'lucide-react';
 import { OpeningHours } from '@/types';
 import { formatTime, getDayName } from '@/lib/utils';
 import { DAYS_DISPLAY } from '@/lib/constants';
@@ -23,7 +24,10 @@ export default function ShopHours({ hours }: ShopHoursProps) {
   if (!hours) {
     return (
       <div className="px-4 py-4 border-b border-grey-light">
-        <h2 className="font-bold text-ink mb-3">opening hours</h2>
+        <div className="flex items-center gap-2 mb-3">
+          <Clock className="w-4 h-4 text-sky" />
+          <h2 className="font-bold text-ink">opening hours</h2>
+        </div>
         <p className="text-grey text-sm">Hours not available</p>
       </div>
     );
@@ -33,39 +37,51 @@ export default function ShopHours({ hours }: ShopHoursProps) {
 
   return (
     <div className="px-4 py-4 border-b border-grey-light">
-      <h2 className="font-bold text-ink mb-3">opening hours</h2>
+      <div className="flex items-center gap-2 mb-3">
+        <Clock className="w-4 h-4 text-sky" />
+        <h2 className="font-bold text-ink">opening hours</h2>
+      </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         {ORDERED_DAYS.map((day) => {
           const dayHours = hours[day];
           const isToday = day === today;
+          const isClosed = !dayHours || dayHours.closed;
 
           return (
             <div
               key={day}
               className={cn(
-                'flex items-center justify-between py-1.5 px-2 rounded-lg',
-                isToday && 'bg-sky-light'
+                'flex items-center justify-between py-2 px-3 rounded-xl transition-colors',
+                isToday ? 'bg-sky-light' : 'hover:bg-oyster-50'
               )}
             >
               <span
                 className={cn(
                   'text-sm',
-                  isToday ? 'font-semibold text-sky' : 'text-grey-dark'
+                  isToday ? 'font-bold text-sky' : 'font-medium text-grey-dark'
                 )}
               >
                 {DAYS_DISPLAY[day]}
-                {isToday && ' (today)'}
+                {isToday && (
+                  <span className="ml-1.5 text-xs bg-sky text-white px-1.5 py-0.5 rounded-md">
+                    today
+                  </span>
+                )}
               </span>
               <span
                 className={cn(
                   'text-sm',
-                  isToday ? 'font-semibold text-sky' : 'text-ink'
+                  isClosed
+                    ? 'text-grey'
+                    : isToday
+                    ? 'font-bold text-sky'
+                    : 'font-medium text-ink'
                 )}
               >
-                {dayHours && !dayHours.closed
-                  ? `${formatTime(dayHours.open)} - ${formatTime(dayHours.close)}`
-                  : 'Closed'}
+                {isClosed
+                  ? 'Closed'
+                  : `${formatTime(dayHours!.open)} - ${formatTime(dayHours!.close)}`}
               </span>
             </div>
           );

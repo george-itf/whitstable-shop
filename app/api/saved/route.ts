@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 export async function GET() {
   try {
@@ -40,6 +41,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 50 save operations per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`saved:post:${ip}`, { limit: 50, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const supabase = await createClient();
 
     // Check authentication
@@ -93,10 +101,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save shop' }, { status: 500 });
     }
 
-    // Increment save count
-    await supabase.rpc('increment_save_count', { p_shop_id: shop_id }).catch(() => {
-      // Ignore if RPC doesn't exist
-    });
+    // Increment save count (fire-and-forget)
+    supabase.rpc('increment_save_count', { p_shop_id: shop_id }).then(() => {});
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
@@ -107,6 +113,13 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    // Rate limit: 50 unsave operations per hour per IP
+    const ip = getClientIP(request);
+    const rateLimit = checkRateLimit(`saved:delete:${ip}`, { limit: 50, windowSeconds: 3600 });
+    if (!rateLimit.success) {
+      return rateLimitResponse(rateLimit.reset);
+    }
+
     const supabase = await createClient();
 
     // Check authentication
@@ -136,10 +149,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Failed to unsave shop' }, { status: 500 });
     }
 
-    // Decrement save count
-    await supabase.rpc('decrement_save_count', { p_shop_id: shopId }).catch(() => {
-      // Ignore if RPC doesn't exist
-    });
+    // Decrement save count (fire-and-forget)
+    supabase.rpc('decrement_save_count', { p_shop_id: shopId }).then(() => {});
 
     return NextResponse.json({ success: true });
   } catch (error) {

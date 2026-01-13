@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -22,7 +23,14 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
       >
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-white font-bold text-xl">whitstable.shop</span>
+            <Image
+              src="/seagull.svg"
+              alt=""
+              width={28}
+              height={36}
+              className="object-contain"
+            />
+            <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
           </Link>
 
           {showMenu && (

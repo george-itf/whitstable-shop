@@ -1,0 +1,35 @@
+<svg viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Whitstable.shop logo with seagull -->
+
+  <!-- Seagull mascot -->
+  <g transform="translate(0, 5)">
+    <!-- Body -->
+    <ellipse cx="35" cy="45" rx="22" ry="28" fill="white"/>
+
+    <!-- Wing - gray accent -->
+    <path d="M18 38 Q10 50 18 62 Q32 65 42 55 Q32 45 25 38 Z" fill="#d1d5db"/>
+
+    <!-- Head -->
+    <ellipse cx="32" cy="22" rx="18" ry="16" fill="white"/>
+
+    <!-- Eyes -->
+    <circle cx="26" cy="19" r="2.5" fill="#1a1a1a"/>
+    <circle cx="38" cy="19" r="2.5" fill="#1a1a1a"/>
+
+    <!-- Beak -->
+    <path d="M29 26 L32 33 L35 26 Z" fill="#f5a623"/>
+
+    <!-- Legs -->
+    <rect x="27" y="70" width="3" height="8" rx="1" fill="#f5a623"/>
+    <rect x="37" y="70" width="3" height="8" rx="1" fill="#f5a623"/>
+
+    <!-- Feet -->
+    <ellipse cx="28.5" cy="80" rx="5" ry="2.5" fill="#f5a623"/>
+    <ellipse cx="38.5" cy="80" rx="5" ry="2.5" fill="#f5a623"/>
+  </g>
+
+  <!-- Text: whitstable.shop -->
+  <text x="65" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="white">
+    whitstable.shop
+  </text>
+</svg>

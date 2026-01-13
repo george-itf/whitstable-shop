@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import ShopList from '@/components/shops/ShopList';
@@ -10,7 +9,6 @@ import { createClient } from '@/lib/supabase/client';
 import type { Shop } from '@/types';
 
 export default function SavedPage() {
-  const router = useRouter();
   const [savedShops, setSavedShops] = useState<Shop[]>([]);
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
