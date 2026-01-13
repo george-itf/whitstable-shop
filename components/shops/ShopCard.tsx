@@ -41,16 +41,16 @@ export default function ShopCard({
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-sky-light to-ocean-100">
-              <div className="text-sky/30">
+            <div className="absolute inset-0 flex items-center justify-center bg-oyster-100">
+              <div className="text-oyster-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
+                  width="40"
+                  height="40"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -87,12 +87,13 @@ export default function ShopCard({
 
           {/* Open/Closed indicator */}
           <div className="absolute bottom-2.5 right-2.5">
-            <span className={`text-xs font-semibold px-2 py-1 rounded-lg ${
+            <span className={`text-xs font-medium px-2 py-1 rounded-md flex items-center gap-1.5 ${
               openStatus.isOpen
-                ? 'bg-green/90 text-white'
-                : 'bg-oyster-600/90 text-white'
+                ? 'bg-white/95 text-green'
+                : 'bg-white/95 text-oyster-500'
             }`}>
-              {openStatus.isOpen ? 'Open' : 'Closed'}
+              <span className={`w-1.5 h-1.5 rounded-full ${openStatus.isOpen ? 'bg-green' : 'bg-oyster-400'}`} />
+              {openStatus.isOpen ? 'Open now' : 'Closed'}
             </span>
           </div>
         </div>

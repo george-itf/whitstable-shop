@@ -10,20 +10,31 @@ export default function Hero() {
   const [greeting, setGreeting] = useState('hey there');
 
   useEffect(() => {
-    // Dynamic greeting based on time of day
+    // Dynamic greeting with Whitstable personality
     const hour = new Date().getHours();
-    if (hour < 12) {
-      setGreeting('good morning');
-    } else if (hour < 17) {
-      setGreeting('good afternoon');
-    } else {
-      setGreeting('good evening');
-    }
+    const greetings = {
+      earlyMorning: ['early riser?', 'up with the seagulls', 'morning, sleepyhead'],
+      morning: ['morning, local', 'lovely morning for it', 'coffee first?'],
+      afternoon: ['afternoon stroll?', 'found a new favourite yet?', 'good to see you'],
+      evening: ['fish & chips o\'clock', 'evening, local', 'sunset watcher?'],
+      night: ['night owl?', 'can\'t sleep either?', 'late one tonight'],
+    };
+
+    let timeOfDay: keyof typeof greetings;
+    if (hour < 7) timeOfDay = 'earlyMorning';
+    else if (hour < 12) timeOfDay = 'morning';
+    else if (hour < 17) timeOfDay = 'afternoon';
+    else if (hour < 21) timeOfDay = 'evening';
+    else timeOfDay = 'night';
+
+    const options = greetings[timeOfDay];
+    setGreeting(options[Math.floor(Math.random() * options.length)]);
 
     // Mock tide data - in production this would come from an API
+    const isRising = hour % 12 < 6;
     setTideInfo({
-      status: hour % 12 < 6 ? 'rising' : 'falling',
-      time: hour % 12 < 6 ? 'high at 3:45pm' : 'low at 9:20pm',
+      status: isRising ? 'coming in' : 'heading out',
+      time: isRising ? 'high around 3:45pm' : 'low around 9:20pm',
     });
   }, []);
 
@@ -55,10 +66,10 @@ export default function Hero() {
         <div className="flex items-end justify-between">
           <div className="flex-1 pb-2">
             <h1 className="text-white text-2xl font-bold mb-2">
-              {greeting}, local
+              {greeting}
             </h1>
             <p className="text-white/80 text-sm mb-4">
-              discover what&apos;s happening in whitstable
+              see what&apos;s on, who&apos;s open, what&apos;s good
             </p>
 
             {/* Tide widget - enhanced with live indicator */}
@@ -80,7 +91,7 @@ export default function Hero() {
                 <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green rounded-full animate-pulse" />
               </div>
               <span className="text-white text-sm font-medium">
-                tide {tideInfo.status} · {tideInfo.time}
+                {tideInfo.status} · {tideInfo.time}
               </span>
             </div>
           </div>

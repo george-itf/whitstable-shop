@@ -59,7 +59,7 @@ export default function ShopsPage() {
             </Link>
             <div>
               <h1 className="text-white font-bold text-xl">shops</h1>
-              <p className="text-white/70 text-sm">discover local businesses</p>
+              <p className="text-white/70 text-sm">the best of Whitstable high street</p>
             </div>
           </div>
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -93,8 +93,8 @@ export default function ShopsPage() {
 
       {/* Shop count */}
       <div className="px-4 py-3">
-        <p className="text-sm font-medium text-oyster-600">
-          {isLoading ? 'Loading...' : `${filteredShops.length} shops`}
+        <p className="text-sm text-oyster-500">
+          {isLoading ? 'Loading...' : `${filteredShops.length} places to explore`}
         </p>
       </div>
 
