@@ -14,8 +14,8 @@ export default function MobileWrapper({
   return (
     <div
       className={cn(
-        'max-w-[430px] mx-auto bg-white min-h-screen relative shadow-lg',
-        withNav && 'pb-20',
+        'max-w-[430px] md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto bg-white min-h-screen relative shadow-lg md:shadow-none',
+        withNav && 'pb-20 md:pb-0',
         className
       )}
     >

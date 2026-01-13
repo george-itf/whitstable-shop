@@ -23,7 +23,7 @@
 
 @layer components {
   .mobile-wrapper {
-    @apply max-w-[430px] mx-auto bg-white min-h-screen relative;
+    @apply max-w-[430px] md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto bg-white min-h-screen relative shadow-lg md:shadow-none;
     background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
   }
 
