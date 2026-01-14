@@ -54,11 +54,14 @@ test.describe('Mobile Menu', () => {
       .or(page.getByLabel(/menu/i));
     await menuButton.click();
 
-    // Click backdrop (area outside menu)
-    await page.locator('.bg-ink\\/50, [aria-hidden="true"]').first().click();
+    // Wait for menu to be visible
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible();
+
+    // Click on the left side of screen (backdrop area, menu is on right)
+    await page.mouse.click(50, 400);
 
     // Menu should be hidden
-    const menuPanel = page.getByRole('dialog');
     await expect(menuPanel).not.toBeVisible();
   });
 
@@ -138,20 +141,20 @@ test.describe('Bottom Navigation', () => {
   test('should navigate between pages', async ({ page }) => {
     await page.goto('/');
 
-    // Click Search
-    await page.getByRole('link', { name: /search/i }).click();
+    // Click Search (in bottom nav)
+    await page.locator('nav[aria-label="Main navigation"]').getByRole('link', { name: /search/i }).click();
     await expect(page).toHaveURL(/\/search/);
 
     // Click Map
-    await page.getByRole('link', { name: /map/i }).click();
+    await page.locator('nav[aria-label="Main navigation"]').getByRole('link', { name: /map/i }).click();
     await expect(page).toHaveURL(/\/map/);
 
     // Click Saved
-    await page.getByRole('link', { name: /saved/i }).click();
+    await page.locator('nav[aria-label="Main navigation"]').getByRole('link', { name: /saved/i }).click();
     await expect(page).toHaveURL(/\/saved/);
 
     // Click Home
-    await page.getByRole('link', { name: /home/i }).click();
+    await page.locator('nav[aria-label="Main navigation"]').getByRole('link', { name: /home/i }).click();
     await expect(page).toHaveURL('/');
   });
 });
