@@ -1,11 +1,19 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Tag, Calendar, Clock, Store } from 'lucide-react';
-import { Card, Badge, Button } from '@/components/ui';
+import { Card, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
-import type { Offer, Shop } from '@/types/database';
+import type { Offer, Shop, ShopImage } from '@/types/database';
+
+type ShopWithImage = Pick<Shop, 'id' | 'name' | 'slug'> & {
+  images?: Pick<ShopImage, 'url' | 'is_primary'>[];
+};
 
 interface OfferCardProps {
-  offer: Offer & { shop?: Pick<Shop, 'name' | 'slug'> };
+  offer: Offer & { shop?: ShopWithImage };
   variant?: 'default' | 'compact';
 }
 
@@ -19,80 +27,109 @@ const offerTypeLabels: Record<string, { label: string; color: 'success' | 'info'
 };
 
 export function OfferCard({ offer, variant = 'default' }: OfferCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const typeInfo = offerTypeLabels[offer.offer_type || 'other'] || offerTypeLabels.other;
   const isOngoing = offer.is_ongoing;
   const isExpiringSoon = !isOngoing && offer.valid_until &&
     new Date(offer.valid_until).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000;
 
+  // Get primary shop image or first available
+  const shopImage = offer.shop?.images?.find(img => img.is_primary)?.url
+    || offer.shop?.images?.[0]?.url;
+
   if (variant === 'compact') {
     return (
-      <Card hoverable className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
-          <Tag className="h-6 w-6 text-green-600" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-oyster-900 truncate">{offer.title}</p>
-          {offer.shop && (
-            <p className="text-sm text-oyster-500 truncate">{offer.shop.name}</p>
-          )}
-        </div>
-        <Badge variant={typeInfo.color} size="sm">
-          {typeInfo.label}
-        </Badge>
-      </Card>
+      <Link href={offer.shop ? `/shops/${offer.shop.slug}` : '#'}>
+        <Card hoverable className="flex items-center gap-3 p-3">
+          {/* Shop image or icon */}
+          <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-oyster-100">
+            {shopImage ? (
+              <Image
+                src={shopImage}
+                alt={offer.shop?.name || ''}
+                width={56}
+                height={56}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Tag className="w-6 h-6 text-oyster-400" />
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-ink text-sm truncate">{offer.title}</p>
+            {offer.shop && (
+              <p className="text-xs text-grey truncate">{offer.shop.name}</p>
+            )}
+          </div>
+          <Badge variant={typeInfo.color} size="sm">
+            {typeInfo.label}
+          </Badge>
+        </Card>
+      </Link>
     );
   }
 
   return (
-    <Card hoverable>
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <Badge variant={typeInfo.color}>{typeInfo.label}</Badge>
-        {isExpiringSoon && (
-          <Badge variant="warning" size="sm">
-            <Clock className="h-3 w-3 mr-1" />
-            Ending soon
-          </Badge>
-        )}
-      </div>
+    <Link href={offer.shop ? `/shops/${offer.shop.slug}` : '#'}>
+      <Card hoverable className="overflow-hidden p-0">
+        {/* Shop image header */}
+        <div className="relative h-32 bg-oyster-100">
+          {shopImage ? (
+            <>
+              {!imageLoaded && <div className="absolute inset-0 skeleton" />}
+              <Image
+                src={shopImage}
+                alt={offer.shop?.name || ''}
+                fill
+                className={`object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setImageLoaded(true)}
+                sizes="(max-width: 640px) 100vw, 50vw"
+              />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Store className="w-10 h-10 text-oyster-300" />
+            </div>
+          )}
+          {/* Badge overlay */}
+          <div className="absolute top-3 left-3">
+            <Badge variant={typeInfo.color}>{typeInfo.label}</Badge>
+          </div>
+          {isExpiringSoon && (
+            <div className="absolute top-3 right-3">
+              <Badge variant="warning" size="sm">
+                <Clock className="h-3 w-3 mr-1" />
+                Ends soon
+              </Badge>
+            </div>
+          )}
+        </div>
 
-      <h3 className="text-lg font-semibold text-oyster-900 mb-2">{offer.title}</h3>
+        <div className="p-4">
+          <h3 className="text-base font-bold text-ink mb-1">{offer.title}</h3>
 
-      {offer.shop && (
-        <Link
-          href={`/shops/${offer.shop.slug}`}
-          className="flex items-center gap-1 text-ocean-600 hover:text-ocean-700 text-sm mb-3"
-        >
-          <Store className="h-4 w-4" />
-          {offer.shop.name}
-        </Link>
-      )}
+          {offer.shop && (
+            <p className="text-sm text-sky mb-2">{offer.shop.name}</p>
+          )}
 
-      {offer.description && (
-        <p className="text-oyster-600 mb-4">{offer.description}</p>
-      )}
+          {offer.description && (
+            <p className="text-sm text-grey line-clamp-2 mb-3">{offer.description}</p>
+          )}
 
-      <div className="flex items-center gap-4 text-sm text-oyster-500 mb-4">
-        <span className="flex items-center gap-1">
-          <Calendar className="h-4 w-4" />
-          {isOngoing
-            ? 'Ongoing offer'
-            : offer.valid_until
-            ? `Valid until ${formatDate(offer.valid_until, 'dd MMM yyyy')}`
-            : `From ${formatDate(offer.valid_from, 'dd MMM yyyy')}`}
-        </span>
-      </div>
-
-      {offer.terms && (
-        <p className="text-xs text-oyster-400 mb-4 italic">{offer.terms}</p>
-      )}
-
-      {offer.shop && (
-        <Link href={`/shops/${offer.shop.slug}`}>
-          <Button size="sm" className="w-full">
-            View Shop
-          </Button>
-        </Link>
-      )}
-    </Card>
+          <div className="flex items-center gap-1.5 text-xs text-grey">
+            <Calendar className="h-3.5 w-3.5" />
+            {isOngoing
+              ? 'Ongoing'
+              : offer.valid_until
+              ? `Until ${formatDate(offer.valid_until, 'dd MMM')}`
+              : `From ${formatDate(offer.valid_from, 'dd MMM')}`}
+          </div>
+        </div>
+      </Card>
+    </Link>
   );
 }
