@@ -39,8 +39,10 @@ export function AnswerCard({
                 ? 'text-ocean-600 bg-ocean-100'
                 : 'text-oyster-400 hover:text-ocean-600 hover:bg-ocean-50'
             )}
+            aria-label={hasUpvoted ? 'Remove upvote' : 'Upvote answer'}
+            aria-pressed={hasUpvoted}
           >
-            <ThumbsUp className={cn('h-5 w-5', hasUpvoted && 'fill-current')} />
+            <ThumbsUp className={cn('h-5 w-5', hasUpvoted && 'fill-current')} aria-hidden="true" />
           </button>
           <span className="font-medium text-oyster-900">{answer.upvotes}</span>
         </div>

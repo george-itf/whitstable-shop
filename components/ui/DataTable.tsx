@@ -116,9 +116,11 @@ export default function DataTable<T extends Record<string, unknown>>({
                       ? 'bg-sky border-sky'
                       : 'border-grey-light hover:border-grey'
                   )}
+                  aria-label={allSelected ? 'Deselect all rows' : 'Select all rows'}
+                  aria-pressed={allSelected}
                 >
                   {(allSelected || someSelected) && (
-                    <Check className="w-3 h-3 text-white" />
+                    <Check className="w-3 h-3 text-white" aria-hidden="true" />
                   )}
                 </button>
               </th>
@@ -197,8 +199,10 @@ export default function DataTable<T extends Record<string, unknown>>({
                             ? 'bg-sky border-sky'
                             : 'border-grey-light hover:border-grey'
                         )}
+                        aria-label={isSelected ? 'Deselect row' : 'Select row'}
+                        aria-pressed={isSelected}
                       >
-                        {isSelected && <Check className="w-3 h-3 text-white" />}
+                        {isSelected && <Check className="w-3 h-3 text-white" aria-hidden="true" />}
                       </button>
                     </td>
                   )}

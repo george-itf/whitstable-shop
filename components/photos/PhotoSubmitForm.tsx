@@ -195,8 +195,9 @@ export function PhotoSubmitForm({
               type="button"
               onClick={clearImage}
               className="absolute top-3 right-3 p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+              aria-label="Remove image"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
         ) : (

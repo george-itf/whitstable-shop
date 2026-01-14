@@ -74,15 +74,17 @@ export default function ShopHero({ shop, category, primaryImage }: ShopHeroProps
           <Link
             href="/shops"
             className="p-2.5 bg-white/95 rounded-xl shadow-soft hover:bg-white transition-all tap-effect"
+            aria-label="Back to shops"
           >
-            <ChevronLeft className="w-5 h-5 text-ink" />
+            <ChevronLeft className="w-5 h-5 text-ink" aria-hidden="true" />
           </Link>
 
           <button
             onClick={handleShare}
             className="p-2.5 bg-white/95 rounded-xl shadow-soft hover:bg-white transition-all tap-effect"
+            aria-label="Share this shop"
           >
-            <Share2 className="w-5 h-5 text-ink" />
+            <Share2 className="w-5 h-5 text-ink" aria-hidden="true" />
           </button>
         </div>
 
