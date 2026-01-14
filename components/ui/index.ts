@@ -10,3 +10,13 @@ export { default as ProgressBar } from './ProgressBar';
 export { default as Tabs, TabsList, TabsTrigger, TabsContent } from './Tabs';
 export { default as EmptyState } from './EmptyState';
 export { default as Countdown } from './Countdown';
+export {
+  Skeleton,
+  ShopCardSkeleton,
+  PhotoCardSkeleton,
+  EventCardSkeleton,
+  ListItemSkeleton,
+  ShopHeroSkeleton,
+  ContentSkeleton,
+  PageSkeleton,
+} from './Skeleton';

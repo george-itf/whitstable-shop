@@ -72,8 +72,13 @@ export default function MapPage() {
 
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-    if (!token) {
-      setMapError('Mapbox API key not configured');
+    if (!token || token === 'your_mapbox_token' || token.length < 50) {
+      setMapError('Mapbox API key not configured or invalid');
+      return;
+    }
+
+    if (!token.startsWith('pk.')) {
+      setMapError('Invalid Mapbox token format (should start with pk.)');
       return;
     }
 
@@ -205,10 +210,14 @@ export default function MapPage() {
         {/* Error state */}
         {mapError && (
           <div className="absolute inset-0 bg-sky-light flex items-center justify-center">
-            <div className="bg-white rounded-card p-4 shadow-card text-center max-w-xs">
-              <p className="text-grey">{mapError}</p>
-              <p className="text-xs text-grey mt-2">
-                Add NEXT_PUBLIC_MAPBOX_TOKEN to your environment variables
+            <div className="bg-white rounded-card p-6 shadow-card text-center max-w-sm mx-4">
+              <div className="w-16 h-16 bg-coral/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-coral" />
+              </div>
+              <h3 className="font-bold text-ink mb-2">Map Unavailable</h3>
+              <p className="text-grey text-sm mb-3">{mapError}</p>
+              <p className="text-xs text-grey-dark bg-oyster-100 rounded-lg p-3">
+                The map requires a valid Mapbox token. Check that NEXT_PUBLIC_MAPBOX_TOKEN is set in your .env.local file.
               </p>
             </div>
           </div>

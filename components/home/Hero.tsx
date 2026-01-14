@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Menu } from 'lucide-react';
+import { MenuTrigger } from '@/components/layout/MobileMenu';
 
 export default function Hero() {
   const [tideInfo, setTideInfo] = useState({ status: 'rising', time: '2:34pm' });
@@ -59,12 +59,10 @@ export default function Hero() {
             />
             <span className="text-white font-bold text-xl tracking-tight font-display">whitstable.shop</span>
           </Link>
-          <button
-            className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors active:scale-95"
-            aria-label="Open menu"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+          <MenuTrigger
+            className="text-white/80 hover:text-white"
+            iconClassName="text-white/80 hover:text-white"
+          />
         </div>
 
         {/* Main content */}

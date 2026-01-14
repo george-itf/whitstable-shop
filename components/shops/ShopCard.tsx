@@ -1,17 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, MapPin } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import { Shop, Category } from '@/types';
-import { isCurrentlyOpen } from '@/lib/utils';
+import { isCurrentlyOpen, cn } from '@/lib/utils';
 
 interface ShopCardProps {
   shop: Shop & { category?: Category | null };
   showSaveButton?: boolean;
   isSaved?: boolean;
   onToggleSave?: (shopId: string) => void;
+  priority?: boolean;
 }
 
 export default function ShopCard({
@@ -19,7 +21,9 @@ export default function ShopCard({
   showSaveButton = true,
   isSaved = false,
   onToggleSave,
+  priority = false,
 }: ShopCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const openStatus = isCurrentlyOpen(shop.opening_hours);
 
   const handleSaveClick = (e: React.MouseEvent) => {
@@ -34,12 +38,24 @@ export default function ShopCard({
         {/* Image */}
         <div className="relative h-36 bg-oyster-100">
           {shop.images && shop.images[0] ? (
-            <Image
-              src={shop.images[0].url}
-              alt={shop.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+            <>
+              {!imageLoaded && (
+                <div className="absolute inset-0 skeleton" aria-hidden="true" />
+              )}
+              <Image
+                src={shop.images[0].url}
+                alt={shop.name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                priority={priority}
+                className={cn(
+                  'object-cover transition-all duration-300',
+                  imageLoaded ? 'opacity-100' : 'opacity-0',
+                  'group-hover:scale-105'
+                )}
+                onLoad={() => setImageLoaded(true)}
+              />
+            </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-oyster-100">
               <div className="text-oyster-300">

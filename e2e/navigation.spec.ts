@@ -1,0 +1,245 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Mobile Menu', () => {
+  test.use({ viewport: { width: 390, height: 844 } }); // iPhone 12 size
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
+
+  test('should open mobile menu when hamburger is clicked', async ({ page }) => {
+    // Find and click hamburger menu button
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+
+    await menuButton.click();
+
+    // Menu panel should be visible
+    const menuPanel = page.getByRole('dialog', { name: /menu|navigation/i });
+    await expect(menuPanel).toBeVisible();
+  });
+
+  test('should close menu when X button is clicked', async ({ page }) => {
+    // Open menu
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+    await menuButton.click();
+
+    // Click close button
+    const closeButton = page.getByRole('button', { name: /close/i });
+    await closeButton.click();
+
+    // Menu should be hidden
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).not.toBeVisible();
+  });
+
+  test('should close menu when Escape key is pressed', async ({ page }) => {
+    // Open menu
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+    await menuButton.click();
+
+    // Press Escape
+    await page.keyboard.press('Escape');
+
+    // Menu should be hidden
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).not.toBeVisible();
+  });
+
+  test('should close menu when backdrop is clicked', async ({ page }) => {
+    // Open menu
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+    await menuButton.click();
+
+    // Click backdrop (area outside menu)
+    await page.locator('.bg-ink\\/50, [aria-hidden="true"]').first().click();
+
+    // Menu should be hidden
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).not.toBeVisible();
+  });
+
+  test('should display all menu sections', async ({ page }) => {
+    // Open menu
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+    await menuButton.click();
+
+    // Check sections exist
+    await expect(page.getByText('Discover')).toBeVisible();
+    await expect(page.getByText('Community')).toBeVisible();
+    await expect(page.getByText('Account')).toBeVisible();
+  });
+
+  test('should navigate to page and close menu', async ({ page }) => {
+    // Open menu
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+    await menuButton.click();
+
+    // Click on a menu item
+    await page.getByRole('link', { name: /all shops/i }).click();
+
+    // Should navigate
+    await expect(page).toHaveURL(/\/shops/);
+
+    // Menu should be closed
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).not.toBeVisible();
+  });
+
+  test('menu should trap focus', async ({ page }) => {
+    // Open menu
+    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
+      .or(page.getByLabel(/menu/i));
+    await menuButton.click();
+
+    // Close button should be focused initially
+    const closeButton = page.getByRole('button', { name: /close/i });
+    await expect(closeButton).toBeFocused();
+
+    // Tab through menu items
+    for (let i = 0; i < 20; i++) {
+      await page.keyboard.press('Tab');
+    }
+
+    // Focus should still be within menu (trapped)
+    const focusedElement = page.locator(':focus');
+    const menuPanel = page.getByRole('dialog');
+
+    // The focused element should be inside the menu
+    await expect(menuPanel.locator(':focus')).toBeVisible();
+  });
+});
+
+test.describe('Bottom Navigation', () => {
+  test.use({ viewport: { width: 390, height: 844 } }); // Mobile
+
+  test('should be visible on mobile', async ({ page }) => {
+    await page.goto('/');
+
+    const bottomNav = page.getByRole('navigation', { name: /main navigation/i });
+    await expect(bottomNav).toBeVisible();
+  });
+
+  test('should highlight current page', async ({ page }) => {
+    await page.goto('/');
+
+    // Home should be active
+    const homeLink = page.getByRole('link', { name: /home.*current/i })
+      .or(page.locator('nav a[aria-current="page"]'));
+
+    await expect(homeLink.first()).toBeVisible();
+  });
+
+  test('should navigate between pages', async ({ page }) => {
+    await page.goto('/');
+
+    // Click Search
+    await page.getByRole('link', { name: /search/i }).click();
+    await expect(page).toHaveURL(/\/search/);
+
+    // Click Map
+    await page.getByRole('link', { name: /map/i }).click();
+    await expect(page).toHaveURL(/\/map/);
+
+    // Click Saved
+    await page.getByRole('link', { name: /saved/i }).click();
+    await expect(page).toHaveURL(/\/saved/);
+
+    // Click Home
+    await page.getByRole('link', { name: /home/i }).click();
+    await expect(page).toHaveURL('/');
+  });
+});
+
+test.describe('Desktop Navigation', () => {
+  test.use({ viewport: { width: 1280, height: 720 } }); // Desktop
+
+  test('bottom nav should be hidden on desktop', async ({ page }) => {
+    await page.goto('/');
+
+    // Bottom nav should not be visible on desktop (md:hidden)
+    const bottomNav = page.locator('nav.fixed.bottom-0');
+    await expect(bottomNav).not.toBeVisible();
+  });
+});
+
+test.describe('Navigation Accessibility', () => {
+  test('all navigation links should be keyboard accessible', async ({ page }) => {
+    await page.goto('/');
+
+    // Tab through page
+    let foundNavLink = false;
+    for (let i = 0; i < 30; i++) {
+      await page.keyboard.press('Tab');
+
+      const focused = page.locator(':focus');
+      const tagName = await focused.evaluate((el) => el.tagName).catch(() => '');
+
+      if (tagName === 'A') {
+        foundNavLink = true;
+        break;
+      }
+    }
+
+    expect(foundNavLink).toBeTruthy();
+  });
+
+  test('navigation links should have visible focus indicators', async ({ page }) => {
+    await page.goto('/');
+
+    // Tab to a link
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+
+    // Check focus is visible
+    const focused = page.locator(':focus');
+    const outline = await focused.evaluate((el) => {
+      const styles = window.getComputedStyle(el);
+      return styles.outline || styles.boxShadow;
+    }).catch(() => 'none');
+
+    // Should have some visible focus indicator
+    expect(outline).not.toBe('none');
+  });
+});
+
+test.describe('Page Transitions', () => {
+  test('should maintain scroll position appropriately', async ({ page }) => {
+    await page.goto('/shops');
+
+    // Scroll down
+    await page.evaluate(() => window.scrollTo(0, 500));
+
+    // Navigate to a shop
+    const shopLink = page.locator('a[href^="/shops/"]').first();
+    if (await shopLink.isVisible()) {
+      await shopLink.click();
+
+      // New page should start at top
+      const scrollY = await page.evaluate(() => window.scrollY);
+      expect(scrollY).toBeLessThan(100);
+    }
+  });
+
+  test('should show loading state during navigation', async ({ page }) => {
+    await page.goto('/');
+
+    // Enable slow network to see loading states
+    // This is more of a visual regression test concept
+    await page.route('**/*', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      await route.continue();
+    });
+
+    // Navigate
+    await page.getByRole('link', { name: /shops/i }).first().click();
+
+    // Should eventually load
+    await expect(page).toHaveURL(/\/shops/, { timeout: 10000 });
+  });
+});

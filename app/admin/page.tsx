@@ -223,6 +223,49 @@ export default function AdminPage() {
         <div className="space-y-3">
           <h2 className="font-bold text-ink">moderation</h2>
 
+          {/* Unified Moderation Queue */}
+          <Link href="/admin/moderation">
+            <Card hoverable className="flex items-center gap-4 border-2 border-coral">
+              <div className="w-12 h-12 rounded-card bg-coral text-white flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                  <path d="m9 14 2 2 4-4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-ink">Unified Queue</h3>
+                <p className="text-sm text-grey">
+                  {stats.pendingShops + stats.pendingReviews} items to review
+                </p>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-grey-light"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </Card>
+          </Link>
+
           <Link href="/admin/shops">
             <Card hoverable className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-card bg-coral-light text-coral flex items-center justify-center">
