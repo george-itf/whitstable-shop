@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Trash2, Waves, PartyPopper, Music, Car, Sun, Phone, Building, Calendar, Stethoscope, ChevronRight } from 'lucide-react';
+import { Trash2, Waves, PartyPopper, Music, Car, Sun, Phone, Building, Calendar, Stethoscope, ChevronRight, Info } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
+import PageHeader from '@/components/layout/PageHeader';
 
 // Info categories with rich visual styling
 const infoCategories = [
@@ -139,21 +140,13 @@ const infoCategories = [
 export default function InfoPage() {
   return (
     <MobileWrapper>
-      {/* Header with gradient */}
-      <div className="bg-gradient-to-br from-sky to-sky-600 px-4 py-6 pb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Link href="/" className="text-white/80 hover:text-white transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <h1 className="text-white font-bold text-xl">Local Info</h1>
-        </div>
-        <p className="text-white/80 text-sm">
-          Everything you need to know about Whitstable — from tide times to bin days, and all the local essentials.
-        </p>
-      </div>
+      <PageHeader
+        title="local info"
+        subtitle="tide times, bin days & local essentials"
+        icon={Info}
+      />
 
-      {/* Content with negative margin overlap */}
-      <div className="px-4 -mt-4 pb-24">
+      <div className="px-4 py-4 pb-24">
         {infoCategories.map((category) => (
           <div key={category.id} className="mb-6">
             <h2 className="text-sm font-bold text-grey-dark uppercase tracking-wide mb-3 px-1">

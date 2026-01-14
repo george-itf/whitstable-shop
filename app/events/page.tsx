@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, Calendar, Clock, MapPin, Repeat } from 'lucide-react';
+import { Calendar, Clock, MapPin, Repeat } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
+import PageHeader from '@/components/layout/PageHeader';
 import { EmptyState } from '@/components/ui';
 import { Event } from '@/types';
 
@@ -44,23 +44,11 @@ export default function EventsPage() {
 
   return (
     <MobileWrapper>
-      {/* Header */}
-      <div className="bg-gradient-to-br from-coral to-coral-dark px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white p-1 hover:bg-white/10 rounded-lg transition-colors">
-              <ChevronLeft className="w-6 h-6" />
-            </Link>
-            <div>
-              <h1 className="text-white font-bold text-xl">what&apos;s on</h1>
-              <p className="text-white/70 text-sm">things happening around town</p>
-            </div>
-          </div>
-          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-            <Calendar className="w-5 h-5 text-white" />
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="what's on"
+        subtitle="things happening around town"
+        icon={Calendar}
+      />
 
       {/* Events list */}
       <div className="px-4 py-6 pb-24 space-y-6">
