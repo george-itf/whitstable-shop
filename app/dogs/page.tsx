@@ -210,7 +210,7 @@ export default function DogsPage() {
                       </div>
                     </div>
                     <Badge
-                      variant="secondary"
+                      variant="default"
                       size="sm"
                       className={DIFFICULTY_COLORS[route.difficulty]}
                     >

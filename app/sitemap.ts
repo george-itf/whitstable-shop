@@ -131,7 +131,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .select('slug, updated_at')
       .eq('status', 'approved');
 
-    shopPages = shops?.map((shop) => ({
+    shopPages = shops?.map((shop: { slug: string; updated_at: string | null }) => ({
       url: `${BASE_URL}/shops/${shop.slug}`,
       lastModified: shop.updated_at ? new Date(shop.updated_at) : now,
       changeFrequency: 'weekly' as const,

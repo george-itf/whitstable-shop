@@ -181,12 +181,12 @@ export default function InfoPage() {
                           <h3 className="font-bold text-ink group-hover:text-sky transition-colors">
                             {item.title}
                           </h3>
-                          {item.badge && (
+                          {'badge' in item && item.badge && (
                             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${item.lightColor} ${item.textColor}`}>
                               {item.badge}
                             </span>
                           )}
-                          {item.urgent && (
+                          {'urgent' in item && item.urgent && (
                             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-red-600">
                               24/7
                             </span>

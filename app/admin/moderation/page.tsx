@@ -8,7 +8,7 @@ import BottomNav from '@/components/layout/BottomNav';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
-import Tabs from '@/components/ui/Tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { createClient } from '@/lib/supabase/client';
 
 interface ModerationItem {
@@ -284,15 +284,13 @@ export default function UnifiedModerationPage() {
 
       {/* Tabs */}
       <div className="px-4 pt-4">
-        <Tabs
-          tabs={[
-            { id: 'all', label: `All (${totalPending})` },
-            { id: 'shops', label: `Shops (${counts.pendingShops})` },
-            { id: 'reviews', label: `Reviews (${counts.pendingReviews})` },
-          ]}
-          activeTab={activeTab}
-          onChange={handleTabChange}
-        />
+        <Tabs defaultValue={activeTab} onChange={handleTabChange}>
+          <TabsList>
+            <TabsTrigger value="all">All ({totalPending})</TabsTrigger>
+            <TabsTrigger value="shops">Shops ({counts.pendingShops})</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews ({counts.pendingReviews})</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* Bulk Actions */}

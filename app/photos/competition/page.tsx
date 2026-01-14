@@ -62,7 +62,7 @@ export default function PhotoCompetitionPage() {
             .eq('user_id', user.id);
 
           if (votes) {
-            setUserVotes(new Set(votes.map((v) => v.photo_id)));
+            setUserVotes(new Set(votes.map((v: { photo_id: string }) => v.photo_id)));
           }
         }
       } catch (error) {

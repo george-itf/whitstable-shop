@@ -154,15 +154,16 @@ export async function GET(request: Request) {
     }
 
     // Aggregate stats
+    type EngagementEvent = { action: string; points: number };
     const stats = {
       total_events: data.length,
-      total_points: data.reduce((sum, e) => sum + e.points, 0),
-      views: data.filter(e => e.action === 'view').length,
-      likes: data.filter(e => e.action === 'like').length,
-      saves: data.filter(e => e.action === 'save').length,
-      shares: data.filter(e => e.action === 'share').length,
-      comments: data.filter(e => e.action === 'comment').length,
-      reviews: data.filter(e => e.action === 'review').length,
+      total_points: data.reduce((sum: number, e: EngagementEvent) => sum + e.points, 0),
+      views: data.filter((e: EngagementEvent) => e.action === 'view').length,
+      likes: data.filter((e: EngagementEvent) => e.action === 'like').length,
+      saves: data.filter((e: EngagementEvent) => e.action === 'save').length,
+      shares: data.filter((e: EngagementEvent) => e.action === 'share').length,
+      comments: data.filter((e: EngagementEvent) => e.action === 'comment').length,
+      reviews: data.filter((e: EngagementEvent) => e.action === 'review').length,
     };
 
     return NextResponse.json(stats);

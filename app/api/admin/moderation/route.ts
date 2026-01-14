@@ -73,7 +73,20 @@ export async function GET(request: NextRequest) {
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
-      results.shops = (shops || []).map(shop => ({
+      results.shops = (shops || []).map((shop: {
+        id: string;
+        name: string;
+        slug: string;
+        tagline: string | null;
+        description: string | null;
+        address: string | null;
+        phone: string | null;
+        website: string | null;
+        status: string;
+        created_at: string;
+        owner: { id: string; email: string; full_name: string } | { id: string; email: string; full_name: string }[] | null;
+        category: { id: string; name: string; slug: string } | { id: string; name: string; slug: string }[] | null;
+      }) => ({
         ...shop,
         type: 'shop',
         owner: Array.isArray(shop.owner) ? shop.owner[0] : shop.owner,
@@ -105,7 +118,18 @@ export async function GET(request: NextRequest) {
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
-      results.reviews = (reviews || []).map(review => ({
+      results.reviews = (reviews || []).map((review: {
+        id: string;
+        rating: number;
+        comment: string | null;
+        author_name: string;
+        author_postcode: string;
+        status: string;
+        flagged_reason: string | null;
+        created_at: string;
+        shop: { id: string; name: string; slug: string } | { id: string; name: string; slug: string }[] | null;
+        user: { id: string; email: string; full_name: string } | { id: string; email: string; full_name: string }[] | null;
+      }) => ({
         ...review,
         type: 'review',
         shop: Array.isArray(review.shop) ? review.shop[0] : review.shop,

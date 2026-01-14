@@ -63,7 +63,7 @@ export default function QuestionDetailPage() {
             .eq('user_id', user.id);
 
           if (upvotes) {
-            setUserUpvotes(new Set(upvotes.map((v) => v.answer_id)));
+            setUserUpvotes(new Set(upvotes.map((v: { answer_id: string }) => v.answer_id)));
           }
         }
 

@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         .select('id, email, display_name')
         .eq('is_admin', true);
 
-      subscribers = (admins || []).map(a => ({
+      subscribers = (admins || []).map((a: { id: string; email: string; display_name: string | null }) => ({
         id: a.id,
         email: a.email,
         name: a.display_name || 'Admin'
@@ -72,7 +72,8 @@ export async function POST(request: Request) {
     }
 
     // Prepare emails
-    const emails = subscribers.map(subscriber => {
+    type Subscriber = { id: string; email: string; name: string };
+    const emails = subscribers.map((subscriber: Subscriber) => {
       const personalizedData: DigestData = {
         ...digestData,
         userName: subscriber.name || 'Local',
@@ -229,17 +230,17 @@ async function gatherDigestData(
     .gte('created_at', sevenDaysAgo);
 
   return {
-    trendingShops: (trendingShops || []).map(shop => ({
+    trendingShops: (trendingShops || []).map((shop: { name: string; tagline: string | null; slug: string }) => ({
       name: shop.name,
       tagline: shop.tagline || 'Local Whitstable business',
       slug: shop.slug,
     })),
-    upcomingEvents: (upcomingEvents || []).map(event => ({
+    upcomingEvents: (upcomingEvents || []).map((event: { title: string; start_date: string; slug: string }) => ({
       title: event.title,
       date: formatEventDate(event.start_date),
       slug: event.slug,
     })),
-    newReviews: (recentReviews || []).map(review => ({
+    newReviews: (recentReviews || []).map((review: { shop: unknown; rating: number; content: string | null }) => ({
       shopName: (review.shop as { name: string })?.name || 'Unknown Shop',
       rating: review.rating,
       excerpt: truncateText(review.content || '', 100),
@@ -278,21 +279,21 @@ async function getDigestSubscribers(
       .eq('email_verified', true)
       .limit(100); // Safety limit
 
-    return (profiles || []).map(p => ({
+    return (profiles || []).map((p: { id: string; email: string; display_name: string | null }) => ({
       id: p.id,
       email: p.email,
       name: p.display_name || 'Local',
     }));
   }
 
-  return (preferences || []).map(p => {
+  return (preferences || []).map((p: { user_id: string; profiles: unknown }) => {
     const profile = p.profiles as { email: string; display_name: string } | null;
     return {
       id: p.user_id,
       email: profile?.email || '',
       name: profile?.display_name || 'Local',
     };
-  }).filter(p => p.email);
+  }).filter((p: { id: string; email: string; name: string }) => p.email);
 }
 
 /**

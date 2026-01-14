@@ -7,12 +7,40 @@ import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import Card from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/client';
+import {
+  Store,
+  Heart,
+  Calendar,
+  MapPin,
+  Tag,
+  Camera,
+  Megaphone,
+  Settings,
+  ClipboardCheck,
+  Bell,
+  Medal,
+  Star,
+  Home,
+  ChevronRight,
+  ArrowLeft,
+  TrendingUp,
+  Users,
+  FileText,
+  Link as LinkIcon,
+  BarChart3,
+  Shield,
+  Clock,
+} from 'lucide-react';
 
 interface AdminStats {
   pendingShops: number;
   pendingReviews: number;
   activeNotices: number;
   totalShops: number;
+  totalEvents: number;
+  totalCharities: number;
+  activeOffers: number;
+  totalCategories: number;
 }
 
 export default function AdminPage() {
@@ -22,6 +50,10 @@ export default function AdminPage() {
     pendingReviews: 0,
     activeNotices: 0,
     totalShops: 0,
+    totalEvents: 0,
+    totalCharities: 0,
+    activeOffers: 0,
+    totalCategories: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -56,8 +88,17 @@ export default function AdminPage() {
 
         setIsAdmin(true);
 
-        // Fetch stats
-        const [shopsRes, reviewsRes, noticesRes, totalRes] = await Promise.all([
+        // Fetch comprehensive stats
+        const [
+          shopsRes,
+          reviewsRes,
+          noticesRes,
+          totalShopsRes,
+          eventsRes,
+          charitiesRes,
+          offersRes,
+          categoriesRes,
+        ] = await Promise.all([
           supabase
             .from('shops')
             .select('id', { count: 'exact', head: true })
@@ -74,13 +115,27 @@ export default function AdminPage() {
             .from('shops')
             .select('id', { count: 'exact', head: true })
             .eq('status', 'approved'),
+          supabase.from('events').select('id', { count: 'exact', head: true }),
+          supabase
+            .from('charities')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true),
+          supabase
+            .from('offers')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true),
+          supabase.from('categories').select('id', { count: 'exact', head: true }),
         ]);
 
         setStats({
           pendingShops: shopsRes.count || 0,
           pendingReviews: reviewsRes.count || 0,
           activeNotices: noticesRes.count || 0,
-          totalShops: totalRes.count || 0,
+          totalShops: totalShopsRes.count || 0,
+          totalEvents: eventsRes.count || 0,
+          totalCharities: charitiesRes.count || 0,
+          activeOffers: offersRes.count || 0,
+          totalCategories: categoriesRes.count || 0,
         });
       } catch (error) {
         console.error('Error fetching admin stats:', error);
@@ -98,21 +153,9 @@ export default function AdminPage() {
         <div className="bg-coral px-4 py-4">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
+              <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="text-white font-bold text-xl">admin panel</h1>
+            <h1 className="text-white font-bold text-xl">admin portal</h1>
           </div>
         </div>
         <div className="px-4 py-6 space-y-6">
@@ -136,40 +179,14 @@ export default function AdminPage() {
         <div className="bg-coral px-4 py-4">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
+              <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="text-white font-bold text-xl">admin panel</h1>
+            <h1 className="text-white font-bold text-xl">admin portal</h1>
           </div>
         </div>
         <div className="px-4 py-6 text-center py-12">
           <div className="w-16 h-16 bg-coral-light rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-coral"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
+            <Store className="w-8 h-8 text-coral" />
           </div>
           <h2 className="text-lg font-bold text-ink mb-2">Access Denied</h2>
           <p className="text-grey text-sm mb-4">You don&apos;t have admin privileges</p>
@@ -191,237 +208,209 @@ export default function AdminPage() {
       <div className="bg-coral px-4 py-4">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
+            <ArrowLeft className="w-6 h-6" />
           </Link>
-          <h1 className="text-white font-bold text-xl">admin panel</h1>
+          <div>
+            <h1 className="text-white font-bold text-xl">admin portal</h1>
+            <p className="text-white/80 text-xs">Manage everything in one place</p>
+          </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-4 py-6 space-y-6">
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard label="Pending Shops" value={stats.pendingShops} urgent />
-          <StatCard label="Pending Reviews" value={stats.pendingReviews} urgent />
-          <StatCard label="Active Notices" value={stats.activeNotices} />
-          <StatCard label="Total Shops" value={stats.totalShops} />
+      <div className="px-4 py-6 space-y-6 pb-24">
+        {/* Quick Stats */}
+        <div className="grid grid-cols-4 gap-2">
+          <StatCard label="Shops" value={stats.totalShops} icon={Store} />
+          <StatCard label="Events" value={stats.totalEvents} icon={Calendar} />
+          <StatCard label="Charities" value={stats.totalCharities} icon={Heart} />
+          <StatCard label="Offers" value={stats.activeOffers} icon={Tag} />
         </div>
 
-        {/* Admin sections */}
+        {/* Urgent Actions */}
+        {(stats.pendingShops > 0 || stats.pendingReviews > 0) && (
+          <div className="space-y-2">
+            <h2 className="font-bold text-ink flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-coral" />
+              needs attention
+            </h2>
+            <Link href="/admin/moderation">
+              <Card hoverable className="flex items-center gap-4 border-2 border-coral bg-coral-light/20">
+                <div className="w-12 h-12 rounded-card bg-coral text-white flex items-center justify-center">
+                  <ClipboardCheck className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-ink">Moderation Queue</h3>
+                  <p className="text-sm text-coral font-medium">
+                    {stats.pendingShops + stats.pendingReviews} items pending
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-grey-light" />
+              </Card>
+            </Link>
+          </div>
+        )}
+
+        {/* Content Management */}
         <div className="space-y-3">
-          <h2 className="font-bold text-ink">moderation</h2>
+          <h2 className="font-bold text-ink flex items-center gap-2">
+            <FileText className="w-4 h-4 text-sky" />
+            content management
+          </h2>
 
-          {/* Unified Moderation Queue */}
-          <Link href="/admin/moderation">
-            <Card hoverable className="flex items-center gap-4 border-2 border-coral">
-              <div className="w-12 h-12 rounded-card bg-coral text-white flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                  <path d="m9 14 2 2 4-4" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Unified Queue</h3>
-                <p className="text-sm text-grey">
-                  {stats.pendingShops + stats.pendingReviews} items to review
-                </p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+          <AdminLink
+            href="/admin/directory"
+            icon={MapPin}
+            title="Local Directory"
+            subtitle={`${stats.totalShops} shops & businesses`}
+            color="coral"
+          />
 
-          <Link href="/admin/shops">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-coral-light text-coral flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Approve Shops</h3>
-                <p className="text-sm text-grey">{stats.pendingShops} pending approval</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+          <AdminLink
+            href="/admin/events"
+            icon={Calendar}
+            title="What's On"
+            subtitle={`${stats.totalEvents} events`}
+            color="sky"
+          />
 
-          <Link href="/admin/reviews">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-yellow/10 text-yellow flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Moderate Reviews</h3>
-                <p className="text-sm text-grey">{stats.pendingReviews} pending moderation</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+          <AdminLink
+            href="/admin/charities"
+            icon={Heart}
+            title="Charities"
+            subtitle={`${stats.totalCharities} charity partners`}
+            color="green"
+          />
 
-          <Link href="/admin/notices">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-sky-light text-sky flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Manage Notices</h3>
-                <p className="text-sm text-grey">
-                  {stats.activeNotices} active banner{stats.activeNotices !== 1 && 's'}
-                </p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+          <AdminLink
+            href="/admin/offers"
+            icon={Tag}
+            title="Offers & Deals"
+            subtitle={`${stats.activeOffers} active offers`}
+            color="yellow"
+          />
 
-          <Link href="/admin/nominations">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-amber-100 text-amber-600 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="8" r="6" />
-                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Award Nominations</h3>
-                <p className="text-sm text-grey">Review and select winners</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
+          <AdminLink
+            href="/admin/categories"
+            icon={Tag}
+            title="Categories"
+            subtitle={`${stats.totalCategories} shop categories`}
+            color="purple"
+          />
+
+          <AdminLink
+            href="/admin/photos"
+            icon={Camera}
+            title="Photo Competitions"
+            subtitle="Manage photo contests"
+            color="pink"
+          />
+        </div>
+
+        {/* Site Settings */}
+        <div className="space-y-3">
+          <h2 className="font-bold text-ink flex items-center gap-2">
+            <Settings className="w-4 h-4 text-grey" />
+            site settings
+          </h2>
+
+          <AdminLink
+            href="/admin/site-settings"
+            icon={Store}
+            title="Store Settings"
+            subtitle="Name, contact, social links"
+            color="ink"
+          />
+
+          <AdminLink
+            href="/admin/notices"
+            icon={Bell}
+            title="Banner Notices"
+            subtitle={`${stats.activeNotices} active`}
+            color="sky"
+          />
+
+          <AdminLink
+            href="/admin/campaigns"
+            icon={Megaphone}
+            title="Campaigns"
+            subtitle="Marketing & promotions"
+            color="coral"
+          />
+
+          <AdminLink
+            href="/admin/nominations"
+            icon={Medal}
+            title="Award Nominations"
+            subtitle="Review & select winners"
+            color="yellow"
+          />
+
+          <AdminLink
+            href="/admin/quick-links"
+            icon={LinkIcon}
+            title="Quick Links"
+            subtitle="Customize menu navigation"
+            color="sky"
+          />
+        </div>
+
+        {/* Moderation Tools */}
+        <div className="space-y-3">
+          <h2 className="font-bold text-ink flex items-center gap-2">
+            <Users className="w-4 h-4 text-grey" />
+            moderation
+          </h2>
+
+          <AdminLink
+            href="/admin/shops"
+            icon={Home}
+            title="Approve Shops"
+            subtitle={`${stats.pendingShops} pending`}
+            color="coral"
+            urgent={stats.pendingShops > 0}
+          />
+
+          <AdminLink
+            href="/admin/reviews"
+            icon={Star}
+            title="Moderate Reviews"
+            subtitle={`${stats.pendingReviews} pending`}
+            color="yellow"
+            urgent={stats.pendingReviews > 0}
+          />
+        </div>
+
+        {/* Admin Tools */}
+        <div className="space-y-3">
+          <h2 className="font-bold text-ink flex items-center gap-2">
+            <Shield className="w-4 h-4 text-purple-600" />
+            admin tools
+          </h2>
+
+          <AdminLink
+            href="/admin/analytics"
+            icon={BarChart3}
+            title="Analytics Dashboard"
+            subtitle="Site performance & stats"
+            color="purple"
+          />
+
+          <AdminLink
+            href="/admin/users"
+            icon={Users}
+            title="User Management"
+            subtitle="Manage users & roles"
+            color="sky"
+          />
+
+          <AdminLink
+            href="/admin/activity"
+            icon={Clock}
+            title="Activity Log"
+            subtitle="View recent actions"
+            color="grey"
+          />
         </div>
       </div>
 
@@ -433,18 +422,60 @@ export default function AdminPage() {
 function StatCard({
   label,
   value,
-  urgent = false,
+  icon: Icon,
 }: {
   label: string;
   value: number;
-  urgent?: boolean;
+  icon: React.ElementType;
 }) {
   return (
-    <Card className="text-center">
-      <div className={`text-2xl font-bold ${urgent && value > 0 ? 'text-coral' : 'text-ink'}`}>
-        {value}
-      </div>
-      <div className="text-xs text-grey">{label}</div>
+    <Card className="text-center py-3 px-2">
+      <Icon className="w-5 h-5 mx-auto mb-1 text-grey" />
+      <div className="text-lg font-bold text-ink">{value}</div>
+      <div className="text-[10px] text-grey leading-tight">{label}</div>
     </Card>
+  );
+}
+
+const colorClasses: Record<string, { bg: string; text: string }> = {
+  coral: { bg: 'bg-coral-light', text: 'text-coral' },
+  sky: { bg: 'bg-sky-light', text: 'text-sky' },
+  green: { bg: 'bg-green/10', text: 'text-green' },
+  yellow: { bg: 'bg-yellow/10', text: 'text-yellow' },
+  purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
+  pink: { bg: 'bg-pink-100', text: 'text-pink-600' },
+  ink: { bg: 'bg-grey-light', text: 'text-ink' },
+};
+
+function AdminLink({
+  href,
+  icon: Icon,
+  title,
+  subtitle,
+  color,
+  urgent = false,
+}: {
+  href: string;
+  icon: React.ElementType;
+  title: string;
+  subtitle: string;
+  color: string;
+  urgent?: boolean;
+}) {
+  const colors = colorClasses[color] || colorClasses.ink;
+
+  return (
+    <Link href={href}>
+      <Card hoverable className={`flex items-center gap-4 ${urgent ? 'border border-coral' : ''}`}>
+        <div className={`w-11 h-11 rounded-card ${colors.bg} ${colors.text} flex items-center justify-center`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-ink">{title}</h3>
+          <p className={`text-sm ${urgent ? 'text-coral font-medium' : 'text-grey'}`}>{subtitle}</p>
+        </div>
+        <ChevronRight className="w-5 h-5 text-grey-light flex-shrink-0" />
+      </Card>
+    </Link>
   );
 }
