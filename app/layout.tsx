@@ -9,11 +9,16 @@ export const metadata: Metadata = {
   title: 'whitstable.shop | Your local guide to Whitstable',
   description: 'Discover the best shops, cafes, restaurants, and local businesses in Whitstable, Kent. Your complete guide to the seaside town.',
   keywords: 'Whitstable, shops, cafes, restaurants, Kent, local businesses, oysters, harbour',
+  icons: {
+    icon: '/brand/logo-square.png',
+    apple: '/brand/logo-square.png',
+  },
   openGraph: {
     title: 'whitstable.shop',
     description: 'Your local guide to Whitstable',
     locale: 'en_GB',
     type: 'website',
+    images: ['/brand/logo-square.png'],
   },
 };
 

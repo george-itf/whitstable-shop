@@ -18,9 +18,9 @@ export default function Footer() {
               your local guide since 2024
             </p>
           </div>
-          <div className="w-16 h-16 relative opacity-80">
+          <div className="w-20 h-20 relative opacity-90">
             <Image
-              src="/seagull.svg"
+              src="/brand/seagull-wave.svg"
               alt=""
               fill
               className="object-contain"

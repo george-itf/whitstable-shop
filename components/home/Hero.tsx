@@ -48,16 +48,15 @@ export default function Hero() {
       <div className="px-4 pt-4 pb-10 relative">
         {/* Header with logo and menu */}
         <div className="flex items-center justify-between mb-6">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
             <Image
-              src="/seagull.svg"
-              alt=""
-              width={32}
-              height={40}
-              className="object-contain"
+              src="/brand/logo-banner.svg"
+              alt="whitstable.shop"
+              width={180}
+              height={48}
+              className="object-contain h-10 w-auto"
               priority
             />
-            <span className="text-white font-bold text-xl tracking-tight font-display">whitstable.shop</span>
           </Link>
           <MenuTrigger
             className="text-white/80 hover:text-white"
@@ -99,9 +98,9 @@ export default function Hero() {
           </div>
 
           {/* Seagull mascot - larger and peeking from edge */}
-          <div className="w-32 h-36 relative -mr-4 -mb-4">
+          <div className="w-28 h-32 relative -mr-2 -mb-6">
             <Image
-              src="/seagull.svg"
+              src="/brand/seagull-stand.svg"
               alt="Whitstable seagull mascot"
               fill
               className="object-contain object-bottom drop-shadow-lg"

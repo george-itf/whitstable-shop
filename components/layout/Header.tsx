@@ -22,15 +22,15 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
         )}
       >
         <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
             <Image
-              src="/seagull.svg"
-              alt=""
-              width={28}
-              height={36}
-              className="object-contain"
+              src="/brand/logo-banner.svg"
+              alt="whitstable.shop"
+              width={180}
+              height={48}
+              className="object-contain h-10 w-auto"
+              priority
             />
-            <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
           </Link>
 
           {/* Desktop navigation */}
