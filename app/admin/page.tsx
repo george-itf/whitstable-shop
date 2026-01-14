@@ -27,6 +27,9 @@ import {
   Users,
   FileText,
   Link as LinkIcon,
+  BarChart3,
+  Shield,
+  Clock,
 } from 'lucide-react';
 
 interface AdminStats {
@@ -375,6 +378,38 @@ export default function AdminPage() {
             subtitle={`${stats.pendingReviews} pending`}
             color="yellow"
             urgent={stats.pendingReviews > 0}
+          />
+        </div>
+
+        {/* Admin Tools */}
+        <div className="space-y-3">
+          <h2 className="font-bold text-ink flex items-center gap-2">
+            <Shield className="w-4 h-4 text-purple-600" />
+            admin tools
+          </h2>
+
+          <AdminLink
+            href="/admin/analytics"
+            icon={BarChart3}
+            title="Analytics Dashboard"
+            subtitle="Site performance & stats"
+            color="purple"
+          />
+
+          <AdminLink
+            href="/admin/users"
+            icon={Users}
+            title="User Management"
+            subtitle="Manage users & roles"
+            color="sky"
+          />
+
+          <AdminLink
+            href="/admin/activity"
+            icon={Clock}
+            title="Activity Log"
+            subtitle="View recent actions"
+            color="grey"
           />
         </div>
       </div>

@@ -10,6 +10,11 @@ export { default as ProgressBar } from './ProgressBar';
 export { default as Tabs, TabsList, TabsTrigger, TabsContent } from './Tabs';
 export { default as EmptyState } from './EmptyState';
 export { default as Countdown } from './Countdown';
+export { default as ConfirmDialog } from './ConfirmDialog';
+export { default as StatCard } from './StatCard';
+export { default as DataTable } from './DataTable';
+export { ToastProvider, useToast } from './Toast';
+export { BarChart, LineChart, DonutChart, Sparkline } from './Chart';
 export {
   Skeleton,
   ShopCardSkeleton,
