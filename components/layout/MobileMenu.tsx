@@ -3,7 +3,28 @@
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Menu } from 'lucide-react';
+import {
+  X,
+  Menu,
+  Store,
+  Calendar,
+  Map,
+  Info,
+  Tag,
+  Flame,
+  MessageCircleQuestion,
+  Camera,
+  Trophy,
+  Dog,
+  BarChart3,
+  Heart,
+  User,
+  Bell,
+  LayoutDashboard,
+  LogIn,
+  Sparkles,
+  LucideIcon,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Context for managing menu state globally
@@ -161,32 +182,32 @@ function MobileMenuPanel() {
         <nav className="p-4 overflow-y-auto max-h-[calc(100vh-60px)]" aria-label="Main menu">
           {/* DISCOVER */}
           <MenuSection title="Discover">
-            <MenuItem href="/shops" icon="🛍️">All Shops</MenuItem>
-            <MenuItem href="/events" icon="📅">What&apos;s On</MenuItem>
-            <MenuItem href="/map" icon="🗺️">Map</MenuItem>
-            <MenuItem href="/info" icon="ℹ️">Local Info</MenuItem>
-            <MenuItem href="/offers" icon="🏷️">Deals &amp; Offers</MenuItem>
-            <MenuItem href="/trending" icon="🔥">Trending</MenuItem>
+            <MenuItem href="/shops" icon={Store} color="text-coral">All Shops</MenuItem>
+            <MenuItem href="/events" icon={Calendar} color="text-sky">What&apos;s On</MenuItem>
+            <MenuItem href="/map" icon={Map} color="text-green">Map</MenuItem>
+            <MenuItem href="/info" icon={Info} color="text-yellow-600">Local Info</MenuItem>
+            <MenuItem href="/offers" icon={Tag} color="text-coral">Deals &amp; Offers</MenuItem>
+            <MenuItem href="/trending" icon={Flame} color="text-orange-500">Trending</MenuItem>
           </MenuSection>
 
           {/* COMMUNITY */}
           <MenuSection title="Community">
-            <MenuItem href="/ask" icon="❓">Ask a Local</MenuItem>
-            <MenuItem href="/photos" icon="📷">Photos</MenuItem>
-            <MenuItem href="/awards" icon="🏆">Awards</MenuItem>
-            <MenuItem href="/dogs" icon="🐕">Dog Walks</MenuItem>
-            <MenuItem href="/leaderboard" icon="📊">Leaderboard</MenuItem>
+            <MenuItem href="/ask" icon={MessageCircleQuestion} color="text-sky">Ask a Local</MenuItem>
+            <MenuItem href="/photos" icon={Camera} color="text-violet-500">Photos</MenuItem>
+            <MenuItem href="/awards" icon={Trophy} color="text-yellow-500">Awards</MenuItem>
+            <MenuItem href="/dogs" icon={Dog} color="text-amber-600">Dog Walks</MenuItem>
+            <MenuItem href="/leaderboard" icon={BarChart3} color="text-green">Leaderboard</MenuItem>
           </MenuSection>
 
           {/* ACCOUNT */}
           <MenuSection title="Account">
-            <MenuItem href="/saved" icon="❤️">Saved Shops</MenuItem>
-            <MenuItem href="/settings/profile" icon="👤">Profile</MenuItem>
-            <MenuItem href="/settings/notifications" icon="🔔">Notifications</MenuItem>
-            <MenuItem href="/dashboard" icon="📈">Dashboard</MenuItem>
+            <MenuItem href="/saved" icon={Heart} color="text-coral">Saved Shops</MenuItem>
+            <MenuItem href="/settings/profile" icon={User} color="text-sky">Profile</MenuItem>
+            <MenuItem href="/settings/notifications" icon={Bell} color="text-yellow-500">Notifications</MenuItem>
+            <MenuItem href="/dashboard" icon={LayoutDashboard} color="text-green">Dashboard</MenuItem>
             <div className="border-t border-grey-light my-2" />
-            <MenuItem href="/auth/login" icon="🔑">Log In</MenuItem>
-            <MenuItem href="/auth/signup" icon="✨">Sign Up</MenuItem>
+            <MenuItem href="/auth/login" icon={LogIn} color="text-grey">Log In</MenuItem>
+            <MenuItem href="/auth/signup" icon={Sparkles} color="text-coral">Sign Up</MenuItem>
           </MenuSection>
         </nav>
       </div>
@@ -215,11 +236,13 @@ function MenuSection({
 
 function MenuItem({
   href,
-  icon,
+  icon: Icon,
+  color,
   children,
 }: {
   href: string;
-  icon?: string;
+  icon: LucideIcon;
+  color?: string;
   children: ReactNode;
 }) {
   const pathname = usePathname();
@@ -238,7 +261,10 @@ function MenuItem({
         )}
         aria-current={isActive ? 'page' : undefined}
       >
-        {icon && <span className="text-base" aria-hidden="true">{icon}</span>}
+        <Icon
+          className={cn('w-5 h-5 flex-shrink-0', isActive ? 'text-sky' : color)}
+          aria-hidden="true"
+        />
         <span>{children}</span>
       </Link>
     </li>
