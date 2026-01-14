@@ -123,16 +123,33 @@ export async function checkBasicA11y(
   const title = await page.title();
   if (!title || title.length < 3) issues.push('Missing or short page title');
 
-  // Check for skip link
+  // Check for skip link (may be visually hidden)
   const hasSkipLink = await page.locator('a[href="#main-content"]').count() > 0;
   if (!hasSkipLink) issues.push('Missing skip link');
 
-  // Check images have alt text
+  // Check images have alt text (allow empty alt for decorative)
   const imagesWithoutAlt = await page.locator('img:not([alt])').count();
   if (imagesWithoutAlt > 0) issues.push(`${imagesWithoutAlt} images without alt text`);
 
-  // Check buttons have accessible names
-  const buttonsWithoutName = await page.locator('button:not([aria-label]):not(:has-text(.))').count();
+  // Check buttons have accessible names (text content, aria-label, or title)
+  const allButtons = await page.locator('button').all();
+  let buttonsWithoutName = 0;
+  for (const button of allButtons) {
+    const ariaLabel = await button.getAttribute('aria-label');
+    const title = await button.getAttribute('title');
+    const textContent = await button.textContent();
+    const ariaLabelledBy = await button.getAttribute('aria-labelledby');
+
+    const hasAccessibleName =
+      (ariaLabel && ariaLabel.trim().length > 0) ||
+      (title && title.trim().length > 0) ||
+      (textContent && textContent.trim().length > 0) ||
+      ariaLabelledBy;
+
+    if (!hasAccessibleName) {
+      buttonsWithoutName++;
+    }
+  }
   if (buttonsWithoutName > 0) issues.push(`${buttonsWithoutName} buttons without accessible name`);
 
   return {

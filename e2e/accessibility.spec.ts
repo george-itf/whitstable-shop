@@ -203,12 +203,16 @@ test.describe('Accessibility - Focus Management', () => {
   });
 
   test('modal should trap focus', async ({ page }) => {
-    page.setViewportSize({ width: 390, height: 844 }); // Mobile
+    await page.setViewportSize({ width: 390, height: 844 }); // Mobile
     await page.goto('/');
 
     // Open menu
-    const menuButton = page.getByRole('button', { name: /menu/i });
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
+
+    // Wait for dialog to be visible
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible({ timeout: 5000 });
 
     // Tab many times
     for (let i = 0; i < 30; i++) {
@@ -216,7 +220,6 @@ test.describe('Accessibility - Focus Management', () => {
     }
 
     // Focus should still be inside modal
-    const dialog = page.getByRole('dialog');
     const focusedInDialog = await dialog.locator(':focus').count();
 
     expect(focusedInDialog).toBeGreaterThan(0);
@@ -284,14 +287,16 @@ test.describe('Accessibility - ARIA', () => {
   });
 
   test('dialogs should have proper ARIA', async ({ page }) => {
-    page.setViewportSize({ width: 390, height: 844 }); // Mobile
+    await page.setViewportSize({ width: 390, height: 844 }); // Mobile
     await page.goto('/');
 
     // Open menu
-    const menuButton = page.getByRole('button', { name: /menu/i });
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
 
+    // Wait for dialog to be visible
     const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible({ timeout: 5000 });
 
     // Check ARIA attributes
     const ariaModal = await dialog.getAttribute('aria-modal');
@@ -325,18 +330,21 @@ test.describe('Accessibility - Keyboard Navigation', () => {
   });
 
   test('escape should close modals/dialogs', async ({ page }) => {
-    page.setViewportSize({ width: 390, height: 844 }); // Mobile
+    await page.setViewportSize({ width: 390, height: 844 }); // Mobile
     await page.goto('/');
 
     // Open menu
-    const menuButton = page.getByRole('button', { name: /menu/i });
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
+
+    // Wait for dialog to be visible
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible({ timeout: 5000 });
 
     // Press Escape
     await page.keyboard.press('Escape');
 
     // Dialog should be closed
-    const dialog = page.getByRole('dialog');
     await expect(dialog).not.toBeVisible();
   });
 });
