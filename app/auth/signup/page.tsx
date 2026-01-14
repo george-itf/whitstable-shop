@@ -27,7 +27,7 @@ export default function SignupPage() {
           </div>
           <div className="w-20 h-24 relative -mr-2 -mb-4">
             <Image
-              src="/seagull.svg"
+              src="/brand/seagull-wave.svg"
               alt=""
               fill
               className="object-contain"
