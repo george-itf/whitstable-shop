@@ -3,7 +3,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 import {
   findRouteConfig,
   hasRouteAccess,
-  getUnauthorizedRedirect,
   type UserRole,
 } from '@/lib/auth/config';
 import {
@@ -18,9 +17,19 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
+  // Check if Supabase environment variables are configured
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // If no Supabase config, skip auth checks (for testing/development without Supabase)
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('[Middleware] Supabase not configured, skipping auth checks');
+    return supabaseResponse;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {

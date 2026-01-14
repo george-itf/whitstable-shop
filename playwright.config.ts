@@ -68,5 +68,11 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      // Use empty values to skip Supabase auth during tests
+      NEXT_PUBLIC_SUPABASE_URL: '',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: '',
+      NEXT_PUBLIC_MAPBOX_TOKEN: 'pk.test_placeholder_token',
+    },
   },
 });
