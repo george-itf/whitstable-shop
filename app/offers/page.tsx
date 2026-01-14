@@ -8,9 +8,14 @@ import PageHeader from '@/components/layout/PageHeader';
 import { Card, EmptyState, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 import { OfferCard } from '@/components/offers';
 import type { Offer, Shop } from '@/types/database';
+import type { ShopImage } from '@/types';
 import Link from 'next/link';
 
-type OfferWithShop = Offer & { shop: Pick<Shop, 'name' | 'slug'> };
+type OfferWithShop = Offer & {
+  shop?: Pick<Shop, 'id' | 'name' | 'slug'> & {
+    images?: Pick<ShopImage, 'url' | 'is_primary'>[];
+  };
+};
 
 const filterConfig = [
   { value: 'all', label: 'All', icon: Tag },

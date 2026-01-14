@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { Tag, Calendar, Clock, Store } from 'lucide-react';
 import { Card, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
-import type { Offer, Shop, ShopImage } from '@/types/database';
+import type { Offer, Shop } from '@/types/database';
+import type { ShopImage } from '@/types';
 
 type ShopWithImage = Pick<Shop, 'id' | 'name' | 'slug'> & {
   images?: Pick<ShopImage, 'url' | 'is_primary'>[];
