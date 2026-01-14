@@ -97,6 +97,7 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="p-2 text-grey hover:text-ink transition-colors"
+                aria-label="Close menu"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -108,6 +109,7 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />

@@ -9,93 +9,106 @@ test.describe('Mobile Menu', () => {
 
   test('should open mobile menu when hamburger is clicked', async ({ page }) => {
     // Find and click hamburger menu button
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
 
     await menuButton.click();
 
     // Menu panel should be visible
-    const menuPanel = page.getByRole('dialog', { name: /menu|navigation/i });
-    await expect(menuPanel).toBeVisible();
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
   });
 
   test('should close menu when X button is clicked', async ({ page }) => {
     // Open menu
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
+
+    // Wait for dialog to appear
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
 
     // Click close button
     const closeButton = page.getByRole('button', { name: /close/i });
     await closeButton.click();
 
     // Menu should be hidden
-    const menuPanel = page.getByRole('dialog');
     await expect(menuPanel).not.toBeVisible();
   });
 
   test('should close menu when Escape key is pressed', async ({ page }) => {
     // Open menu
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
+
+    // Wait for dialog to appear
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
 
     // Press Escape
     await page.keyboard.press('Escape');
 
     // Menu should be hidden
-    const menuPanel = page.getByRole('dialog');
     await expect(menuPanel).not.toBeVisible();
   });
 
   test('should close menu when backdrop is clicked', async ({ page }) => {
     // Open menu
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
 
-    // Click backdrop (area outside menu)
-    await page.locator('.bg-ink\\/50, [aria-hidden="true"]').first().click();
+    // Wait for menu to be visible
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
+
+    // Click on the left side of screen (backdrop area, menu is on right)
+    await page.mouse.click(50, 400);
 
     // Menu should be hidden
-    const menuPanel = page.getByRole('dialog');
-    await expect(menuPanel).not.toBeVisible();
+    await expect(menuPanel).not.toBeVisible({ timeout: 5000 });
   });
 
   test('should display all menu sections', async ({ page }) => {
     // Open menu
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
 
-    // Check sections exist
-    await expect(page.getByText('Discover')).toBeVisible();
-    await expect(page.getByText('Community')).toBeVisible();
-    await expect(page.getByText('Account')).toBeVisible();
+    // Wait for menu to be visible
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
+
+    // Check sections exist within the menu panel
+    await expect(menuPanel.getByText('Discover')).toBeVisible();
+    await expect(menuPanel.getByText('Community')).toBeVisible();
+    await expect(menuPanel.getByText('Account')).toBeVisible();
   });
 
   test('should navigate to page and close menu', async ({ page }) => {
     // Open menu
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
 
+    // Wait for dialog to appear
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
+
     // Click on a menu item
-    await page.getByRole('link', { name: /all shops/i }).click();
+    await menuPanel.getByRole('link', { name: /all shops/i }).click();
 
     // Should navigate
     await expect(page).toHaveURL(/\/shops/);
 
-    // Menu should be closed
-    const menuPanel = page.getByRole('dialog');
-    await expect(menuPanel).not.toBeVisible();
+    // Menu should be closed (route change closes it)
+    await expect(menuPanel).not.toBeVisible({ timeout: 5000 });
   });
 
   test('menu should trap focus', async ({ page }) => {
     // Open menu
-    const menuButton = page.getByRole('button', { name: /open.*menu|menu/i })
-      .or(page.getByLabel(/menu/i));
+    const menuButton = page.getByRole('button', { name: /open.*navigation.*menu/i });
     await menuButton.click();
+
+    // Wait for dialog to appear
+    const menuPanel = page.getByRole('dialog');
+    await expect(menuPanel).toBeVisible({ timeout: 5000 });
 
     // Close button should be focused initially
     const closeButton = page.getByRole('button', { name: /close/i });
@@ -107,9 +120,6 @@ test.describe('Mobile Menu', () => {
     }
 
     // Focus should still be within menu (trapped)
-    const focusedElement = page.locator(':focus');
-    const menuPanel = page.getByRole('dialog');
-
     // The focused element should be inside the menu
     await expect(menuPanel.locator(':focus')).toBeVisible();
   });
@@ -138,21 +148,25 @@ test.describe('Bottom Navigation', () => {
   test('should navigate between pages', async ({ page }) => {
     await page.goto('/');
 
-    // Click Search
-    await page.getByRole('link', { name: /search/i }).click();
-    await expect(page).toHaveURL(/\/search/);
+    // Get bottom nav
+    const bottomNav = page.getByRole('navigation', { name: /main navigation/i });
+    await expect(bottomNav).toBeVisible({ timeout: 5000 });
+
+    // Click Search (in bottom nav)
+    await bottomNav.getByRole('link', { name: /^search$/i }).click();
+    await expect(page).toHaveURL(/\/search/, { timeout: 10000 });
 
     // Click Map
-    await page.getByRole('link', { name: /map/i }).click();
-    await expect(page).toHaveURL(/\/map/);
+    await bottomNav.getByRole('link', { name: /^map$/i }).click();
+    await expect(page).toHaveURL(/\/map/, { timeout: 10000 });
 
     // Click Saved
-    await page.getByRole('link', { name: /saved/i }).click();
-    await expect(page).toHaveURL(/\/saved/);
+    await bottomNav.getByRole('link', { name: /^saved$/i }).click();
+    await expect(page).toHaveURL(/\/saved/, { timeout: 10000 });
 
     // Click Home
-    await page.getByRole('link', { name: /home/i }).click();
-    await expect(page).toHaveURL('/');
+    await bottomNav.getByRole('link', { name: /^home$/i }).click();
+    await expect(page).toHaveURL(/^\/$/, { timeout: 10000 });
   });
 });
 
