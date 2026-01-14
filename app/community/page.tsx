@@ -67,7 +67,7 @@ export default function CommunityPage() {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
             <Heart className="w-4 h-4 text-white/80 mx-auto mb-1" />
             <p className="text-base font-bold text-white">{charities.length}</p>
@@ -79,13 +79,8 @@ export default function CommunityPage() {
             <p className="text-[10px] text-white/70">events</p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
-            <Store className="w-4 h-4 text-white/80 mx-auto mb-1" />
-            <p className="text-base font-bold text-white">15</p>
-            <p className="text-[10px] text-white/70">give back</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2.5 text-center">
             <PoundSterling className="w-4 h-4 text-white/80 mx-auto mb-1" />
-            <p className="text-base font-bold text-white">{(totalRaised / 1000).toFixed(0)}k</p>
+            <p className="text-base font-bold text-white">{totalRaised > 0 ? `${(totalRaised / 1000).toFixed(0)}k` : '0'}</p>
             <p className="text-[10px] text-white/70">raised</p>
           </div>
         </div>
@@ -161,35 +156,6 @@ export default function CommunityPage() {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Shops That Give Back */}
-            <div className="mb-6">
-              <h2 className="font-semibold text-ink text-sm mb-3 section-title">Shops That Give Back</h2>
-              <Card className="bg-green-light/30 border-green/20">
-                <p className="text-xs text-oyster-600 mb-3">
-                  Local businesses supporting community causes
-                </p>
-                <div className="space-y-2">
-                  {["Wheeler's Oyster Bar", 'The Cheese Box', 'Frank'].map((shop, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between py-2 border-b border-oyster-100 last:border-0"
-                    >
-                      <span className="text-sm text-ink">{shop}</span>
-                      <Badge variant="success" size="sm">
-                        <HandHeart className="h-3 w-3 mr-1" />
-                        Gives Back
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/shops?filter=gives-back" className="block mt-3">
-                  <Button variant="outline" size="sm" className="w-full">
-                    View All Shops
-                  </Button>
-                </Link>
-              </Card>
             </div>
 
             {/* CTA */}
