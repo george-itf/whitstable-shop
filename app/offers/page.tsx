@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, Tag, Percent, Gift, Star, Store } from 'lucide-react';
+import { Tag, Percent, Gift, Star, Store } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
+import PageHeader from '@/components/layout/PageHeader';
 import { Card, EmptyState, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 import { OfferCard } from '@/components/offers';
 import type { Offer, Shop } from '@/types/database';
+import Link from 'next/link';
 
 type OfferWithShop = Offer & { shop: Pick<Shop, 'name' | 'slug'> };
 
@@ -50,23 +51,11 @@ export default function OffersPage() {
 
   return (
     <MobileWrapper>
-      {/* Header */}
-      <div className="bg-gradient-to-br from-green to-green/80 px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white p-1 hover:bg-white/10 rounded-lg transition-colors">
-              <ChevronLeft className="w-6 h-6" />
-            </Link>
-            <div>
-              <h1 className="text-white font-bold text-xl">deals</h1>
-              <p className="text-white/70 text-sm">offers from local shops</p>
-            </div>
-          </div>
-          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-            <Tag className="w-5 h-5 text-white" />
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="deals"
+        subtitle="offers from local shops"
+        icon={Tag}
+      />
 
       {/* Stats */}
       <div className="px-4 py-4">
