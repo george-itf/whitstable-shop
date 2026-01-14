@@ -288,7 +288,7 @@ export default function WalkDetailPage({ params }: { params: Promise<{ slug: str
         </Link>
 
         <div className="absolute bottom-4 left-4 right-4">
-          <Badge variant="secondary" size="sm" className={DIFFICULTY_COLORS[route.difficulty]}>
+          <Badge variant="default" size="sm" className={DIFFICULTY_COLORS[route.difficulty]}>
             {route.difficulty}
           </Badge>
           <h1 className="text-white font-bold text-2xl mt-2 drop-shadow-sm">

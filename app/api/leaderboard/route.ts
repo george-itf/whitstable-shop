@@ -40,7 +40,16 @@ export async function GET(request: Request) {
     }
 
     // Add rank and calculate engagement score
-    const leaderboard = data.map((shop, index) => ({
+    type ShopData = {
+      id: string;
+      name: string;
+      slug: string;
+      tagline: string | null;
+      view_count: number | null;
+      save_count: number | null;
+      category: unknown;
+    };
+    const leaderboard = data.map((shop: ShopData, index: number) => ({
       ...shop,
       rank: index + 1,
       engagement_score: (shop.view_count || 0) + (shop.save_count || 0) * 5,

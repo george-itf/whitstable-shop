@@ -304,7 +304,7 @@ export default function TrendingPage() {
                     )}
 
                     <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="secondary" size="sm" className={`${config.bgColor} ${config.color} border-0`}>
+                      <Badge variant="default" size="sm" className={`${config.bgColor} ${config.color} border-0`}>
                         {config.label}
                       </Badge>
                       <span className="text-xs text-grey">{item.reason}</span>

@@ -47,19 +47,24 @@ export async function GET(request: Request) {
 
       // Count attendees per schedule
       const countsBySchedule: Record<string, number> = {};
-      attendeeCounts?.forEach((a) => {
+      attendeeCounts?.forEach((a: { schedule_id: string }) => {
         countsBySchedule[a.schedule_id] = (countsBySchedule[a.schedule_id] || 0) + 1;
       });
 
       // Filter schedules to only include those for the target day
       // and add attendee counts
-      const routesWithCounts = routes.map((route) => ({
+      interface Schedule {
+        id: string;
+        day_of_week: number;
+        time_slot: string;
+        max_participants: number;
+        is_active: boolean;
+      }
+      const routesWithCounts = routes.map((route: { schedules?: Schedule[] }) => ({
         ...route,
         schedules: (route.schedules || [])
-          .filter((s: { day_of_week: number; is_active: boolean }) =>
-            s.day_of_week === dayOfWeek && s.is_active
-          )
-          .map((s: { id: string; max_participants: number }) => ({
+          .filter((s) => s.day_of_week === dayOfWeek && s.is_active)
+          .map((s) => ({
             ...s,
             attendee_count: countsBySchedule[s.id] || 0,
           })),

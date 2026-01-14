@@ -109,8 +109,6 @@ export async function updateSession(request: NextRequest) {
 
   // Check if user is authenticated
   if (routeConfig.requireAuth && !user) {
-    const redirectUrl = getUnauthorizedRedirect(pathname, false);
-
     await logAuditEvent(
       createAccessDeniedEvent(pathname, method, 'Not authenticated', undefined, undefined, ip, userAgent)
     );

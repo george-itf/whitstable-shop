@@ -268,7 +268,7 @@ async function getLegacyTrending(
     .gte('viewed_at', sevenDaysAgo);
 
   const shopViewCounts: Record<string, number> = {};
-  viewCounts?.forEach((view) => {
+  viewCounts?.forEach((view: { shop_id: string }) => {
     shopViewCounts[view.shop_id] = (shopViewCounts[view.shop_id] || 0) + 1;
   });
 
@@ -280,7 +280,7 @@ async function getLegacyTrending(
     .gte('created_at', sevenDaysAgo);
 
   const shopReviewCounts: Record<string, number> = {};
-  reviewCounts?.forEach((review) => {
+  reviewCounts?.forEach((review: { shop_id: string }) => {
     shopReviewCounts[review.shop_id] = (shopReviewCounts[review.shop_id] || 0) + 1;
   });
 
@@ -295,7 +295,8 @@ async function getLegacyTrending(
   }
 
   // Calculate trending score
-  const trendingShops = shops.map((shop) => {
+  type TrendingShop = { id: string; name: string; slug: string; tagline: string | null; save_count: number | null; category: unknown };
+  const trendingShops = shops.map((shop: TrendingShop) => {
     const views = shopViewCounts[shop.id] || 0;
     const reviews = shopReviewCounts[shop.id] || 0;
     const saves = shop.save_count || 0;
@@ -330,11 +331,12 @@ async function getLegacyTrending(
   });
 
   // Sort by score and take top items
+  type TrendingResult = { score: number; rank: number; name: string; slug: string; tagline: string; reason: string };
   const sorted = trendingShops
-    .filter(s => s.score > 0)
-    .sort((a, b) => b.score - a.score)
+    .filter((s: TrendingResult) => s.score > 0)
+    .sort((a: TrendingResult, b: TrendingResult) => b.score - a.score)
     .slice(0, limit)
-    .map((item, index) => ({ ...item, rank: index + 1 }));
+    .map((item: TrendingResult, index: number) => ({ ...item, rank: index + 1 }));
 
   return NextResponse.json(sorted);
 }

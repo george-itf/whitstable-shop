@@ -63,7 +63,7 @@ export default function AdminShopsPage() {
           .order('created_at', { ascending: false });
 
         // Transform data to handle Supabase's join return type
-        const transformedShops = (pendingShops || []).map((shop) => ({
+        const transformedShops = (pendingShops || []).map((shop: PendingShop & { category: { name: string } | { name: string }[] | null }) => ({
           ...shop,
           category: Array.isArray(shop.category) ? shop.category[0] : shop.category,
         }));

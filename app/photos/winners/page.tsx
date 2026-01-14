@@ -39,8 +39,9 @@ export default function PhotoWinnersPage() {
         }
 
         // Fetch winners for each competition
+        type Competition = { competition_month: string; theme: string };
         const winnersData: WinnerMonth[] = await Promise.all(
-          competitions.map(async (competition) => {
+          competitions.map(async (competition: Competition) => {
             // Get winner
             const { data: winner } = await supabase
               .from('photo_entries')
