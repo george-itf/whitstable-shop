@@ -14,7 +14,6 @@ export async function GET(request: Request) {
     let query = supabase
       .from('events')
       .select('*, shop:shops(id, name, slug)')
-      .eq('status', 'approved')
       .order('date', { ascending: true })
       .limit(limit);
 
@@ -103,7 +102,6 @@ export async function POST(request: Request) {
       location: location ? (location as string).trim() : null,
       is_recurring: body.is_recurring || false,
       recurrence_rule: body.recurrence_rule || null,
-      status: 'pending', // Requires approval
     };
 
     const { data, error } = await supabase.from('events').insert(eventData).select().single();

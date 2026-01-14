@@ -55,8 +55,11 @@ export async function GET(request: Request) {
     const { data: trendingScores, error: trendingError } = await query;
 
     if (trendingError) {
-      console.error('Trending scores error:', trendingError);
-      // Fall back to legacy method if new table doesn't exist
+      // Table doesn't exist yet - silently fall back to legacy method
+      // PGRST205 = table not found, 42P01 = undefined_table
+      if (trendingError.code !== 'PGRST205' && trendingError.code !== '42P01') {
+        console.error('Trending scores error:', trendingError);
+      }
       return getLegacyTrending(supabase, type, limit);
     }
 
