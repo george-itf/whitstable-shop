@@ -2,34 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import MobileWrapper from '@/components/layout/MobileWrapper';
-import BottomNav from '@/components/layout/BottomNav';
-import Card from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/client';
 import {
   Store,
   Heart,
   Calendar,
-  MapPin,
   Tag,
   Camera,
-  Megaphone,
-  Settings,
   ClipboardCheck,
-  Bell,
-  Medal,
-  Star,
-  Home,
-  ChevronRight,
-  ArrowLeft,
   TrendingUp,
   Users,
-  FileText,
-  Link as LinkIcon,
   BarChart3,
-  Shield,
-  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  Eye,
+  ShoppingBag,
 } from 'lucide-react';
 
 interface AdminStats {
@@ -44,7 +31,6 @@ interface AdminStats {
 }
 
 export default function AdminPage() {
-  const router = useRouter();
   const [stats, setStats] = useState<AdminStats>({
     pendingShops: 0,
     pendingReviews: 0,
@@ -56,37 +42,11 @@ export default function AdminPage() {
     totalCategories: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   useEffect(() => {
     async function fetchAdminStats() {
       try {
         const supabase = createClient();
-
-        // Check authentication and admin role
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        if (!user) {
-          router.push('/login?redirect=/admin');
-          return;
-        }
-
-        // Check if admin
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-
-        if (profile?.role !== 'admin') {
-          setIsAdmin(false);
-          setIsLoading(false);
-          return;
-        }
-
-        setIsAdmin(true);
 
         // Fetch comprehensive stats
         const [
@@ -145,281 +105,217 @@ export default function AdminPage() {
     }
 
     fetchAdminStats();
-  }, [router]);
+  }, []);
 
   if (isLoading) {
     return (
-      <MobileWrapper>
-        <div className="bg-coral px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <ArrowLeft className="w-6 h-6" />
-            </Link>
-            <h1 className="text-white font-bold text-xl">admin portal</h1>
-          </div>
+      <div className="p-6 lg:p-8">
+        <div className="mb-8">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-2 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-72 animate-pulse" />
         </div>
-        <div className="px-4 py-6 space-y-6">
-          <div className="grid grid-cols-2 gap-3">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-8 bg-grey-light rounded w-1/2 mx-auto mb-1" />
-                <div className="h-3 bg-grey-light rounded w-2/3 mx-auto" />
-              </Card>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 shadow-sm animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-20 mb-4" />
+              <div className="h-8 bg-gray-200 rounded w-16 mb-2" />
+              <div className="h-3 bg-gray-200 rounded w-24" />
+            </div>
+          ))}
         </div>
-        <BottomNav />
-      </MobileWrapper>
+      </div>
     );
   }
 
-  if (isAdmin === false) {
-    return (
-      <MobileWrapper>
-        <div className="bg-coral px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <ArrowLeft className="w-6 h-6" />
-            </Link>
-            <h1 className="text-white font-bold text-xl">admin portal</h1>
-          </div>
-        </div>
-        <div className="px-4 py-6 text-center py-12">
-          <div className="w-16 h-16 bg-coral-light rounded-full flex items-center justify-center mx-auto mb-4">
-            <Store className="w-8 h-8 text-coral" />
-          </div>
-          <h2 className="text-lg font-bold text-ink mb-2">Access Denied</h2>
-          <p className="text-grey text-sm mb-4">You don&apos;t have admin privileges</p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-2 bg-coral text-white rounded-button font-semibold"
-          >
-            go home
-          </Link>
-        </div>
-        <BottomNav />
-      </MobileWrapper>
-    );
-  }
+  const pendingTotal = stats.pendingShops + stats.pendingReviews;
 
   return (
-    <MobileWrapper>
+    <div className="p-6 lg:p-8">
       {/* Header */}
-      <div className="bg-coral px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="text-white">
-            <ArrowLeft className="w-6 h-6" />
-          </Link>
-          <div>
-            <h1 className="text-white font-bold text-xl">admin portal</h1>
-            <p className="text-white/80 text-xs">Manage everything in one place</p>
-          </div>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-1">Welcome to the whitstable.shop admin center</p>
       </div>
 
-      {/* Content */}
-      <div className="px-4 py-6 space-y-6 pb-24">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-4 gap-2">
-          <StatCard label="Shops" value={stats.totalShops} icon={Store} />
-          <StatCard label="Events" value={stats.totalEvents} icon={Calendar} />
-          <StatCard label="Charities" value={stats.totalCharities} icon={Heart} />
-          <StatCard label="Offers" value={stats.activeOffers} icon={Tag} />
-        </div>
-
-        {/* Urgent Actions */}
-        {(stats.pendingShops > 0 || stats.pendingReviews > 0) && (
-          <div className="space-y-2">
-            <h2 className="font-bold text-ink flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-coral" />
-              needs attention
-            </h2>
-            <Link href="/admin/moderation">
-              <Card hoverable className="flex items-center gap-4 border-2 border-coral bg-coral-light/20">
-                <div className="w-12 h-12 rounded-card bg-coral text-white flex items-center justify-center">
+      {/* Urgent Alert */}
+      {pendingTotal > 0 && (
+        <Link href="/admin/moderation">
+          <div className="mb-8 bg-gradient-to-r from-coral to-coral/80 rounded-xl p-6 text-white hover:shadow-lg transition-shadow cursor-pointer">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <ClipboardCheck className="w-6 h-6" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-ink">Moderation Queue</h3>
-                  <p className="text-sm text-coral font-medium">
-                    {stats.pendingShops + stats.pendingReviews} items pending
-                  </p>
+                <div>
+                  <h2 className="font-bold text-lg">Moderation Queue</h2>
+                  <p className="text-white/80">{pendingTotal} items need your attention</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-grey-light" />
-              </Card>
-            </Link>
+              </div>
+              <ArrowUpRight className="w-6 h-6" />
+            </div>
           </div>
-        )}
+        </Link>
+      )}
 
-        {/* Content Management */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink flex items-center gap-2">
-            <FileText className="w-4 h-4 text-sky" />
-            content management
-          </h2>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard
+          title="Total Shops"
+          value={stats.totalShops}
+          icon={Store}
+          trend={12}
+          color="coral"
+        />
+        <StatCard
+          title="Active Events"
+          value={stats.totalEvents}
+          icon={Calendar}
+          trend={8}
+          color="sky"
+        />
+        <StatCard
+          title="Charities"
+          value={stats.totalCharities}
+          icon={Heart}
+          trend={-2}
+          color="green"
+        />
+        <StatCard
+          title="Active Offers"
+          value={stats.activeOffers}
+          icon={Tag}
+          trend={15}
+          color="yellow"
+        />
+      </div>
 
-          <AdminLink
-            href="/admin/directory"
-            icon={MapPin}
-            title="Local Directory"
-            subtitle={`${stats.totalShops} shops & businesses`}
-            color="coral"
-          />
-
-          <AdminLink
-            href="/admin/events"
-            icon={Calendar}
-            title="What's On"
-            subtitle={`${stats.totalEvents} events`}
-            color="sky"
-          />
-
-          <AdminLink
-            href="/admin/charities"
-            icon={Heart}
-            title="Charities"
-            subtitle={`${stats.totalCharities} charity partners`}
-            color="green"
-          />
-
-          <AdminLink
-            href="/admin/offers"
-            icon={Tag}
-            title="Offers & Deals"
-            subtitle={`${stats.activeOffers} active offers`}
-            color="yellow"
-          />
-
-          <AdminLink
-            href="/admin/categories"
-            icon={Tag}
-            title="Categories"
-            subtitle={`${stats.totalCategories} shop categories`}
-            color="purple"
-          />
-
-          <AdminLink
-            href="/admin/photos"
-            icon={Camera}
-            title="Photo Competitions"
-            subtitle="Manage photo contests"
-            color="pink"
-          />
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Pending Items */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-coral" />
+            Needs Attention
+          </h3>
+          <div className="space-y-3">
+            <QuickActionItem
+              href="/admin/shops"
+              label="Pending Shop Submissions"
+              count={stats.pendingShops}
+              urgent={stats.pendingShops > 0}
+            />
+            <QuickActionItem
+              href="/admin/reviews"
+              label="Reviews to Moderate"
+              count={stats.pendingReviews}
+              urgent={stats.pendingReviews > 0}
+            />
+            <QuickActionItem
+              href="/admin/notices"
+              label="Active Notices"
+              count={stats.activeNotices}
+            />
+          </div>
         </div>
 
-        {/* Site Settings */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink flex items-center gap-2">
-            <Settings className="w-4 h-4 text-grey" />
-            site settings
-          </h2>
-
-          <AdminLink
-            href="/admin/site-settings"
-            icon={Store}
-            title="Store Settings"
-            subtitle="Name, contact, social links"
-            color="ink"
-          />
-
-          <AdminLink
-            href="/admin/notices"
-            icon={Bell}
-            title="Banner Notices"
-            subtitle={`${stats.activeNotices} active`}
-            color="sky"
-          />
-
-          <AdminLink
-            href="/admin/campaigns"
-            icon={Megaphone}
-            title="Campaigns"
-            subtitle="Marketing & promotions"
-            color="coral"
-          />
-
-          <AdminLink
-            href="/admin/nominations"
-            icon={Medal}
-            title="Award Nominations"
-            subtitle="Review & select winners"
-            color="yellow"
-          />
-
-          <AdminLink
-            href="/admin/quick-links"
-            icon={LinkIcon}
-            title="Quick Links"
-            subtitle="Customize menu navigation"
-            color="sky"
-          />
-        </div>
-
-        {/* Moderation Tools */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink flex items-center gap-2">
-            <Users className="w-4 h-4 text-grey" />
-            moderation
-          </h2>
-
-          <AdminLink
-            href="/admin/shops"
-            icon={Home}
-            title="Approve Shops"
-            subtitle={`${stats.pendingShops} pending`}
-            color="coral"
-            urgent={stats.pendingShops > 0}
-          />
-
-          <AdminLink
-            href="/admin/reviews"
-            icon={Star}
-            title="Moderate Reviews"
-            subtitle={`${stats.pendingReviews} pending`}
-            color="yellow"
-            urgent={stats.pendingReviews > 0}
-          />
-        </div>
-
-        {/* Admin Tools */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink flex items-center gap-2">
-            <Shield className="w-4 h-4 text-purple-600" />
-            admin tools
-          </h2>
-
-          <AdminLink
-            href="/admin/analytics"
-            icon={BarChart3}
-            title="Analytics Dashboard"
-            subtitle="Site performance & stats"
-            color="purple"
-          />
-
-          <AdminLink
-            href="/admin/users"
-            icon={Users}
-            title="User Management"
-            subtitle="Manage users & roles"
-            color="sky"
-          />
-
-          <AdminLink
-            href="/admin/activity"
-            icon={Clock}
-            title="Activity Log"
-            subtitle="View recent actions"
-            color="grey"
-          />
+        {/* Quick Stats */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-sky" />
+            Overview
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <MiniStat label="Categories" value={stats.totalCategories} icon={ShoppingBag} />
+            <MiniStat label="Photo Contests" value={0} icon={Camera} />
+            <MiniStat label="Total Users" value={0} icon={Users} />
+            <MiniStat label="Page Views" value={0} icon={Eye} />
+          </div>
         </div>
       </div>
 
-      <BottomNav />
-    </MobileWrapper>
+      {/* Recent Activity placeholder */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h3 className="font-bold text-gray-900 mb-4">Recent Activity</h3>
+        <div className="text-center py-8 text-gray-500">
+          <p>Activity tracking coming soon</p>
+          <Link href="/admin/activity" className="text-coral hover:underline mt-2 inline-block">
+            View Activity Log →
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }
 
+// Stat Card Component
 function StatCard({
+  title,
+  value,
+  icon: Icon,
+  trend,
+  color,
+}: {
+  title: string;
+  value: number;
+  icon: React.ElementType;
+  trend: number;
+  color: 'coral' | 'sky' | 'green' | 'yellow';
+}) {
+  const colorClasses = {
+    coral: 'bg-coral/10 text-coral',
+    sky: 'bg-sky/10 text-sky',
+    green: 'bg-green/10 text-green',
+    yellow: 'bg-yellow-100 text-yellow-600',
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm font-medium text-gray-500">{title}</span>
+        <div className={`w-10 h-10 rounded-lg ${colorClasses[color]} flex items-center justify-center`}>
+          <Icon className="w-5 h-5" />
+        </div>
+      </div>
+      <div className="flex items-end justify-between">
+        <span className="text-3xl font-bold text-gray-900">{value}</span>
+        <div className={`flex items-center gap-1 text-sm ${trend >= 0 ? 'text-green' : 'text-red-500'}`}>
+          {trend >= 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+          <span>{Math.abs(trend)}%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Quick Action Item Component
+function QuickActionItem({
+  href,
+  label,
+  count,
+  urgent = false,
+}: {
+  href: string;
+  label: string;
+  count: number;
+  urgent?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+    >
+      <span className={`font-medium ${urgent ? 'text-coral' : 'text-gray-700'}`}>{label}</span>
+      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+        urgent ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'
+      }`}>
+        {count}
+      </span>
+    </Link>
+  );
+}
+
+// Mini Stat Component
+function MiniStat({
   label,
   value,
   icon: Icon,
@@ -429,53 +325,12 @@ function StatCard({
   icon: React.ElementType;
 }) {
   return (
-    <Card className="text-center py-3 px-2">
-      <Icon className="w-5 h-5 mx-auto mb-1 text-grey" />
-      <div className="text-lg font-bold text-ink">{value}</div>
-      <div className="text-[10px] text-grey leading-tight">{label}</div>
-    </Card>
-  );
-}
-
-const colorClasses: Record<string, { bg: string; text: string }> = {
-  coral: { bg: 'bg-coral-light', text: 'text-coral' },
-  sky: { bg: 'bg-sky-light', text: 'text-sky' },
-  green: { bg: 'bg-green/10', text: 'text-green' },
-  yellow: { bg: 'bg-yellow/10', text: 'text-yellow' },
-  purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
-  pink: { bg: 'bg-pink-100', text: 'text-pink-600' },
-  ink: { bg: 'bg-grey-light', text: 'text-ink' },
-};
-
-function AdminLink({
-  href,
-  icon: Icon,
-  title,
-  subtitle,
-  color,
-  urgent = false,
-}: {
-  href: string;
-  icon: React.ElementType;
-  title: string;
-  subtitle: string;
-  color: string;
-  urgent?: boolean;
-}) {
-  const colors = colorClasses[color] || colorClasses.ink;
-
-  return (
-    <Link href={href}>
-      <Card hoverable className={`flex items-center gap-4 ${urgent ? 'border border-coral' : ''}`}>
-        <div className={`w-11 h-11 rounded-card ${colors.bg} ${colors.text} flex items-center justify-center`}>
-          <Icon className="w-5 h-5" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-ink">{title}</h3>
-          <p className={`text-sm ${urgent ? 'text-coral font-medium' : 'text-grey'}`}>{subtitle}</p>
-        </div>
-        <ChevronRight className="w-5 h-5 text-grey-light flex-shrink-0" />
-      </Card>
-    </Link>
+    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+      <Icon className="w-5 h-5 text-gray-400" />
+      <div>
+        <p className="text-xl font-bold text-gray-900">{value}</p>
+        <p className="text-xs text-gray-500">{label}</p>
+      </div>
+    </div>
   );
 }
