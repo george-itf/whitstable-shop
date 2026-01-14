@@ -33,8 +33,8 @@ const pageConfig: Record<string, {
     bgColor: 'bg-sky',
     subtitle: 'high & low tide predictions',
     quickFacts: [
-      { label: 'Next high tide', value: '3:45pm today', icon: <Clock className="w-4 h-4" /> },
-      { label: 'Height', value: '4.8m', icon: <Waves className="w-4 h-4" /> },
+      { label: 'Location', value: 'Whitstable Harbour', icon: <MapPin className="w-4 h-4" /> },
+      { label: 'Tidal range', value: '~4-5m (springs)', icon: <Waves className="w-4 h-4" /> },
     ],
     links: [
       { label: 'BBC Weather Tides', url: 'https://www.bbc.co.uk/weather/coast-and-sea/tide-tables', description: '14-day forecast' },
@@ -182,11 +182,11 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
     title: 'Tide Times',
     sections: [
       {
-        heading: "Today's tides",
+        heading: 'Checking tide times',
         content: [
-          '**High tide**: 3:45pm (4.8m)',
-          '**Low tide**: 9:20pm (1.2m)',
+          'Use the links below to check current tide predictions.',
           'Times are for Whitstable Harbour. Add ~10 mins for Tankerton.',
+          'Tides occur roughly 50 minutes later each day.',
         ],
       },
       {

@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import { MenuTrigger } from '@/components/layout/MobileMenu';
 
 export default function Hero() {
-  const [tideInfo, setTideInfo] = useState({ status: 'rising', time: '2:34pm' });
   const [greeting, setGreeting] = useState('hey there');
 
   useEffect(() => {
@@ -29,13 +28,6 @@ export default function Hero() {
 
     const options = greetings[timeOfDay];
     setGreeting(options[Math.floor(Math.random() * options.length)]);
-
-    // Mock tide data - in production this would come from an API
-    const isRising = hour % 12 < 6;
-    setTideInfo({
-      status: isRising ? 'coming in' : 'heading out',
-      time: isRising ? 'high around 3:45pm' : 'low around 9:20pm',
-    });
   }, []);
 
   return (
@@ -72,8 +64,11 @@ export default function Hero() {
               {greeting}
             </h1>
 
-            {/* Tide widget - more prominent */}
-            <div className="inline-flex items-center gap-2.5 bg-white/15 border border-white/20 rounded-xl px-3.5 py-2">
+            {/* Tide widget - links to tide info */}
+            <Link
+              href="/info/tide-times"
+              className="inline-flex items-center gap-2.5 bg-white/15 border border-white/20 rounded-xl px-3.5 py-2 hover:bg-white/20 transition-colors"
+            >
               <div className="relative">
                 <svg
                   width="18"
@@ -88,13 +83,12 @@ export default function Hero() {
                 >
                   <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-5a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2z" />
                 </svg>
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green rounded-full animate-pulse" />
               </div>
               <div className="text-white">
-                <p className="text-xs text-white/70 leading-none mb-0.5">the tide&apos;s</p>
-                <p className="text-sm font-medium leading-none">{tideInfo.status}</p>
+                <p className="text-xs text-white/70 leading-none mb-0.5">check</p>
+                <p className="text-sm font-medium leading-none">tide times</p>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Seagull mascot - larger and peeking from edge */}
