@@ -43,10 +43,15 @@ export default function EventsPage() {
   }, []);
 
   // Group events by month
+  // Normalize date field: support both `start_date` (canonical) and legacy `date`
   const eventsByMonth: Record<string, EventWithShopImage[]> = {};
   events.forEach((event) => {
-    const date = new Date(event.date);
-    const monthKey = date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    // Accept start_date (preferred), fall back to date if present, otherwise produce Invalid Date
+    const raw = (event as any).start_date ?? (event as any).date ?? '';
+    const date = raw ? new Date(raw) : new Date('');
+    const monthKey = isNaN(date.getTime())
+      ? 'Unknown'
+      : date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
     if (!eventsByMonth[monthKey]) {
       eventsByMonth[monthKey] = [];
     }
@@ -106,7 +111,10 @@ export default function EventsPage() {
 
 function EventCard({ event }: { event: EventWithShopImage }) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const date = new Date(event.date);
+
+  // Normalize date field: support both start_date (canonical) and legacy date
+  const rawDate = (event as any).start_date ?? (event as any).date ?? '';
+  const date = rawDate ? new Date(rawDate) : new Date('');
   const dayNum = date.getDate();
   const dayName = date.toLocaleDateString('en-GB', { weekday: 'short' });
   const monthName = date.toLocaleDateString('en-GB', { month: 'short' });
@@ -172,12 +180,14 @@ function EventCard({ event }: { event: EventWithShopImage }) {
           )}
 
           <div className="mt-2 space-y-1">
-            {event.time_start && (
+            {/* Normalize time fields: support both start_time (canonical) and legacy time_start */}
+            {((event as any).start_time ?? (event as any).time_start) && (
               <div className="flex items-center gap-1.5 text-sm text-grey">
                 <Clock className="w-3.5 h-3.5 flex-shrink-0" />
                 <span>
-                  {event.time_start}
-                  {event.time_end && ` – ${event.time_end}`}
+                  {(event as any).start_time ?? (event as any).time_start}
+                  {((event as any).end_time ?? (event as any).time_end) &&
+                    ` – ${(event as any).end_time ?? (event as any).time_end}`}
                 </span>
               </div>
             )}
