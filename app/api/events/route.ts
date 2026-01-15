@@ -14,20 +14,20 @@ export async function GET(request: Request) {
     let query = supabase
       .from('events')
       .select('*, shop:shops(id, name, slug, images:shop_images(url, is_primary))')
-      .order('date', { ascending: true })
+      .order('start_date', { ascending: true }) // Canonical field name
       .limit(limit);
 
     // Date filtering
     if (from) {
-      query = query.gte('date', from);
+      query = query.gte('start_date', from); // Canonical field name
     } else {
       // Default to today onwards
       const today = new Date().toISOString().split('T')[0];
-      query = query.gte('date', today);
+      query = query.gte('start_date', today); // Canonical field name
     }
 
     if (to) {
-      query = query.lte('date', to);
+      query = query.lte('start_date', to); // Canonical field name
     }
 
     if (shopId) {
@@ -69,13 +69,13 @@ export async function POST(request: Request) {
     }
 
     // Validate required fields
-    const { title, date, location } = body;
-    if (!title || !date) {
-      return NextResponse.json({ error: 'title and date are required' }, { status: 400 });
+    const { title, start_date, location } = body; // Use canonical field name
+    if (!title || !start_date) {
+      return NextResponse.json({ error: 'title and start_date are required' }, { status: 400 });
     }
 
     // Validate date format
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date as string)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(start_date as string)) {
       return NextResponse.json({ error: 'Invalid date format (expected YYYY-MM-DD)' }, { status: 400 });
     }
 
@@ -95,13 +95,18 @@ export async function POST(request: Request) {
     const eventData = {
       shop_id: body.shop_id || null,
       title: (title as string).trim(),
+      slug: (title as string).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       description: body.description ? (body.description as string).trim() : null,
-      date,
-      time_start: body.time_start || null,
-      time_end: body.time_end || null,
+      start_date, // Canonical field name
+      end_date: body.end_date || null, // Canonical field name
+      start_time: body.start_time || null, // Canonical field name
+      end_time: body.end_time || null, // Canonical field name
       location: location ? (location as string).trim() : null,
+      venue: body.venue || null,
       is_recurring: body.is_recurring || false,
       recurrence_rule: body.recurrence_rule || null,
+      is_active: true,
+      is_featured: false,
     };
 
     const { data, error } = await supabase.from('events').insert(eventData).select().single();
