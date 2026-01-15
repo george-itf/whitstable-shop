@@ -35,8 +35,23 @@ export function PhotoSubmitForm({
   });
 
   const handleFileSelect = useCallback(async (file: File) => {
+    // Basic type check
     if (!file.type.startsWith('image/')) {
       setError('Please select an image file');
+      return;
+    }
+
+    // SECURITY: Block SVG uploads to prevent XSS attacks
+    // SVG files can contain embedded JavaScript that executes when rendered
+    if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+      setError('SVG files are not allowed for security reasons. Please upload JPG, PNG, GIF, or WebP images.');
+      return;
+    }
+
+    // Only allow safe image formats
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Only JPG, PNG, GIF, and WebP images are allowed');
       return;
     }
 
@@ -214,7 +229,7 @@ export function PhotoSubmitForm({
           >
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/gif,image/webp"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) handleFileSelect(file);
