@@ -7,7 +7,15 @@ import { Event, ShopImage } from '@/types';
 import { formatDateShort } from '@/lib/utils';
 import { Clock, MapPin } from 'lucide-react';
 
-type EventWithShopImage = Event & {
+// Type helper to handle schema drift between canonical and legacy field names
+type EventWithSchemaFallback = Event & {
+  // Legacy field names (for backwards compatibility during schema migration)
+  date?: string;
+  time_start?: string;
+  time_end?: string;
+};
+
+type EventWithShopImage = EventWithSchemaFallback & {
   shop?: {
     id: string;
     name: string;
@@ -73,7 +81,7 @@ function EventScrollCard({ event }: { event: EventWithShopImage }) {
           {/* Date badge overlay */}
           <div className="absolute top-2 left-2">
             <div className="bg-coral text-white px-2 py-1 rounded-lg text-xs font-bold shadow-sm">
-              {formatDateShort(event.date)}
+              {formatDateShort(event.start_date ?? event.date ?? '')}
             </div>
           </div>
         </div>
@@ -83,7 +91,7 @@ function EventScrollCard({ event }: { event: EventWithShopImage }) {
         {/* Date badge - only show if no image */}
         {!shopImage && (
           <div className="bg-coral text-white px-2.5 py-1 rounded-lg text-xs font-bold inline-block mb-2">
-            {formatDateShort(event.date)}
+            {formatDateShort(event.start_date ?? event.date ?? '')}
           </div>
         )}
 

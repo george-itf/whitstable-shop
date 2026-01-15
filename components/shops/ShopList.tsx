@@ -1,10 +1,10 @@
 'use client';
 
-import { Shop, Category } from '@/types';
+import { ShopWithCategory } from '@/types';
 import ShopCard from './ShopCard';
 
 interface ShopListProps {
-  shops: (Shop & { category?: Category | null })[];
+  shops: ShopWithCategory[];
   savedShopIds?: string[];
   onToggleSave?: (shopId: string) => void;
 }

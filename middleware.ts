@@ -1,5 +1,5 @@
 import { updateSession } from '@/lib/supabase/middleware';
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 // Domains configuration
 const MAIN_DOMAIN = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'whitstable.shop';
@@ -43,8 +43,6 @@ export async function middleware(request: NextRequest) {
     const authCheckRequest = new NextRequest(url, {
       headers: request.headers,
       method: request.method,
-      // Pass through cookies from original request
-      nextConfig: request.nextConfig,
     });
 
     // Copy cookies from original request to auth check request
