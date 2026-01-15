@@ -31,6 +31,7 @@ import {
   Star,
   MapPin,
   ClipboardCheck,
+  Info,
 } from 'lucide-react';
 
 interface NavItem {
@@ -143,6 +144,7 @@ export default function AdminLayout({
         { href: '/admin/events', label: "What's On", icon: Calendar },
         { href: '/admin/charities', label: 'Charities', icon: Heart },
         { href: '/admin/offers', label: 'Offers & Deals', icon: Tag },
+        { href: '/admin/local-info', label: 'Local Info Pages', icon: Info },
         { href: '/admin/categories', label: 'Categories', icon: FileText },
         { href: '/admin/photos', label: 'Photo Competitions', icon: Camera },
       ],
