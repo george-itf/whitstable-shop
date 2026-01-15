@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import { Button, Card, Input, Modal, Select, Textarea, Badge } from '@/components/ui';
+import { EmptyState, AdminSkeleton } from '@/components/admin';
 import { createClient } from '@/lib/supabase/client';
 import {
   ArrowLeft,
@@ -385,7 +386,7 @@ export default function CampaignsPage() {
             <option value="competition">Competition</option>
           </Select>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="Start Date"
               type="date"

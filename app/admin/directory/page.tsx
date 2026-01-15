@@ -485,7 +485,7 @@ export default function DirectoryPage() {
             ))}
           </Select>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="Phone"
               value={formData.phone}
@@ -501,7 +501,7 @@ export default function DirectoryPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="Website"
               value={formData.website}

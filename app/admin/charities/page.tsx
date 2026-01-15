@@ -19,6 +19,7 @@ import {
   Target,
   Star,
 } from 'lucide-react';
+import { EmptyState, AdminSkeleton } from '@/components/admin';
 
 interface Charity {
   id: string;
@@ -216,13 +217,8 @@ export default function CharitiesPage() {
             <h1 className="text-white font-bold text-xl">charities</h1>
           </div>
         </div>
-        <div className="px-4 py-6 space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <div className="h-4 bg-grey-light rounded w-3/4 mb-2" />
-              <div className="h-3 bg-grey-light rounded w-1/2" />
-            </Card>
-          ))}
+        <div className="px-4 py-6">
+          <AdminSkeleton variant="list" count={4} />
         </div>
         <BottomNav />
       </MobileWrapper>
@@ -263,10 +259,12 @@ export default function CharitiesPage() {
       {/* Charities List */}
       <div className="px-4 py-4 space-y-3 pb-24">
         {filteredCharities.length === 0 ? (
-          <div className="text-center py-12">
-            <Heart className="w-12 h-12 text-grey-light mx-auto mb-3" />
-            <p className="text-grey">No charities found</p>
-          </div>
+          <EmptyState
+            icon={Heart}
+            title="No charities found"
+            description={searchQuery ? "Try adjusting your search" : "Add your first charity partner to get started"}
+            action={!searchQuery ? { label: "Add Charity", onClick: openCreateModal } : undefined}
+          />
         ) : (
           filteredCharities.map((charity) => (
             <Card key={charity.id} className="relative">
@@ -398,7 +396,7 @@ export default function CharitiesPage() {
             placeholder="https://..."
           />
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="Website"
               value={formData.website}
@@ -428,7 +426,7 @@ export default function CharitiesPage() {
               placeholder="e.g. 2025 Lifeboat Fund"
             />
 
-            <div className="grid grid-cols-2 gap-3 mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               <Input
                 label="Target Amount (£)"
                 type="number"

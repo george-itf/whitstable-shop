@@ -224,7 +224,7 @@ export default function AdminPage() {
             <BarChart3 className="w-5 h-5 text-sky" />
             Overview
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <MiniStat label="Categories" value={stats.totalCategories} icon={ShoppingBag} />
             <MiniStat label="Photo Contests" value={0} icon={Camera} />
             <MiniStat label="Total Users" value={0} icon={Users} />
