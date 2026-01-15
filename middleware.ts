@@ -16,9 +16,10 @@ export async function middleware(request: NextRequest) {
   if (subdomain === ADMIN_SUBDOMAIN) {
     const pathname = url.pathname;
 
-    // Don't rewrite API routes, static files, etc.
+    // Don't rewrite API routes, auth routes, static files, etc.
     if (
       pathname.startsWith('/api') ||
+      pathname.startsWith('/auth') ||
       pathname.startsWith('/_next') ||
       pathname.startsWith('/favicon') ||
       pathname.includes('.')
