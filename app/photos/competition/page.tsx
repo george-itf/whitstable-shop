@@ -77,7 +77,7 @@ export default function PhotoCompetitionPage() {
 
   const handleVote = async (photoId: string) => {
     if (!userId) {
-      window.location.href = '/login?redirect=/photos/competition';
+      window.location.href = '/auth/login?redirect=/photos/competition';
       return;
     }
 

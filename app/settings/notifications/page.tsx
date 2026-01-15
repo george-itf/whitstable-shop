@@ -73,7 +73,7 @@ export default function NotificationSettingsPage() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          router.push('/login?redirect=/settings/notifications');
+          router.push('/auth/login?redirect=/settings/notifications');
           return;
         }
 

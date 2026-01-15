@@ -1,10 +1,16 @@
+// NOTE: This Profile interface is deprecated. Use types from types/database.ts instead.
+// Kept for backwards compatibility during migration.
 export interface Profile {
   id: string;
-  email: string;
-  name: string | null;
-  postcode: string | null;
-  role: 'visitor' | 'shop_owner' | 'admin';
-  created_at: string;
+  email: string | null;
+  display_name: string | null; // Renamed from 'name' to match database schema
+  bio: string | null;
+  avatar_url: string | null;
+  role: 'user' | 'admin' | 'moderator'; // Aligned with canonical database schema
+  is_public: boolean;
+  is_local: boolean;
+  joined_at: string; // Renamed from 'created_at' to match database schema
+  updated_at: string;
 }
 
 export interface Category {
@@ -15,6 +21,9 @@ export interface Category {
   display_order: number;
 }
 
+// NOTE: This Shop interface is deprecated. Use types from types/database.ts instead.
+// Kept for backwards compatibility during migration.
+// Canonical schema uses 'address' and 'street' fields, not 'address_line1/address_line2'
 export interface Shop {
   id: string;
   owner_id: string | null;
@@ -22,25 +31,32 @@ export interface Shop {
   slug: string;
   tagline: string | null;
   description: string | null;
+  category: string; // Category name (for backwards compat)
   category_id: string | null;
+  subcategory: string | null;
   phone: string | null;
   email: string | null;
   website: string | null;
   instagram: string | null;
-  address_line1: string | null;
-  address_line2: string | null;
+  facebook: string | null;
+  address: string | null; // Canonical field name
+  street: string | null; // Canonical field name
   postcode: string | null;
   latitude: number | null;
   longitude: number | null;
+  image_url: string | null;
+  gallery_urls: string[] | null;
   opening_hours: OpeningHours | null;
-  status: 'pending' | 'approved' | 'rejected' | 'claimed';
+  status: 'pending' | 'approved' | 'rejected';
+  is_active: boolean;
+  is_verified: boolean;
   is_featured: boolean;
   view_count: number;
   save_count: number;
+  review_count: number;
+  average_rating: number;
   created_at: string;
   updated_at: string;
-  category?: Category;
-  images?: ShopImage[];
 }
 
 export interface OpeningHours {
@@ -90,20 +106,30 @@ export interface Save {
   created_at: string;
 }
 
+// NOTE: This Event interface is deprecated. Use types from types/database.ts instead.
+// Canonical schema uses 'start_date/end_date' and 'start_time/end_time', not 'date/time_start/time_end'
 export interface Event {
   id: string;
   shop_id: string | null;
   title: string;
+  slug: string;
   description: string | null;
-  date: string;
-  time_start: string | null;
-  time_end: string | null;
-  location: string | null;
+  start_date: string; // Canonical field name
+  end_date: string | null; // Canonical field name
+  start_time: string | null; // Canonical field name
+  end_time: string | null; // Canonical field name
   is_recurring: boolean;
   recurrence_rule: string | null;
-  status: 'pending' | 'approved' | 'rejected';
+  location: string | null;
+  venue: string | null;
+  price: string | null;
+  booking_url: string | null;
+  image_url: string | null;
+  category: string | null;
+  is_active: boolean;
+  is_featured: boolean;
   created_at: string;
-  shop?: Shop;
+  updated_at: string;
 }
 
 export interface LocalInfo {

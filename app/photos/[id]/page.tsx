@@ -85,7 +85,7 @@ export default function PhotoDetailPage() {
 
   const handleVote = async () => {
     if (!userId) {
-      window.location.href = `/login?redirect=/photos/${photoId}`;
+      window.location.href = `/auth/login?redirect=/photos/${photoId}`;
       return;
     }
 

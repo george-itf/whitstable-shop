@@ -55,7 +55,7 @@ export default function ProfileSettingsPage() {
         } = await supabase.auth.getUser();
 
         if (!authUser) {
-          router.push('/login?redirect=/settings/profile');
+          router.push('/auth/login?redirect=/settings/profile');
           return;
         }
 
@@ -134,7 +134,7 @@ export default function ProfileSettingsPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
         <p className="text-oyster-600 mb-4">Please sign in to view your profile</p>
-        <Link href="/login?redirect=/settings/profile">
+        <Link href="/auth/login?redirect=/settings/profile">
           <Button>Sign In</Button>
         </Link>
       </div>

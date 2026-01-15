@@ -3,7 +3,9 @@
  * Centralized configuration for protected routes, roles, and permissions
  */
 
-export type UserRole = 'user' | 'admin' | 'moderator' | 'shop_owner';
+// Canonical role model matching types/database.ts and the database schema
+// Note: 'shop_owner' is not a role - shop ownership is determined by shops.owner_id relationship
+export type UserRole = 'user' | 'admin' | 'moderator';
 
 export interface RouteConfig {
   path: string;
@@ -17,15 +19,16 @@ export interface RouteConfig {
  * Define which routes require authentication and specific roles
  */
 export const protectedRoutes: RouteConfig[] = [
-  // User-level protected routes
-  { path: '/saved', roles: ['user', 'admin', 'moderator', 'shop_owner'], requireAuth: true },
-  { path: '/settings', roles: ['user', 'admin', 'moderator', 'shop_owner'], requireAuth: true },
+  // User-level protected routes (any authenticated user)
+  { path: '/saved', roles: ['user', 'admin', 'moderator'], requireAuth: true },
+  { path: '/settings', roles: ['user', 'admin', 'moderator'], requireAuth: true },
 
-  // Shop owner routes
-  { path: '/dashboard', roles: ['shop_owner', 'admin'], requireAuth: true },
-  { path: '/dashboard/edit', roles: ['shop_owner', 'admin'], requireAuth: true },
-  { path: '/dashboard/reviews', roles: ['shop_owner', 'admin'], requireAuth: true },
-  { path: '/dashboard/analytics', roles: ['shop_owner', 'admin'], requireAuth: true },
+  // Dashboard routes - require auth, ownership checked in page
+  // Shop ownership is determined by shops.owner_id, not by role
+  { path: '/dashboard', roles: ['user', 'admin', 'moderator'], requireAuth: true },
+  { path: '/dashboard/edit', roles: ['user', 'admin', 'moderator'], requireAuth: true },
+  { path: '/dashboard/reviews', roles: ['user', 'admin', 'moderator'], requireAuth: true },
+  { path: '/dashboard/analytics', roles: ['user', 'admin', 'moderator'], requireAuth: true },
 
   // Moderator routes
   { path: '/moderate', roles: ['moderator', 'admin'], requireAuth: true },
@@ -71,9 +74,9 @@ export const publicRoutes = [
  * API routes that require authentication
  */
 export const protectedApiRoutes: RouteConfig[] = [
-  { path: '/api/saved', roles: ['user', 'admin', 'moderator', 'shop_owner'], requireAuth: true },
-  { path: '/api/reviews', roles: ['user', 'admin', 'moderator', 'shop_owner'], requireAuth: true },
-  { path: '/api/notifications', roles: ['user', 'admin', 'moderator', 'shop_owner'], requireAuth: true },
+  { path: '/api/saved', roles: ['user', 'admin', 'moderator'], requireAuth: true },
+  { path: '/api/reviews', roles: ['user', 'admin', 'moderator'], requireAuth: true },
+  { path: '/api/notifications', roles: ['user', 'admin', 'moderator'], requireAuth: true },
   { path: '/api/admin', roles: ['admin'], requireAuth: true },
   { path: '/api/moderation', roles: ['admin', 'moderator'], requireAuth: true },
 ];
@@ -132,8 +135,9 @@ export function getUnauthorizedRedirect(pathname: string, isAuthenticated: boole
  */
 export const permissions = {
   // Shop permissions
+  // Note: 'shop:edit' requires ownership check (shops.owner_id === user.id) OR admin role
   'shop:create': ['user', 'admin'],
-  'shop:edit': ['shop_owner', 'admin'],
+  'shop:edit': ['user', 'admin'], // Plus ownership check in implementation
   'shop:delete': ['admin'],
   'shop:approve': ['admin', 'moderator'],
 
