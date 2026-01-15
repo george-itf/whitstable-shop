@@ -398,7 +398,7 @@ export default function CharitiesPage() {
             placeholder="https://..."
           />
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
               label="Website"
               value={formData.website}
@@ -428,7 +428,7 @@ export default function CharitiesPage() {
               placeholder="e.g. 2025 Lifeboat Fund"
             />
 
-            <div className="grid grid-cols-2 gap-3 mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               <Input
                 label="Target Amount (£)"
                 type="number"
