@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { CheckCircle } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import { EmptyState, AdminSkeleton } from '@/components/admin';
 import { createClient } from '@/lib/supabase/client';
 
 interface PendingShop {
@@ -134,17 +136,8 @@ export default function AdminShopsPage() {
             <h1 className="text-white font-bold text-xl">approve shops</h1>
           </div>
         </div>
-        <div className="px-4 py-6 space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <div className="h-5 bg-grey-light rounded w-1/2 mb-2" />
-              <div className="h-4 bg-grey-light rounded w-3/4 mb-4" />
-              <div className="flex gap-3">
-                <div className="h-8 bg-grey-light rounded flex-1" />
-                <div className="h-8 bg-grey-light rounded flex-1" />
-              </div>
-            </Card>
-          ))}
+        <div className="px-4 py-6">
+          <AdminSkeleton count={3} variant="list" />
         </div>
         <BottomNav />
       </MobileWrapper>
@@ -209,24 +202,13 @@ export default function AdminShopsPage() {
       {/* Content */}
       <div className="px-4 py-6 space-y-4">
         {shops.length === 0 ? (
-          <Card className="text-center py-8">
-            <div className="w-16 h-16 bg-green-light rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-green"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-            <p className="text-grey">All caught up! No pending shops.</p>
+          <Card>
+            <EmptyState
+              icon={CheckCircle}
+              title="All caught up!"
+              description="No pending shops to review"
+              variant="success"
+            />
           </Card>
         ) : (
           shops.map((shop) => (
