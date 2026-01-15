@@ -17,7 +17,6 @@ export async function POST(request: Request) {
   // Generate session ID if not exists
   if (!sessionId) {
     sessionId = generateSessionId();
-    // Note: In a real app, you'd set this cookie in the response
   }
 
   const supabase = await createClient();
@@ -46,13 +45,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Update shop view count
-  // This would be better done with a Postgres trigger
+  // Update shop view count (atomic RPC)
   try {
     await supabase.rpc('increment_view_count', { shop_id: body.shop_id });
-  } catch {
-    // If RPC doesn't exist, fail silently
+  } catch (rpcError) {
+    console.error('Failed to increment view count:', rpcError);
+    // Continue - view was logged even if counter update failed
   }
 
-  return NextResponse.json({ success: true });
+  // Create response with session cookie
+  const response = NextResponse.json({ success: true });
+
+  // Set session cookie (30 days expiry, consistent with cooldown logic)
+  response.cookies.set('session_id', sessionId, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    path: '/',
+  });
+
+  return response;
 }
