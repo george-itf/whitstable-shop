@@ -7,12 +7,12 @@ import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import ShopList from '@/components/shops/ShopList';
 import { EmptyState } from '@/components/ui';
-import type { Category, Shop } from '@/types';
+import type { Category, ShopWithCategory } from '@/types';
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [shops, setShops] = useState<Shop[]>([]);
+  const [shops, setShops] = useState<ShopWithCategory[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

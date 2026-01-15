@@ -159,6 +159,7 @@ export interface ShopView {
 
 export type ShopWithCategory = Omit<Shop, 'category'> & {
   category: Category | null;
+  images?: Pick<ShopImage, 'url' | 'is_primary'>[];
 };
 
 export type ShopWithDetails = Omit<Shop, 'category' | 'images'> & {

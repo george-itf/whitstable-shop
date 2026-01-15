@@ -5,11 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, MapPin } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
-import { Shop, Category } from '@/types';
+import { ShopWithCategory } from '@/types';
 import { isCurrentlyOpen, cn } from '@/lib/utils';
 
 interface ShopCardProps {
-  shop: Shop & { category?: Category | null };
+  shop: ShopWithCategory;
   showSaveButton?: boolean;
   isSaved?: boolean;
   onToggleSave?: (shopId: string) => void;
@@ -124,10 +124,10 @@ export default function ShopCard({
           )}
 
           {/* Location hint */}
-          {shop.address_line1 && (
+          {(shop.address || shop.street) && (
             <div className="flex items-center gap-1 mt-2 text-xs text-oyster-400">
               <MapPin className="w-3 h-3" />
-              <span className="truncate">{shop.address_line1}</span>
+              <span className="truncate">{shop.address || shop.street}</span>
             </div>
           )}
         </div>

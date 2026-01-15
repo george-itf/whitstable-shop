@@ -7,10 +7,10 @@ import MobileWrapper from '@/components/layout/MobileWrapper';
 import ShopList from '@/components/shops/ShopList';
 import { Button, EmptyState } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
-import type { Shop } from '@/types';
+import type { ShopWithCategory } from '@/types';
 
 export default function SavedPage() {
-  const [savedShops, setSavedShops] = useState<Shop[]>([]);
+  const [savedShops, setSavedShops] = useState<ShopWithCategory[]>([]);
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -34,7 +34,7 @@ export default function SavedPage() {
         if (res.ok) {
           const data = await res.json();
           setSavedShops(data);
-          setSavedIds(data.map((s: Shop) => s.id));
+          setSavedIds(data.map((s: ShopWithCategory) => s.id));
         }
       } catch (error) {
         console.error('Error fetching saved shops:', error);

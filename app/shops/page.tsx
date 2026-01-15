@@ -6,11 +6,11 @@ import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import PageHeader from '@/components/layout/PageHeader';
 import ShopList from '@/components/shops/ShopList';
-import { Category, Shop } from '@/types';
+import { Category, ShopWithCategory } from '@/types';
 
 export default function ShopsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [shops, setShops] = useState<Shop[]>([]);
+  const [shops, setShops] = useState<ShopWithCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 

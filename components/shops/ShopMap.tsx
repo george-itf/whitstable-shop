@@ -8,7 +8,7 @@ interface ShopMapProps {
 
 export default function ShopMap({ shop }: ShopMapProps) {
   const hasLocation = shop.latitude && shop.longitude;
-  const address = [shop.address_line1, shop.address_line2, shop.postcode]
+  const address = [shop.street, shop.address, shop.postcode]
     .filter(Boolean)
     .join(', ');
 
