@@ -22,15 +22,15 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
         )}
       >
         <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
             <Image
-              src="/seagull.svg"
-              alt=""
-              width={28}
-              height={36}
-              className="object-contain"
+              src="/brand/logo-banner.svg"
+              alt="whitstable.shop"
+              width={180}
+              height={48}
+              className="object-contain h-10 w-auto"
+              priority
             />
-            <span className="text-white font-bold text-xl tracking-tight font-display">whitstable.shop</span>
           </Link>
 
           {/* Desktop navigation */}
@@ -97,6 +97,7 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="p-2 text-grey hover:text-ink transition-colors"
+                aria-label="Close menu"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -108,6 +109,7 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />

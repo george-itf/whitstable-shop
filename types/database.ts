@@ -18,6 +18,7 @@ export interface Database {
           display_name: string | null;
           bio: string | null;
           avatar_url: string | null;
+          role: 'user' | 'admin' | 'moderator';
           is_public: boolean;
           is_local: boolean;
           joined_at: string;
@@ -29,6 +30,7 @@ export interface Database {
           display_name?: string | null;
           bio?: string | null;
           avatar_url?: string | null;
+          role?: 'user' | 'admin' | 'moderator';
           is_public?: boolean;
           is_local?: boolean;
           joined_at?: string;
@@ -40,6 +42,7 @@ export interface Database {
           display_name?: string | null;
           bio?: string | null;
           avatar_url?: string | null;
+          role?: 'user' | 'admin' | 'moderator';
           is_public?: boolean;
           is_local?: boolean;
           joined_at?: string;
@@ -997,6 +1000,59 @@ export interface Database {
           generated_at?: string;
         };
       };
+      local_info_pages: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          subtitle: string | null;
+          icon: string | null;
+          color: string | null;
+          bg_color: string | null;
+          image_url: string | null;
+          quick_facts: Json | null;
+          links: Json | null;
+          sections: Json | null;
+          display_order: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          subtitle?: string | null;
+          icon?: string | null;
+          color?: string | null;
+          bg_color?: string | null;
+          image_url?: string | null;
+          quick_facts?: Json | null;
+          links?: Json | null;
+          sections?: Json | null;
+          display_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          title?: string;
+          subtitle?: string | null;
+          icon?: string | null;
+          color?: string | null;
+          bg_color?: string | null;
+          image_url?: string | null;
+          quick_facts?: Json | null;
+          links?: Json | null;
+          sections?: Json | null;
+          display_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 }
@@ -1027,6 +1083,7 @@ export type Campaign = Database['public']['Tables']['campaigns']['Row'];
 export type SavedShop = Database['public']['Tables']['saved_shops']['Row'];
 export type VisitedShop = Database['public']['Tables']['visited_shops']['Row'];
 export type WeeklyDigest = Database['public']['Tables']['weekly_digest']['Row'];
+export type LocalInfoPage = Database['public']['Tables']['local_info_pages']['Row'];
 
 // Extended types with relations
 export interface PhotoEntryWithUser extends PhotoEntry {

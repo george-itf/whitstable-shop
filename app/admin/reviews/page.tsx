@@ -37,7 +37,7 @@ export default function AdminReviewsPage() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          router.push('/login?redirect=/admin/reviews');
+          router.push('/auth/login?redirect=/admin/reviews');
           return;
         }
 
@@ -64,7 +64,7 @@ export default function AdminReviewsPage() {
           .order('created_at', { ascending: false });
 
         // Transform data to handle Supabase's join return type
-        const transformedReviews = (pendingReviews || []).map((review) => ({
+        const transformedReviews = (pendingReviews || []).map((review: PendingReview & { shop: { name: string } | { name: string }[] | null }) => ({
           ...review,
           shop: Array.isArray(review.shop) ? review.shop[0] : review.shop,
         }));

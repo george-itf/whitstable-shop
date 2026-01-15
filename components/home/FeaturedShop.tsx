@@ -1,7 +1,11 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Badge from '@/components/ui/Badge';
 import { Shop } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface FeaturedShopProps {
   shop: Pick<Shop, 'id' | 'name' | 'slug' | 'tagline' | 'description'> & {
@@ -11,6 +15,7 @@ interface FeaturedShopProps {
 }
 
 export default function FeaturedShop({ shop }: FeaturedShopProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
   return (
     <div className="px-4 py-6">
       <h2 className="section-title mb-4">featured</h2>
@@ -20,12 +25,23 @@ export default function FeaturedShop({ shop }: FeaturedShopProps) {
           {/* Image */}
           <div className="relative h-40 bg-grey-light">
             {shop.image_url ? (
-              <Image
-                src={shop.image_url}
-                alt={shop.name}
-                fill
-                className="object-cover"
-              />
+              <>
+                {!imageLoaded && (
+                  <div className="absolute inset-0 skeleton" aria-hidden="true" />
+                )}
+                <Image
+                  src={shop.image_url}
+                  alt={shop.name}
+                  fill
+                  sizes="(max-width: 430px) 100vw, (max-width: 768px) 80vw, 600px"
+                  priority
+                  className={cn(
+                    'object-cover transition-opacity duration-300',
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                  onLoad={() => setImageLoaded(true)}
+                />
+              </>
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg

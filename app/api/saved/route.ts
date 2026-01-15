@@ -27,8 +27,8 @@ export async function GET() {
     }
 
     // Extract just the shop data with saved timestamp
-    const shops = data.map((item) => ({
-      ...item.shop,
+    const shops = data.map((item: { shop: unknown; created_at: string }) => ({
+      ...(item.shop as object),
       saved_at: item.created_at,
     }));
 

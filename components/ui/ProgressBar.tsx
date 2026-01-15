@@ -7,6 +7,10 @@ export interface ProgressBarProps {
   variant?: 'default' | 'success' | 'warning' | 'danger';
   showLabel?: boolean;
   className?: string;
+  /** Accessible label describing what this progress bar represents */
+  'aria-label'?: string;
+  /** ID of element that labels this progress bar */
+  'aria-labelledby'?: string;
 }
 
 export function ProgressBar({
@@ -16,6 +20,8 @@ export function ProgressBar({
   variant = 'default',
   showLabel = false,
   className,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
 }: ProgressBarProps) {
   const percentage = Math.min(Math.round((value / max) * 100), 100);
 
@@ -41,6 +47,12 @@ export function ProgressBar({
         </div>
       )}
       <div
+        role="progressbar"
+        aria-valuenow={value}
+        aria-valuemin={0}
+        aria-valuemax={max}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledby}
         className={cn(
           'w-full bg-oyster-200 rounded-full overflow-hidden',
           sizes[size]
@@ -52,8 +64,11 @@ export function ProgressBar({
             variants[variant]
           )}
           style={{ width: `${percentage}%` }}
+          aria-hidden="true"
         />
       </div>
+      {/* Screen reader announcement of percentage */}
+      <span className="sr-only">{percentage}% complete</span>
     </div>
   );
 }

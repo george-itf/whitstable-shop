@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
     let query = supabase
       .from('offers')
-      .select('*, shop:shops(id, name, slug)')
+      .select('*, shop:shops(id, name, slug, images:shop_images(url, is_primary))')
       .eq('is_active', true)
       .order('created_at', { ascending: false })
       .limit(limit);

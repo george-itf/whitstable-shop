@@ -2,62 +2,63 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import MobileWrapper from '@/components/layout/MobileWrapper';
-import BottomNav from '@/components/layout/BottomNav';
-import Card from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/client';
+import {
+  Store,
+  Heart,
+  Calendar,
+  Tag,
+  Camera,
+  ClipboardCheck,
+  TrendingUp,
+  Users,
+  BarChart3,
+  ArrowUpRight,
+  ArrowDownRight,
+  Eye,
+  ShoppingBag,
+} from 'lucide-react';
 
 interface AdminStats {
   pendingShops: number;
   pendingReviews: number;
   activeNotices: number;
   totalShops: number;
+  totalEvents: number;
+  totalCharities: number;
+  activeOffers: number;
+  totalCategories: number;
 }
 
 export default function AdminPage() {
-  const router = useRouter();
   const [stats, setStats] = useState<AdminStats>({
     pendingShops: 0,
     pendingReviews: 0,
     activeNotices: 0,
     totalShops: 0,
+    totalEvents: 0,
+    totalCharities: 0,
+    activeOffers: 0,
+    totalCategories: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   useEffect(() => {
     async function fetchAdminStats() {
       try {
         const supabase = createClient();
 
-        // Check authentication and admin role
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        if (!user) {
-          router.push('/login?redirect=/admin');
-          return;
-        }
-
-        // Check if admin
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-
-        if (profile?.role !== 'admin') {
-          setIsAdmin(false);
-          setIsLoading(false);
-          return;
-        }
-
-        setIsAdmin(true);
-
-        // Fetch stats
-        const [shopsRes, reviewsRes, noticesRes, totalRes] = await Promise.all([
+        // Fetch comprehensive stats
+        const [
+          shopsRes,
+          reviewsRes,
+          noticesRes,
+          totalShopsRes,
+          eventsRes,
+          charitiesRes,
+          offersRes,
+          categoriesRes,
+        ] = await Promise.all([
           supabase
             .from('shops')
             .select('id', { count: 'exact', head: true })
@@ -74,13 +75,27 @@ export default function AdminPage() {
             .from('shops')
             .select('id', { count: 'exact', head: true })
             .eq('status', 'approved'),
+          supabase.from('events').select('id', { count: 'exact', head: true }),
+          supabase
+            .from('charities')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true),
+          supabase
+            .from('offers')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true),
+          supabase.from('categories').select('id', { count: 'exact', head: true }),
         ]);
 
         setStats({
           pendingShops: shopsRes.count || 0,
           pendingReviews: reviewsRes.count || 0,
           activeNotices: noticesRes.count || 0,
-          totalShops: totalRes.count || 0,
+          totalShops: totalShopsRes.count || 0,
+          totalEvents: eventsRes.count || 0,
+          totalCharities: charitiesRes.count || 0,
+          activeOffers: offersRes.count || 0,
+          totalCategories: categoriesRes.count || 0,
         });
       } catch (error) {
         console.error('Error fetching admin stats:', error);
@@ -90,318 +105,232 @@ export default function AdminPage() {
     }
 
     fetchAdminStats();
-  }, [router]);
+  }, []);
 
   if (isLoading) {
     return (
-      <MobileWrapper>
-        <div className="bg-coral px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-white font-bold text-xl">admin panel</h1>
-          </div>
+      <div className="p-6 lg:p-8">
+        <div className="mb-8">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-2 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-72 animate-pulse" />
         </div>
-        <div className="px-4 py-6 space-y-6">
-          <div className="grid grid-cols-2 gap-3">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-8 bg-grey-light rounded w-1/2 mx-auto mb-1" />
-                <div className="h-3 bg-grey-light rounded w-2/3 mx-auto" />
-              </Card>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 shadow-sm animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-20 mb-4" />
+              <div className="h-8 bg-gray-200 rounded w-16 mb-2" />
+              <div className="h-3 bg-gray-200 rounded w-24" />
+            </div>
+          ))}
         </div>
-        <BottomNav />
-      </MobileWrapper>
+      </div>
     );
   }
 
-  if (isAdmin === false) {
-    return (
-      <MobileWrapper>
-        <div className="bg-coral px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-white font-bold text-xl">admin panel</h1>
-          </div>
-        </div>
-        <div className="px-4 py-6 text-center py-12">
-          <div className="w-16 h-16 bg-coral-light rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-coral"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          </div>
-          <h2 className="text-lg font-bold text-ink mb-2">Access Denied</h2>
-          <p className="text-grey text-sm mb-4">You don&apos;t have admin privileges</p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-2 bg-coral text-white rounded-button font-semibold"
-          >
-            go home
-          </Link>
-        </div>
-        <BottomNav />
-      </MobileWrapper>
-    );
-  }
+  const pendingTotal = stats.pendingShops + stats.pendingReviews;
 
   return (
-    <MobileWrapper>
+    <div className="p-6 lg:p-8">
       {/* Header */}
-      <div className="bg-coral px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <h1 className="text-white font-bold text-xl">admin panel</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-1">Welcome to the whitstable.shop admin center</p>
+      </div>
+
+      {/* Urgent Alert */}
+      {pendingTotal > 0 && (
+        <Link href="/admin/moderation">
+          <div className="mb-8 bg-gradient-to-r from-coral to-coral/80 rounded-xl p-6 text-white hover:shadow-lg transition-shadow cursor-pointer">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <ClipboardCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-lg">Moderation Queue</h2>
+                  <p className="text-white/80">{pendingTotal} items need your attention</p>
+                </div>
+              </div>
+              <ArrowUpRight className="w-6 h-6" />
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard
+          title="Total Shops"
+          value={stats.totalShops}
+          icon={Store}
+          trend={12}
+          color="coral"
+        />
+        <StatCard
+          title="Active Events"
+          value={stats.totalEvents}
+          icon={Calendar}
+          trend={8}
+          color="sky"
+        />
+        <StatCard
+          title="Charities"
+          value={stats.totalCharities}
+          icon={Heart}
+          trend={-2}
+          color="green"
+        />
+        <StatCard
+          title="Active Offers"
+          value={stats.activeOffers}
+          icon={Tag}
+          trend={15}
+          color="yellow"
+        />
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Pending Items */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-coral" />
+            Needs Attention
+          </h3>
+          <div className="space-y-3">
+            <QuickActionItem
+              href="/admin/shops"
+              label="Pending Shop Submissions"
+              count={stats.pendingShops}
+              urgent={stats.pendingShops > 0}
+            />
+            <QuickActionItem
+              href="/admin/reviews"
+              label="Reviews to Moderate"
+              count={stats.pendingReviews}
+              urgent={stats.pendingReviews > 0}
+            />
+            <QuickActionItem
+              href="/admin/notices"
+              label="Active Notices"
+              count={stats.activeNotices}
+            />
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-sky" />
+            Overview
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <MiniStat label="Categories" value={stats.totalCategories} icon={ShoppingBag} />
+            <MiniStat label="Photo Contests" value={0} icon={Camera} />
+            <MiniStat label="Total Users" value={0} icon={Users} />
+            <MiniStat label="Page Views" value={0} icon={Eye} />
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-4 py-6 space-y-6">
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard label="Pending Shops" value={stats.pendingShops} urgent />
-          <StatCard label="Pending Reviews" value={stats.pendingReviews} urgent />
-          <StatCard label="Active Notices" value={stats.activeNotices} />
-          <StatCard label="Total Shops" value={stats.totalShops} />
-        </div>
-
-        {/* Admin sections */}
-        <div className="space-y-3">
-          <h2 className="font-bold text-ink">moderation</h2>
-
-          <Link href="/admin/shops">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-coral-light text-coral flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Approve Shops</h3>
-                <p className="text-sm text-grey">{stats.pendingShops} pending approval</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
-
-          <Link href="/admin/reviews">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-yellow/10 text-yellow flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Moderate Reviews</h3>
-                <p className="text-sm text-grey">{stats.pendingReviews} pending moderation</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
-
-          <Link href="/admin/notices">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-sky-light text-sky flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Manage Notices</h3>
-                <p className="text-sm text-grey">
-                  {stats.activeNotices} active banner{stats.activeNotices !== 1 && 's'}
-                </p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
-          </Link>
-
-          <Link href="/admin/nominations">
-            <Card hoverable className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-card bg-amber-100 text-amber-600 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="8" r="6" />
-                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-ink">Award Nominations</h3>
-                <p className="text-sm text-grey">Review and select winners</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-grey-light"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </Card>
+      {/* Recent Activity placeholder */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h3 className="font-bold text-gray-900 mb-4">Recent Activity</h3>
+        <div className="text-center py-8 text-gray-500">
+          <p>Activity tracking coming soon</p>
+          <Link href="/admin/activity" className="text-coral hover:underline mt-2 inline-block">
+            View Activity Log →
           </Link>
         </div>
       </div>
-
-      <BottomNav />
-    </MobileWrapper>
+    </div>
   );
 }
 
+// Stat Card Component
 function StatCard({
-  label,
+  title,
   value,
+  icon: Icon,
+  trend,
+  color,
+}: {
+  title: string;
+  value: number;
+  icon: React.ElementType;
+  trend: number;
+  color: 'coral' | 'sky' | 'green' | 'yellow';
+}) {
+  const colorClasses = {
+    coral: 'bg-coral/10 text-coral',
+    sky: 'bg-sky/10 text-sky',
+    green: 'bg-green/10 text-green',
+    yellow: 'bg-yellow-100 text-yellow-600',
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm font-medium text-gray-500">{title}</span>
+        <div className={`w-10 h-10 rounded-lg ${colorClasses[color]} flex items-center justify-center`}>
+          <Icon className="w-5 h-5" />
+        </div>
+      </div>
+      <div className="flex items-end justify-between">
+        <span className="text-3xl font-bold text-gray-900">{value}</span>
+        <div className={`flex items-center gap-1 text-sm ${trend >= 0 ? 'text-green' : 'text-red-500'}`}>
+          {trend >= 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+          <span>{Math.abs(trend)}%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Quick Action Item Component
+function QuickActionItem({
+  href,
+  label,
+  count,
   urgent = false,
 }: {
+  href: string;
   label: string;
-  value: number;
+  count: number;
   urgent?: boolean;
 }) {
   return (
-    <Card className="text-center">
-      <div className={`text-2xl font-bold ${urgent && value > 0 ? 'text-coral' : 'text-ink'}`}>
-        {value}
+    <Link
+      href={href}
+      className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+    >
+      <span className={`font-medium ${urgent ? 'text-coral' : 'text-gray-700'}`}>{label}</span>
+      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+        urgent ? 'bg-coral text-white' : 'bg-gray-100 text-gray-600'
+      }`}>
+        {count}
+      </span>
+    </Link>
+  );
+}
+
+// Mini Stat Component
+function MiniStat({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: number;
+  icon: React.ElementType;
+}) {
+  return (
+    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+      <Icon className="w-5 h-5 text-gray-400" />
+      <div>
+        <p className="text-xl font-bold text-gray-900">{value}</p>
+        <p className="text-xs text-gray-500">{label}</p>
       </div>
-      <div className="text-xs text-grey">{label}</div>
-    </Card>
+    </div>
   );
 }

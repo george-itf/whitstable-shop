@@ -8,6 +8,7 @@ import Hero from '@/components/home/Hero';
 import Notice from '@/components/home/Notice';
 import HubButtons from '@/components/home/HubButtons';
 import EventsScroll from '@/components/home/EventsScroll';
+import TrendingList from '@/components/home/TrendingList';
 import LocalInfoGrid from '@/components/home/LocalInfoGrid';
 import CTABanner from '@/components/home/CTABanner';
 import type { Event } from '@/types';
@@ -89,6 +90,9 @@ export default function HomePage() {
       ) : events.length > 0 ? (
         <EventsScroll events={events} />
       ) : null}
+
+      {/* Trending - what's hot in the community */}
+      <TrendingList limit={5} />
 
       {/* Local info grid - practical information */}
       <LocalInfoGrid items={localInfoItems} />

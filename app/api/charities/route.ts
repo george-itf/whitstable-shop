@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
     // If with_events requested, also get upcoming events
     if (withEvents === 'true' && charities.length > 0) {
-      const charityIds = charities.map((c) => c.id);
+      const charityIds = charities.map((c: { id: string }) => c.id);
       const today = new Date().toISOString().split('T')[0];
 
       const { data: events, error: eventsError } = await supabase
@@ -45,9 +45,9 @@ export async function GET(request: Request) {
 
       if (!eventsError && events) {
         // Attach events to charities
-        const charitiesWithEvents = charities.map((charity) => ({
+        const charitiesWithEvents = charities.map((charity: { id: string }) => ({
           ...charity,
-          upcoming_events: events.filter((e) => e.charity_id === charity.id),
+          upcoming_events: events.filter((e: { charity_id: string }) => e.charity_id === charity.id),
         }));
         return NextResponse.json(charitiesWithEvents);
       }

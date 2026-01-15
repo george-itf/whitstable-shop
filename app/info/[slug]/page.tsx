@@ -1,11 +1,44 @@
 import Link from 'next/link';
-import { ChevronLeft, ExternalLink, Phone, MapPin, Clock, AlertCircle, Calendar, Waves, Car, Sun, Trash2, Music, Building, Heart, Stethoscope } from 'lucide-react';
+import Image from 'next/image';
+import { ChevronLeft, ExternalLink, Phone, MapPin, Clock, AlertCircle, Calendar, Waves, Car, Sun, Trash2, Music, Building, Heart, Stethoscope, Info } from 'lucide-react';
 import MobileWrapper from '@/components/layout/MobileWrapper';
 import BottomNav from '@/components/layout/BottomNav';
 import { notFound } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import type { LocalInfoPage } from '@/types/database';
 
-// Page-specific configuration
-const pageConfig: Record<string, {
+// Icon mapping for database entries
+const iconMap: Record<string, React.ReactNode> = {
+  Trash2: <Trash2 className="w-6 h-6" />,
+  Waves: <Waves className="w-6 h-6" />,
+  Music: <Music className="w-6 h-6" />,
+  Car: <Car className="w-6 h-6" />,
+  Sun: <Sun className="w-6 h-6" />,
+  Phone: <Phone className="w-6 h-6" />,
+  Building: <Building className="w-6 h-6" />,
+  Calendar: <Calendar className="w-6 h-6" />,
+  Stethoscope: <Stethoscope className="w-6 h-6" />,
+  Heart: <Heart className="w-6 h-6" />,
+  MapPin: <MapPin className="w-6 h-6" />,
+  AlertCircle: <AlertCircle className="w-6 h-6" />,
+  Info: <Info className="w-6 h-6" />,
+};
+
+// Small icon mapping for quick facts
+const smallIconMap: Record<string, React.ReactNode> = {
+  Calendar: <Calendar className="w-4 h-4" />,
+  Trash2: <Trash2 className="w-4 h-4" />,
+  MapPin: <MapPin className="w-4 h-4" />,
+  Waves: <Waves className="w-4 h-4" />,
+  Car: <Car className="w-4 h-4" />,
+  Heart: <Heart className="w-4 h-4" />,
+  Phone: <Phone className="w-4 h-4" />,
+  AlertCircle: <AlertCircle className="w-4 h-4" />,
+  Clock: <Clock className="w-4 h-4" />,
+};
+
+// Fallback hardcoded page configuration (used when database is empty)
+const fallbackPageConfig: Record<string, {
   icon: React.ReactNode;
   color: string;
   bgColor: string;
@@ -33,8 +66,8 @@ const pageConfig: Record<string, {
     bgColor: 'bg-sky',
     subtitle: 'high & low tide predictions',
     quickFacts: [
-      { label: 'Next high tide', value: '3:45pm today', icon: <Clock className="w-4 h-4" /> },
-      { label: 'Height', value: '4.8m', icon: <Waves className="w-4 h-4" /> },
+      { label: 'Location', value: 'Whitstable Harbour', icon: <MapPin className="w-4 h-4" /> },
+      { label: 'Tidal range', value: '~4-5m (springs)', icon: <Waves className="w-4 h-4" /> },
     ],
     links: [
       { label: 'BBC Weather Tides', url: 'https://www.bbc.co.uk/weather/coast-and-sea/tide-tables', description: '14-day forecast' },
@@ -142,8 +175,8 @@ const pageConfig: Record<string, {
   },
 };
 
-// Content for each page
-const infoContent: Record<string, { title: string; sections: { heading?: string; content: string[] }[] }> = {
+// Fallback content for each page
+const fallbackInfoContent: Record<string, { title: string; sections: { heading?: string; content: string[] }[] }> = {
   'bin-collection': {
     title: 'Bin Collection Days',
     sections: [
@@ -169,24 +202,17 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
           'Charges apply — typically £25-35 per collection.',
         ],
       },
-      {
-        heading: 'Christmas schedule',
-        content: [
-          'Collections often change during the festive period.',
-          'Check the council website in December for updated times.',
-        ],
-      },
     ],
   },
   'tide-times': {
     title: 'Tide Times',
     sections: [
       {
-        heading: "Today's tides",
+        heading: 'Checking tide times',
         content: [
-          '**High tide**: 3:45pm (4.8m)',
-          '**Low tide**: 9:20pm (1.2m)',
+          'Use the links below to check current tide predictions.',
           'Times are for Whitstable Harbour. Add ~10 mins for Tankerton.',
+          'Tides occur roughly 50 minutes later each day.',
         ],
       },
       {
@@ -195,21 +221,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
           'Best swimming at high tide ± 2 hours.',
           'Avoid swimming at low tide — exposed mudflats and shallow water.',
           'Always check for red flags indicating no swimming.',
-        ],
-      },
-      {
-        heading: 'For oyster foraging',
-        content: [
-          'Low tide is best for exploring the oyster beds.',
-          'The famous "Street" at Tankerton is only visible at low tide.',
-          'Always check tide times before heading out.',
-        ],
-      },
-      {
-        heading: 'Spring vs neap tides',
-        content: [
-          '**Spring tides** (full/new moon): Higher highs, lower lows — more dramatic',
-          '**Neap tides** (quarter moons): More moderate tidal range',
         ],
       },
     ],
@@ -222,34 +233,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
         content: [
           '**Saturday 26th - Sunday 27th July 2025**',
           "Whitstable's biggest annual event celebrating our maritime heritage.",
-        ],
-      },
-      {
-        heading: 'Main events',
-        content: [
-          '**Oyster Parade**: Saturday 10am from Harbour Street',
-          '**Blessing of the Waters**: Saturday 11am at the harbour',
-          '**Oyster Eating Competition**: Saturday 2pm',
-          '**Live music**: Both days across multiple stages',
-          '**Fireworks**: Saturday 10pm over the harbour',
-        ],
-      },
-      {
-        heading: 'What to expect',
-        content: [
-          'Street food from local vendors (not just oysters!)',
-          'Local craft stalls and artisan markets',
-          "Children's activities and entertainment",
-          'Beer tent with local ales and ciders',
-        ],
-      },
-      {
-        heading: 'Getting there',
-        content: [
-          '**Park & Ride**: Free shuttle from Whitstable Rugby Club',
-          '**Train**: Regular services from London Victoria (90 mins)',
-          '**Parking**: Very limited — please use public transport',
-          'Harbour Street and surrounding areas closed to traffic.',
         ],
       },
     ],
@@ -265,29 +248,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
           '**Stream Walk (Medium Stay)** — CT5 1AW, ~100 spaces, £1.50/hr, max £6/day',
         ],
       },
-      {
-        heading: 'Beach car parks',
-        content: [
-          '**Tankerton Slopes** — Marine Parade, seasonal rates, arrive early in summer',
-          '**Long Beach** — Pay & display, can flood at high tide (check notices)',
-        ],
-      },
-      {
-        heading: 'Tips',
-        content: [
-          'Download the **RingGo** app for easy payment.',
-          'Most car parks fill by 10am on sunny weekends.',
-          'Blue badge holders: Free parking in all council car parks.',
-          'Consider Park & Ride during festivals and busy summer weekends.',
-        ],
-      },
-      {
-        heading: 'Resident permits',
-        content: [
-          'Apply through Canterbury City Council for annual permits.',
-          'Needed for zone-restricted streets.',
-        ],
-      },
     ],
   },
   'beach-info': {
@@ -296,33 +256,9 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
       {
         heading: 'Beach areas',
         content: [
-          '**West Beach**: Pebble/shingle, good swimming at high tide, popular with families, cafes nearby',
-          '**Tankerton Beach**: Longer stretch, the famous "Street" visible at low tide, quieter, beach huts',
-          '**Long Beach** (towards Seasalter): More secluded, dog-friendly year-round, great for walks',
-        ],
-      },
-      {
-        heading: 'Facilities',
-        content: [
-          'Public toilets at West Beach and Tankerton Slopes.',
-          'Beach huts available for hire (book well in advance).',
-          'RNLI lifeguards patrol in summer — check flags.',
-        ],
-      },
-      {
-        heading: 'Safety flags',
-        content: [
-          '🚩 **Red flag**: No swimming',
-          '🚩 **Yellow flag**: Caution, weak swimmers stay out',
-          '🏁 **Checkered flag**: Safe swimming area',
-        ],
-      },
-      {
-        heading: 'Dogs on beaches',
-        content: [
-          'Dogs allowed all year at Long Beach.',
-          'Seasonal restrictions on West Beach and Tankerton (May-September).',
-          'Always clean up after your dog.',
+          '**West Beach**: Pebble/shingle, good swimming at high tide, popular with families',
+          '**Tankerton Beach**: Longer stretch, the famous "Street" visible at low tide',
+          '**Long Beach**: More secluded, dog-friendly year-round',
         ],
       },
     ],
@@ -338,31 +274,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
           '**111**: NHS non-emergency health advice',
         ],
       },
-      {
-        heading: 'Local services',
-        content: [
-          '**Whitstable Police Station**: 25 High Street, CT5 1AP',
-          '**Nearest A&E**: Kent & Canterbury Hospital, Canterbury CT1 3NG — 01227 766877',
-        ],
-      },
-      {
-        heading: 'Useful numbers',
-        content: [
-          '**Coast Guard**: 999 (ask for Coast Guard)',
-          '**Whitstable Lifeboat**: 01227 262166',
-          '**Canterbury City Council**: 01227 862000',
-          '**Gas emergency**: 0800 111 999',
-          '**Power cuts**: 0800 31 63 105',
-          '**Flooding**: Environment Agency 0800 80 70 60',
-        ],
-      },
-      {
-        heading: 'Local medical',
-        content: [
-          '**Whitstable Medical Practice**: Harbour Street, 01227 594400',
-          '**Out of hours**: Call 111',
-        ],
-      },
     ],
   },
   'council-contacts': {
@@ -373,26 +284,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
         content: [
           '**Phone**: 01227 862000',
           '**Email**: info@canterbury.gov.uk',
-          '**Address**: Council Offices, Military Road, Canterbury CT1 1YW',
-        ],
-      },
-      {
-        heading: 'Useful departments',
-        content: [
-          '**Council Tax**: 01227 862056',
-          '**Housing**: 01227 862030',
-          '**Planning**: 01227 862178',
-          '**Environmental Health**: 01227 862100',
-          '**Parking Services**: 01227 862545',
-        ],
-      },
-      {
-        heading: 'Reporting issues',
-        content: [
-          '**Fly-tipping**: Report online or call 01227 862000',
-          '**Potholes**: Report through Kent County Council',
-          '**Streetlights**: KCC — 03000 41 81 81',
-          '**Noise complaints**: Environmental Health',
         ],
       },
     ],
@@ -401,37 +292,10 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
     title: 'School Term Dates',
     sections: [
       {
-        heading: 'Autumn term 2024',
-        content: [
-          '**Start**: Tuesday 3 September 2024',
-          '**Half term**: 28 October - 1 November 2024',
-          '**End**: Friday 20 December 2024',
-        ],
-      },
-      {
-        heading: 'Spring term 2025',
-        content: [
-          '**Start**: Monday 6 January 2025',
-          '**Half term**: 17-21 February 2025',
-          '**End**: Friday 4 April 2025',
-        ],
-      },
-      {
         heading: 'Summer term 2025',
         content: [
           '**Start**: Tuesday 22 April 2025',
-          '**Half term**: 26-30 May 2025',
           '**End**: Tuesday 22 July 2025',
-        ],
-      },
-      {
-        heading: 'Local schools',
-        content: [
-          'Whitstable Junior School',
-          'Joy Lane Primary School',
-          'Swalecliffe Community Primary',
-          'The Whitstable School',
-          'Each school sets their own INSET days — check with your school.',
         ],
       },
     ],
@@ -443,36 +307,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
         heading: 'GP surgeries',
         content: [
           '**Whitstable Medical Practice**: Harbour Street, CT5 1AJ — 01227 594400',
-          '**Estuary View Medical Centre**: Boorman Way, CT5 3SE — 01227 284100',
-        ],
-      },
-      {
-        heading: 'Dentists',
-        content: [
-          '**Whitstable Dental Practice**: 39 High Street — 01227 273322',
-          '**Coast Dental**: Oxford Street — 01227 262280',
-          'Finding an NHS dentist can be difficult. Use the NHS Find a Dentist tool or call 111.',
-        ],
-      },
-      {
-        heading: 'Pharmacies',
-        content: [
-          '**Boots**: 41 High Street — 01227 273414',
-          '**Lloyds**: 24 Oxford Street — 01227 262888',
-        ],
-      },
-      {
-        heading: 'Vets',
-        content: [
-          '**Westgate Veterinary Surgery**: 7 Station Road, CT5 1QT — 01227 273223 (24hr emergency)',
-          '**Companion Care** (Pets at Home): Thanet Way Retail Park — 01227 771174',
-        ],
-      },
-      {
-        heading: 'Opticians',
-        content: [
-          '**Specsavers**: 38 High Street — 01227 264955',
-          '**Blacks Opticians**: 12 Oxford Street — 01227 273880',
         ],
       },
     ],
@@ -484,31 +318,6 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
         heading: '2025 carnival',
         content: [
           '**Date**: Saturday 9th August 2025 (TBC)',
-          "The Whitstable Carnival is a traditional summer celebration held annually since the 1930s.",
-        ],
-      },
-      {
-        heading: 'Events',
-        content: [
-          '**Carnival Procession**: Starting from Tankerton, ending at the harbour',
-          '**Float competition**: Enter your community group!',
-          '**Fancy dress**: Categories for all ages',
-          '**Beach activities**: Sandcastle competition, games',
-          '**Live entertainment**: Music, dancing, performers',
-        ],
-      },
-      {
-        heading: 'Getting involved',
-        content: [
-          '**Enter a float**: Contact the carnival committee by June',
-          '**Volunteer marshals needed**: Help keep the procession safe',
-          '**Sponsor the event**: Business sponsorship opportunities',
-        ],
-      },
-      {
-        heading: 'Road closures',
-        content: [
-          'The carnival route (Tankerton Road, Oxford Street, Harbour Street) will be closed 11am-5pm.',
         ],
       },
     ],
@@ -516,21 +325,59 @@ const infoContent: Record<string, { title: string; sections: { heading?: string;
 };
 
 interface InfoPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
+}
+
+async function getInfoPage(slug: string): Promise<{
+  dbPage: LocalInfoPage | null;
+  fallbackConfig: typeof fallbackPageConfig[string] | null;
+  fallbackContent: typeof fallbackInfoContent[string] | null;
+}> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('local_info_pages')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_active', true)
+      .single();
+
+    if (data && !error) {
+      return { dbPage: data, fallbackConfig: null, fallbackContent: null };
+    }
+  } catch (e) {
+    // Database fetch failed, fall back to hardcoded
+  }
+
+  // Use fallback if database doesn't have this page
+  return {
+    dbPage: null,
+    fallbackConfig: fallbackPageConfig[slug] || null,
+    fallbackContent: fallbackInfoContent[slug] || null,
+  };
 }
 
 export default async function InfoDetailPage({ params }: InfoPageProps) {
-  const { slug } = params;
-  const info = infoContent[slug];
-  const config = pageConfig[slug];
+  const { slug } = await params;
+  const { dbPage, fallbackConfig, fallbackContent } = await getInfoPage(slug);
 
-  if (!info) {
+  // If neither database nor fallback has this page, 404
+  if (!dbPage && !fallbackContent) {
     notFound();
   }
 
+  // Resolve content from database or fallback
+  const title = dbPage?.title || fallbackContent?.title || 'Info';
+  const subtitle = dbPage?.subtitle || fallbackConfig?.subtitle;
+  const bgColor = dbPage?.bg_color || fallbackConfig?.bgColor || 'bg-sky';
+  const icon = dbPage?.icon ? iconMap[dbPage.icon] : fallbackConfig?.icon;
+  const imageUrl = dbPage?.image_url;
+  const quickFacts = (dbPage?.quick_facts as Array<{ label: string; value: string; icon?: string }>) || fallbackConfig?.quickFacts || [];
+  const links = (dbPage?.links as Array<{ label: string; url: string; description?: string }>) || fallbackConfig?.links || [];
+  const sections = (dbPage?.sections as Array<{ heading?: string; content: string[] }>) || fallbackContent?.sections || [];
+
   // Render content with basic markdown
   const renderText = (text: string) => {
-    // Handle bold text
     const parts = text.split(/(\*\*[^*]+\*\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
@@ -543,31 +390,44 @@ export default async function InfoDetailPage({ params }: InfoPageProps) {
   return (
     <MobileWrapper>
       {/* Header */}
-      <div className={`${config?.bgColor || 'bg-sky'} px-4 py-5`}>
+      <div className={`${bgColor} px-4 py-5`}>
+        {/* Header image if available */}
+        {imageUrl && (
+          <div className="relative -mx-4 -mt-5 mb-4 h-40 overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          </div>
+        )}
+
         <div className="flex items-center gap-3 mb-4">
           <Link href="/info" className="text-white/80 hover:text-white transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-white font-bold text-xl">{info.title.toLowerCase()}</h1>
-            {config?.subtitle && (
-              <p className="text-white/70 text-sm">{config.subtitle}</p>
+            <h1 className="text-white font-bold text-xl">{title.toLowerCase()}</h1>
+            {subtitle && (
+              <p className="text-white/70 text-sm">{subtitle}</p>
             )}
           </div>
-          {config?.icon && (
+          {icon && (
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white">
-              {config.icon}
+              {icon}
             </div>
           )}
         </div>
 
         {/* Quick facts */}
-        {config?.quickFacts && config.quickFacts.length > 0 && (
+        {quickFacts.length > 0 && (
           <div className="grid grid-cols-2 gap-2">
-            {config.quickFacts.map((fact, i) => (
+            {quickFacts.map((fact, i) => (
               <div key={i} className="bg-white/15 backdrop-blur-sm rounded-xl px-3 py-2.5">
                 <div className="flex items-center gap-2 text-white/70 text-xs mb-0.5">
-                  {fact.icon}
+                  {typeof fact.icon === 'string' ? smallIconMap[fact.icon] : fact.icon}
                   <span>{fact.label}</span>
                 </div>
                 <p className="text-white font-semibold text-sm">{fact.value}</p>
@@ -579,7 +439,7 @@ export default async function InfoDetailPage({ params }: InfoPageProps) {
 
       {/* Content */}
       <div className="px-4 py-5 space-y-6">
-        {info.sections.map((section, i) => (
+        {sections.map((section, i) => (
           <div key={i}>
             {section.heading && (
               <h2 className="text-base font-bold text-ink mb-3 lowercase">{section.heading}</h2>
@@ -595,11 +455,11 @@ export default async function InfoDetailPage({ params }: InfoPageProps) {
         ))}
 
         {/* Useful links */}
-        {config?.links && config.links.length > 0 && (
+        {links.length > 0 && (
           <div className="pt-4 border-t border-oyster-100">
             <h2 className="text-base font-bold text-ink mb-3 lowercase">useful links</h2>
             <div className="space-y-2">
-              {config.links.map((link, i) => (
+              {links.map((link, i) => (
                 <a
                   key={i}
                   href={link.url}
@@ -632,5 +492,21 @@ export default async function InfoDetailPage({ params }: InfoPageProps) {
 }
 
 export async function generateStaticParams() {
-  return Object.keys(infoContent).map((slug) => ({ slug }));
+  // Return all known slugs (from fallback + any active database pages)
+  const fallbackSlugs = Object.keys(fallbackInfoContent);
+
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('local_info_pages')
+      .select('slug')
+      .eq('is_active', true);
+
+    const dbSlugs = data?.map((p: { slug: string }) => p.slug) || [];
+    const allSlugs = [...new Set([...fallbackSlugs, ...dbSlugs])];
+
+    return allSlugs.map((slug) => ({ slug }));
+  } catch {
+    return fallbackSlugs.map((slug) => ({ slug }));
+  }
 }

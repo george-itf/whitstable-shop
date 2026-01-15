@@ -30,7 +30,7 @@ export async function GET() {
       });
     }
 
-    const shopIds = shops.map((s) => s.id);
+    const shopIds = shops.map((s: { id: string }) => s.id);
 
     // Get total views for all shops
     const { data: viewsData } = await supabase
@@ -38,7 +38,7 @@ export async function GET() {
       .select('view_count')
       .in('shop_id', shopIds);
 
-    const totalViews = viewsData?.reduce((sum, v) => sum + (v.view_count || 0), 0) || 0;
+    const totalViews = viewsData?.reduce((sum: number, v: { view_count: number | null }) => sum + (v.view_count || 0), 0) || 0;
 
     // Get saves count
     const { count: savesCount } = await supabase

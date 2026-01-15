@@ -37,7 +37,7 @@ export default function AdminNominationsPage() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          router.push('/login?redirect=/admin/nominations');
+          router.push('/auth/login?redirect=/admin/nominations');
           return;
         }
 
