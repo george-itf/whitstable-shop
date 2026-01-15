@@ -10,7 +10,15 @@ import PageHeader from '@/components/layout/PageHeader';
 import { EmptyState } from '@/components/ui';
 import { Event, ShopImage } from '@/types';
 
-type EventWithShopImage = Event & {
+// Type helper to handle schema drift between canonical and legacy field names
+type EventWithSchemaFallback = Event & {
+  // Legacy field names (for backwards compatibility during schema migration)
+  date?: string;
+  time_start?: string;
+  time_end?: string;
+};
+
+type EventWithShopImage = EventWithSchemaFallback & {
   shop?: {
     id: string;
     name: string;
@@ -47,7 +55,7 @@ export default function EventsPage() {
   const eventsByMonth: Record<string, EventWithShopImage[]> = {};
   events.forEach((event) => {
     // Accept start_date (preferred), fall back to date if present, otherwise produce Invalid Date
-    const raw = (event as any).start_date ?? (event as any).date ?? '';
+    const raw = event.start_date ?? event.date ?? '';
     const date = raw ? new Date(raw) : new Date('');
     const monthKey = isNaN(date.getTime())
       ? 'Unknown'
@@ -113,7 +121,7 @@ function EventCard({ event }: { event: EventWithShopImage }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Normalize date field: support both start_date (canonical) and legacy date
-  const rawDate = (event as any).start_date ?? (event as any).date ?? '';
+  const rawDate = event.start_date ?? event.date ?? '';
   const date = rawDate ? new Date(rawDate) : new Date('');
   const dayNum = date.getDate();
   const dayName = date.toLocaleDateString('en-GB', { weekday: 'short' });
@@ -181,13 +189,13 @@ function EventCard({ event }: { event: EventWithShopImage }) {
 
           <div className="mt-2 space-y-1">
             {/* Normalize time fields: support both start_time (canonical) and legacy time_start */}
-            {((event as any).start_time ?? (event as any).time_start) && (
+            {(event.start_time ?? event.time_start) && (
               <div className="flex items-center gap-1.5 text-sm text-grey">
                 <Clock className="w-3.5 h-3.5 flex-shrink-0" />
                 <span>
-                  {(event as any).start_time ?? (event as any).time_start}
-                  {((event as any).end_time ?? (event as any).time_end) &&
-                    ` – ${(event as any).end_time ?? (event as any).time_end}`}
+                  {event.start_time ?? event.time_start}
+                  {(event.end_time ?? event.time_end) &&
+                    ` – ${event.end_time ?? event.time_end}`}
                 </span>
               </div>
             )}
