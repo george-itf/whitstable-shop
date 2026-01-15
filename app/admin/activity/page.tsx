@@ -93,8 +93,8 @@ export default function AdminActivityPage() {
         .limit(200);
 
       if (error) {
-        // Audit logs table may not exist, use sample data for demo
-        setLogs(generateSampleLogs());
+        // Audit logs table may not exist yet - show empty state
+        setLogs([]);
       } else {
         setLogs(data || []);
       }
@@ -276,32 +276,4 @@ export default function AdminActivityPage() {
       </div>
     </MobileWrapper>
   );
-}
-
-// Generate sample logs for demo purposes
-function generateSampleLogs(): AuditLogEntry[] {
-  const actions = [
-    { action: 'shop.approved', entity_type: 'shop', entity_name: 'Harbour Coffee Co.' },
-    { action: 'review.approved', entity_type: 'review', entity_name: 'Review for Wheelers Oyster Bar' },
-    { action: 'shop.created', entity_type: 'shop', entity_name: 'The Oyster Stores' },
-    { action: 'user.role_changed', entity_type: 'user', entity_name: 'john@example.com' },
-    { action: 'shop.rejected', entity_type: 'shop', entity_name: 'Test Shop' },
-    { action: 'review.flagged', entity_type: 'review', entity_name: 'Review for Beach Walk Cafe' },
-    { action: 'shop.updated', entity_type: 'shop', entity_name: 'Samphire' },
-    { action: 'access.denied', entity_type: 'access', entity_name: '/admin/users' },
-  ];
-
-  return actions.map((a, i) => ({
-    id: `sample-${i}`,
-    action: a.action,
-    entity_type: a.entity_type,
-    entity_id: `entity-${i}`,
-    entity_name: a.entity_name,
-    user_id: 'admin-user',
-    user_email: 'admin@whitstable.shop',
-    details: null,
-    ip_address: '192.168.1.1',
-    user_agent: 'Mozilla/5.0',
-    created_at: new Date(Date.now() - i * 3600000 * (i + 1)).toISOString(),
-  }));
 }
