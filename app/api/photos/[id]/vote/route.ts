@@ -54,11 +54,20 @@ export async function POST(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Failed to vote' }, { status: 500 });
     }
 
-    // Increment vote count
-    const newVoteCount = (photo.vote_count || 0) + 1;
-    await supabase.from('photos').update({ vote_count: newVoteCount }).eq('id', photoId);
+    // Increment vote count atomically
+    await supabase.rpc('increment_photo_vote_count', { p_photo_id: photoId });
 
-    return NextResponse.json({ success: true, vote_count: newVoteCount }, { status: 201 });
+    // Fetch updated count for response
+    const { data: updatedPhoto } = await supabase
+      .from('photos')
+      .select('vote_count')
+      .eq('id', photoId)
+      .single();
+
+    return NextResponse.json({
+      success: true,
+      vote_count: updatedPhoto?.vote_count || 0
+    }, { status: 201 });
   } catch (error) {
     console.error('Vote POST exception:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -79,9 +88,6 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    // Get current vote count
-    const { data: photo } = await supabase.from('photos').select('vote_count').eq('id', photoId).single();
-
     // Delete vote
     const { error } = await supabase
       .from('photo_votes')
@@ -94,11 +100,20 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Failed to remove vote' }, { status: 500 });
     }
 
-    // Decrement vote count
-    const newVoteCount = Math.max((photo?.vote_count || 1) - 1, 0);
-    await supabase.from('photos').update({ vote_count: newVoteCount }).eq('id', photoId);
+    // Decrement vote count atomically
+    await supabase.rpc('decrement_photo_vote_count', { p_photo_id: photoId });
 
-    return NextResponse.json({ success: true, vote_count: newVoteCount });
+    // Fetch updated count for response
+    const { data: updatedPhoto } = await supabase
+      .from('photos')
+      .select('vote_count')
+      .eq('id', photoId)
+      .single();
+
+    return NextResponse.json({
+      success: true,
+      vote_count: updatedPhoto?.vote_count || 0
+    });
   } catch (error) {
     console.error('Vote DELETE exception:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
