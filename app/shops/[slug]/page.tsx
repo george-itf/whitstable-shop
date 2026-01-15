@@ -40,11 +40,9 @@ async function getShop(slug: string) {
     .order('created_at', { ascending: false })
     .limit(10);
 
-  // Increment view count (don't await, fire and forget)
+  // Increment view count atomically (don't await, fire and forget)
   supabase
-    .from('shops')
-    .update({ view_count: (shop.view_count || 0) + 1 })
-    .eq('id', shop.id)
+    .rpc('increment_view_count', { p_shop_id: shop.id })
     .then(() => {});
 
   return {

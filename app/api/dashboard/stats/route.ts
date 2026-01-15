@@ -33,12 +33,11 @@ export async function GET() {
     const shopIds = shops.map((s: { id: string }) => s.id);
 
     // Get total views for all shops
-    const { data: viewsData } = await supabase
+    // shop_views is an event log, so count the rows instead of summing a view_count column
+    const { count: totalViews } = await supabase
       .from('shop_views')
-      .select('view_count')
+      .select('*', { count: 'exact', head: true })
       .in('shop_id', shopIds);
-
-    const totalViews = viewsData?.reduce((sum: number, v: { view_count: number | null }) => sum + (v.view_count || 0), 0) || 0;
 
     // Get saves count
     const { count: savesCount } = await supabase

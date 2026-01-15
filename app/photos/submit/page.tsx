@@ -28,7 +28,7 @@ export default function PhotoSubmitPage() {
 
         // Redirect to login if not authenticated
         if (!user) {
-          router.push('/login?redirect=/photos/submit');
+          router.push('/auth/login?redirect=/photos/submit');
           return;
         }
 

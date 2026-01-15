@@ -95,7 +95,7 @@ export default function QuestionDetailPage() {
     e.preventDefault();
 
     if (!userId) {
-      router.push(`/login?redirect=/ask/${questionId}`);
+      router.push(`/auth/login?redirect=/ask/${questionId}`);
       return;
     }
 
@@ -128,7 +128,7 @@ export default function QuestionDetailPage() {
 
   const handleUpvote = async (answerId: string) => {
     if (!userId) {
-      router.push(`/login?redirect=/ask/${questionId}`);
+      router.push(`/auth/login?redirect=/ask/${questionId}`);
       return;
     }
 

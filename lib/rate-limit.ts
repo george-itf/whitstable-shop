@@ -1,6 +1,21 @@
 /**
  * Simple in-memory rate limiter for API endpoints
- * For production at scale, consider using Redis or Upstash
+ *
+ * ⚠️  WARNING - NOT PRODUCTION-READY FOR SERVERLESS/EDGE:
+ * This implementation stores rate limit state in memory, which means:
+ * - State is NOT shared across serverless function instances
+ * - State is lost when functions scale down or redeploy
+ * - Clients can exceed limits by hitting different instances
+ *
+ * For production use, replace with a durable rate limiter:
+ * - Upstash Rate Limit (recommended for Vercel): https://github.com/upstash/ratelimit
+ * - Redis-based limiter: Use Upstash Redis or similar
+ * - Database-backed limiter: Store counts in Supabase with expiry
+ *
+ * Current implementation is suitable for:
+ * - Development environments
+ * - Low-traffic deployments
+ * - Basic abuse prevention (not security-critical limits)
  */
 
 interface RateLimitEntry {

@@ -27,17 +27,35 @@ export async function middleware(request: NextRequest) {
       return updateSession(request);
     }
 
-    // Rewrite to /admin/* path
+    // Determine the effective admin path for authorization
+    let effectiveAdminPath: string;
     if (pathname === '/') {
+      effectiveAdminPath = '/admin';
       url.pathname = '/admin';
     } else if (!pathname.startsWith('/admin')) {
-      url.pathname = `/admin${pathname}`;
+      effectiveAdminPath = `/admin${pathname}`;
+      url.pathname = effectiveAdminPath;
+    } else {
+      effectiveAdminPath = pathname;
     }
 
-    // Create rewrite response with session handling
-    const sessionResponse = await updateSession(request);
+    // Create a new request with the admin path for auth checking
+    const authCheckRequest = new NextRequest(url, {
+      headers: request.headers,
+      method: request.method,
+      // Pass through cookies from original request
+      nextConfig: request.nextConfig,
+    });
 
-    // If session middleware returned a redirect, honor it
+    // Copy cookies from original request to auth check request
+    request.cookies.getAll().forEach(cookie => {
+      authCheckRequest.cookies.set(cookie.name, cookie.value);
+    });
+
+    // Check auth with the effective admin path
+    const sessionResponse = await updateSession(authCheckRequest);
+
+    // If session middleware returned a redirect (unauthorized), honor it
     if (sessionResponse.status === 307 || sessionResponse.status === 308) {
       return sessionResponse;
     }

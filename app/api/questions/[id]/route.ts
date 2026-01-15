@@ -38,11 +38,9 @@ export async function GET(request: Request, { params }: RouteParams) {
       console.error('Answers GET error:', answersError);
     }
 
-    // Increment view count (fire-and-forget)
+    // Increment view count atomically (fire-and-forget)
     supabase
-      .from('questions')
-      .update({ view_count: (question.view_count || 0) + 1 })
-      .eq('id', id)
+      .rpc('increment_question_views', { p_question_id: id })
       .then(() => {});
 
     return NextResponse.json({
