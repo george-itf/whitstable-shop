@@ -56,7 +56,7 @@ export default function CategoriesPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/categories');
+        router.push('/auth/login?redirect=/admin/categories');
         return;
       }
 

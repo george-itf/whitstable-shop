@@ -92,7 +92,7 @@ export default function OffersPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/offers');
+        router.push('/auth/login?redirect=/admin/offers');
         return;
       }
 

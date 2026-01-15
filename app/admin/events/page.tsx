@@ -71,7 +71,7 @@ export default function EventsPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/events');
+        router.push('/auth/login?redirect=/admin/events');
         return;
       }
 

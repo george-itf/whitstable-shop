@@ -93,8 +93,7 @@ export default function AdminActivityPage() {
         .limit(200);
 
       if (error) {
-        console.log('Audit logs table may not exist:', error.message);
-        // Generate sample data for demo
+        // Audit logs table may not exist, use sample data for demo
         setLogs(generateSampleLogs());
       } else {
         setLogs(data || []);

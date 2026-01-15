@@ -16,7 +16,7 @@ export default function SkipLink() {
         bg-sky text-white font-semibold
         rounded-lg shadow-lg
         focus:outline-none focus:ring-2 focus:ring-sky focus:ring-offset-2
-        transition-transform
+        transition-transform duration-200
         focus:translate-y-0
         -translate-y-16
       "

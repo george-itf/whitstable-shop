@@ -37,7 +37,7 @@ export default function AdminReviewsPage() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          router.push('/login?redirect=/admin/reviews');
+          router.push('/auth/login?redirect=/admin/reviews');
           return;
         }
 

@@ -36,7 +36,7 @@ export default function AdminShopsPage() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          router.push('/login?redirect=/admin/shops');
+          router.push('/auth/login?redirect=/admin/shops');
           return;
         }
 

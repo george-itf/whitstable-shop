@@ -70,7 +70,7 @@ export default function CharitiesPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/charities');
+        router.push('/auth/login?redirect=/admin/charities');
         return;
       }
 
