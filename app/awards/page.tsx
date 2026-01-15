@@ -8,8 +8,8 @@ import { Card } from '@/components/ui';
 
 interface Winner {
   id: string;
-  nominee_name: string;
-  nominee_business: string | null;
+  winner_name: string; // Field name in award_winners table
+  winner_business: string | null; // Field name in award_winners table
   reason: string;
   rank: number;
   category: 'hospitality_star' | 'community_hero';
@@ -26,10 +26,11 @@ export default function AwardsPage() {
   useEffect(() => {
     async function fetchWinners() {
       try {
-        const res = await fetch('/api/nominations?status=winner');
+        // Use the public winners endpoint (not status=winner which requires admin)
+        const res = await fetch('/api/nominations?winners=true');
         if (res.ok) {
           const data = await res.json();
-          setWinners(data);
+          setWinners(data.winners || []);
         }
       } catch (error) {
         console.error('Error fetching winners:', error);
@@ -141,9 +142,9 @@ export default function AwardsPage() {
                             {winner.rank === 1 ? '🥇' : winner.rank === 2 ? '🥈' : '🥉'}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-ink text-sm">{winner.nominee_name}</p>
-                            {winner.nominee_business && (
-                              <p className="text-xs text-oyster-500">{winner.nominee_business}</p>
+                            <p className="font-medium text-ink text-sm">{winner.winner_name}</p>
+                            {winner.winner_business && (
+                              <p className="text-xs text-oyster-500">{winner.winner_business}</p>
                             )}
                             <p className="text-xs text-oyster-600 mt-1 line-clamp-2">
                               &ldquo;{winner.reason}&rdquo;
@@ -179,7 +180,7 @@ export default function AwardsPage() {
                             {winner.rank === 1 ? '🥇' : winner.rank === 2 ? '🥈' : '🥉'}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-ink text-sm">{winner.nominee_name}</p>
+                            <p className="font-medium text-ink text-sm">{winner.winner_name}</p>
                             <p className="text-xs text-oyster-600 mt-1 line-clamp-2">
                               &ldquo;{winner.reason}&rdquo;
                             </p>
