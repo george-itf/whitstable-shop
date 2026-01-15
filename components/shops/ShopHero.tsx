@@ -101,9 +101,9 @@ export default function ShopHero({ shop, category, primaryImage }: ShopHeroProps
       {/* Shop info */}
       <div className="px-4 py-4 border-b border-grey-light">
         <div>
-          <h1 className="text-2xl font-bold text-ink">{shop.name}</h1>
+          <h1 className="text-2xl font-bold text-ink font-display">{shop.name}</h1>
           {shop.tagline && (
-            <p className="text-grey mt-1">{shop.tagline}</p>
+            <p className="text-pebble-500 mt-1 font-handwritten text-lg">{shop.tagline}</p>
           )}
         </div>
 

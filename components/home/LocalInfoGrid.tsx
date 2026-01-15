@@ -68,9 +68,9 @@ export default function LocalInfoGrid({ items }: LocalInfoGridProps) {
   return (
     <div className="px-4 py-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="section-title">local info</h2>
-        <Link href="/info" className="text-sky text-sm font-medium hover:text-sky-dark transition-colors">
-          explore more
+        <h2 className="section-title font-display">local info</h2>
+        <Link href="/info" className="text-sky text-sm font-medium hover:text-sky-dark transition-colors font-handwritten text-base">
+          explore more →
         </Link>
       </div>
 
