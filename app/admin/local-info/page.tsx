@@ -50,6 +50,7 @@ export default function AdminLocalInfoPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [editingPage, setEditingPage] = useState<EditingPage | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Fetch data
@@ -209,6 +210,37 @@ export default function AdminLocalInfoPage() {
     }
   };
 
+  // Import default pages
+  const importDefaults = async () => {
+    setIsImporting(true);
+    try {
+      const res = await fetch('/api/admin/local-info/seed', {
+        method: 'POST',
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.inserted > 0) {
+          // Refresh the pages list
+          const pagesRes = await fetch('/api/admin/local-info?all=true');
+          if (pagesRes.ok) {
+            const data = await pagesRes.json();
+            setPages(data);
+          }
+          showToast('success', `Imported ${result.inserted} default pages`);
+        } else {
+          showToast('success', 'All default pages already exist');
+        }
+      } else {
+        showToast('error', 'Failed to import pages');
+      }
+    } catch (error) {
+      showToast('error', 'Failed to import pages');
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -287,7 +319,30 @@ export default function AdminLocalInfoPage() {
           {pages.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
               <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No info pages yet. Click &ldquo;Add Page&rdquo; to create one.</p>
+              <p className="text-gray-500 mb-4">No info pages yet.</p>
+              <div className="flex items-center justify-center gap-3">
+                <button
+                  onClick={importDefaults}
+                  disabled={isImporting}
+                  className="flex items-center gap-2 px-4 py-2 bg-sky text-white rounded-lg font-medium hover:bg-sky/90 disabled:opacity-50 transition-colors"
+                >
+                  {isImporting ? (
+                    <>
+                      <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                      Importing...
+                    </>
+                  ) : (
+                    'Import Default Pages'
+                  )}
+                </button>
+                <span className="text-gray-400">or</span>
+                <button
+                  onClick={() => setEditingPage({ isNew: true, is_active: true, display_order: 0 })}
+                  className="text-coral hover:underline font-medium"
+                >
+                  Create from scratch
+                </button>
+              </div>
             </div>
           ) : (
             pages.map((page, index) => (
