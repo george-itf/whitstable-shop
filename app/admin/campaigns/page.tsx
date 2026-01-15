@@ -83,7 +83,7 @@ export default function CampaignsPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/campaigns');
+        router.push('/auth/login?redirect=/admin/campaigns');
         return;
       }
 

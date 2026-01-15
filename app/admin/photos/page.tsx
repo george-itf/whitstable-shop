@@ -76,7 +76,7 @@ export default function PhotosPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/photos');
+        router.push('/auth/login?redirect=/admin/photos');
         return;
       }
 

@@ -137,7 +137,7 @@ export default function Modal({
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-ink/50 transition-opacity"
+        className="absolute inset-0 bg-ink/50 transition-opacity duration-200"
         onClick={handleOverlayClick}
         aria-hidden="true"
       />

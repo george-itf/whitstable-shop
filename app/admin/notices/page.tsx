@@ -36,7 +36,7 @@ export default function AdminNoticesPage() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          router.push('/login?redirect=/admin/notices');
+          router.push('/auth/login?redirect=/admin/notices');
           return;
         }
 

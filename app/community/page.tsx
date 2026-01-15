@@ -108,7 +108,7 @@ export default function CommunityPage() {
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-semibold text-ink text-sm section-title">Upcoming Events</h2>
                 <Link
-                  href="/community/events"
+                  href="/events"
                   className="text-xs text-sky font-medium"
                 >
                   View all

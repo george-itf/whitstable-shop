@@ -108,7 +108,7 @@ export default function DirectoryPage() {
       // Check admin
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/directory');
+        router.push('/auth/login?redirect=/admin/directory');
         return;
       }
 

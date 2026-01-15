@@ -57,7 +57,7 @@ const ENTITY_CONFIG: Record<string, {
     color: 'text-coral',
     bgColor: 'bg-coral/10',
     icon: Heart,
-    baseUrl: '/charities',
+    baseUrl: '/community/charities',
   },
   question: {
     label: 'Question',

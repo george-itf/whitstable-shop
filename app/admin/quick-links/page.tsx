@@ -85,7 +85,7 @@ export default function QuickLinksPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/quick-links');
+        router.push('/auth/login?redirect=/admin/quick-links');
         return;
       }
 

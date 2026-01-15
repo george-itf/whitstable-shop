@@ -132,11 +132,11 @@ export async function GET(request: Request) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('is_admin')
+      .select('role')
       .eq('id', user.id)
       .single();
 
-    if (!profile?.is_admin) {
+    if (!profile || profile.role !== 'admin') {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
@@ -271,8 +271,7 @@ async function getDigestSubscribers(
     .eq('weekly_digest', true);
 
   if (error) {
-    // Table might not exist yet - fall back to all verified users
-    console.log('notification_preferences table not found, using fallback');
+    // notification_preferences table not found - fall back to all verified users
     const { data: profiles } = await supabase
       .from('profiles')
       .select('id, email, display_name')

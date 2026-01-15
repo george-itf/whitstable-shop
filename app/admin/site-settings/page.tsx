@@ -86,7 +86,7 @@ export default function SiteSettingsPage() {
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/admin/site-settings');
+        router.push('/auth/login?redirect=/admin/site-settings');
         return;
       }
 
