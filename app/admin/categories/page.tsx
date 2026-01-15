@@ -16,6 +16,7 @@ import {
   Tag,
   Store,
 } from 'lucide-react';
+import { EmptyState, AdminSkeleton } from '@/components/admin';
 
 interface Category {
   id: string;
@@ -219,13 +220,8 @@ export default function CategoriesPage() {
             <h1 className="text-white font-bold text-xl">categories</h1>
           </div>
         </div>
-        <div className="px-4 py-6 space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <div className="h-4 bg-grey-light rounded w-3/4 mb-2" />
-              <div className="h-3 bg-grey-light rounded w-1/2" />
-            </Card>
-          ))}
+        <div className="px-4 py-6">
+          <AdminSkeleton variant="list" count={5} />
         </div>
         <BottomNav />
       </MobileWrapper>
@@ -256,10 +252,12 @@ export default function CategoriesPage() {
       {/* Categories List */}
       <div className="px-4 py-4 space-y-3 pb-24">
         {categories.length === 0 ? (
-          <div className="text-center py-12">
-            <Tag className="w-12 h-12 text-grey-light mx-auto mb-3" />
-            <p className="text-grey">No categories found</p>
-          </div>
+          <EmptyState
+            icon={Tag}
+            title="No categories found"
+            description="Add your first category to organize shops"
+            action={{ label: "Add Category", onClick: openCreateModal }}
+          />
         ) : (
           categories.map((category, index) => (
             <Card key={category.id} className="relative">

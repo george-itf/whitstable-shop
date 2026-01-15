@@ -21,6 +21,7 @@ import {
   Package,
   CreditCard,
 } from 'lucide-react';
+import { EmptyState, AdminSkeleton } from '@/components/admin';
 
 interface Shop {
   id: string;
@@ -240,13 +241,8 @@ export default function OffersPage() {
             <h1 className="text-ink font-bold text-xl">offers & deals</h1>
           </div>
         </div>
-        <div className="px-4 py-6 space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <div className="h-4 bg-grey-light rounded w-3/4 mb-2" />
-              <div className="h-3 bg-grey-light rounded w-1/2" />
-            </Card>
-          ))}
+        <div className="px-4 py-6">
+          <AdminSkeleton variant="list" count={4} />
         </div>
         <BottomNav />
       </MobileWrapper>
@@ -342,10 +338,12 @@ export default function OffersPage() {
         )}
 
         {filteredOffers.length === 0 && (
-          <div className="text-center py-12">
-            <Tag className="w-12 h-12 text-grey-light mx-auto mb-3" />
-            <p className="text-grey">No offers found</p>
-          </div>
+          <EmptyState
+            icon={Tag}
+            title="No offers found"
+            description={searchQuery || filterType !== 'all' ? "Try adjusting your filters" : "Create your first offer to attract customers"}
+            action={!searchQuery && filterType === 'all' ? { label: "Add Offer", onClick: openCreateModal } : undefined}
+          />
         )}
       </div>
 
