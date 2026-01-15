@@ -30,7 +30,7 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
               height={36}
               className="object-contain"
             />
-            <span className="text-white font-bold text-xl tracking-tight">whitstable.shop</span>
+            <span className="text-white font-bold text-xl tracking-tight font-display">whitstable.shop</span>
           </Link>
 
           {/* Desktop navigation */}
@@ -93,7 +93,7 @@ export default function Header({ variant = 'default', showMenu = true }: HeaderP
           {/* Menu panel */}
           <div className="absolute right-0 top-0 h-full w-72 bg-white shadow-lg">
             <div className="p-4 border-b border-grey-light flex items-center justify-between">
-              <span className="font-bold text-lg">Menu</span>
+              <span className="font-bold text-lg font-display">Menu</span>
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="p-2 text-grey hover:text-ink transition-colors"
@@ -187,7 +187,7 @@ function MenuSection({
 }) {
   return (
     <div className="mb-4">
-      <h3 className="text-xs font-semibold uppercase text-grey px-3 mb-1">
+      <h3 className="text-sm font-semibold text-driftwood-500 px-3 mb-2 font-handwritten text-base tracking-wide">
         {title}
       </h3>
       <ul className="space-y-1">{children}</ul>
