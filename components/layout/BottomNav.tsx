@@ -48,22 +48,22 @@ const navItems = [
   {
     href: '/',
     label: 'Home',
-    icon: Home,
+    icon: BeachHutIcon,
   },
   {
     href: '/search',
     label: 'Search',
-    icon: Search,
+    icon: BinocularsIcon,
   },
   {
     href: '/map',
     label: 'Map',
-    icon: Map,
+    icon: CompassIcon,
   },
   {
     href: '/saved',
     label: 'Saved',
-    icon: Heart,
+    icon: HeartWaveIcon,
   },
 ];
 
@@ -78,7 +78,7 @@ export default function BottomNav() {
       <div className="flex items-center justify-around py-2 px-2" role="list">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
-          const Icon = item.Icon;
+          const Icon = item.icon;
 
           return (
             <Link
@@ -98,12 +98,7 @@ export default function BottomNav() {
                 'transition-all duration-200',
                 isActive && 'scale-110'
               )}>
-                <Icon
-                  className="w-6 h-6"
-                  fill={isActive && item.icon === Heart ? 'currentColor' : 'none'}
-                  strokeWidth={isActive ? 2.5 : 2}
-                  aria-hidden="true"
-                />
+                <Icon filled={isActive && item.label === 'Saved'} />
               </div>
               <span className={cn(
                 'text-xs mt-1 transition-all duration-200',
